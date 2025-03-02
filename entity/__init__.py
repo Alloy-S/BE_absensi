@@ -3,3 +3,12 @@ from .user_role import UserRole
 from .data_kontak import DataKontak
 from .data_pribadi import DataPribadi
 from .data_karyawan import DataKaryawan
+from .jadwal_kerja import JadwalKerja
+from .lokasi import Lokasi
+from .perusahaan import Perusahaan
+from .grup import Grup
+from .user_login_log import UserLoginLog
+from .libur import Libur
+from .reimburse import Reimburse
+from .photo import Photo
+from .approval_reimburse import ApporvalReimburse

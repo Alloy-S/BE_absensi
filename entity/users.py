@@ -19,6 +19,9 @@ class Users(db.Model):
     data_kontak = db.relationship('DataKontak', back_populates='user', uselist=False)
     data_pribadi = db.relationship('DataPribadi', back_populates='user', uselist=False)
     data_karyawan = db.relationship('DataKaryawan', back_populates='user', uselist=False)
+    login_log = db.relationship('UserLoginLog', back_populates='user')
+    reimburse = db.relationship('Reimburse', back_populates='user')
+    approval_reimburse = db.relationship("ApprovalReimburse", back_populates="user")
     
     def set_password(self, password):
         self.password = generate_password_hash(password)
