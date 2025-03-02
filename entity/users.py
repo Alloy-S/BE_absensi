@@ -14,6 +14,7 @@ class Users(db.Model):
     data_kontak_id = db.Column(UUID(as_uuid=True), db.ForeignKey('data_kontak.id'), nullable=False)
     data_pribadi_id = db.Column(UUID(as_uuid=True), db.ForeignKey('data_pribadi.id'), nullable=False)
     data_karyawan_id = db.Column(UUID(as_uuid=True), db.ForeignKey('data_karyawan.id'), nullable=False)
+    face_embedding_id = db.Column(UUID(as_uuid=True), db.ForeignKey('face_embeddings.id'), nullable=False)
     
     user_role = db.relationship('UserRole', back_populates='users')
     data_kontak = db.relationship('DataKontak', back_populates='user', uselist=False)
@@ -22,6 +23,11 @@ class Users(db.Model):
     login_log = db.relationship('UserLoginLog', back_populates='user')
     reimburse = db.relationship('Reimburse', back_populates='user')
     approval_reimburse = db.relationship("ApprovalReimburse", back_populates="user")
+    approval_izin = db.relationship("ApprovalIzin", back_populates="user")
+    approval_kehadiran = db.relationship("ApprovalKehadiran", back_populates="user")
+    izin = db.relationship("Izin", back_populates="user")
+    face_embeddings = db.relationship("FaceEmbeddings", back_populates="user", uselist=False)
+    absensi = db.relationship("Absensi", back_populates="user")
     
     def set_password(self, password):
         self.password = generate_password_hash(password)

@@ -8,7 +8,7 @@ class Reimburse(db.Model):
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     nama = db.Column(db.String(255), nullable=False)  
     jumlah = db.Column(db.Numeric(9, 2), nullable=False) 
-    date = db.Column(db.DateTime, nullable=False)
+    date = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
     status = db.Column(db.String(10), nullable=False)  
     photo_id = db.Column(UUID(as_uuid=True), db.ForeignKey('photo.id'), nullable=False)
     created_by = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False)

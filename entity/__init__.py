@@ -12,3 +12,11 @@ from .libur import Libur
 from .reimburse import Reimburse
 from .photo import Photo
 from .approval_reimburse import ApporvalReimburse
+from .izin import Izin
+from .jenis_izin import JenisIzin
+from .approval_izin import ApprovalIzin
+from .absensi import Absensi
+from .detail_absensi import DetailAbsensi
+from .approval_kehadiran import ApprovalKehadiran
+from .approval_koreksi import ApprovalKoreksi
+from .face_embeddings import FaceEmbeddings
