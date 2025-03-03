@@ -20,3 +20,5 @@ from .detail_absensi import DetailAbsensi
 from .approval_kehadiran import ApprovalKehadiran
 from .approval_koreksi import ApprovalKoreksi
 from .face_embeddings import FaceEmbeddings
+from .config_props import ConfigProps
+from .kuota_cuti import KuotaCuti

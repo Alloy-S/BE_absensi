@@ -19,7 +19,8 @@ class DataKaryawan(db.Model):
     user = db.relationship('Users', back_populates='data_karyawan')
     lokasi = db.relationship('Lokasi', back_populates='data_karyawan')
     jadwal_kerja = db.relationship('JadwalKerja', back_populates='data_karyawan')
-    grup = db.relationship('grup', back_populates='data_karyawan')
+    grup = db.relationship('Grup', back_populates='data_karyawan')
+    kuota_cuti = db.relationship("KuotaCuti", back_populates="data_karyawan")
 
     def __repr__(self):
         return (f"<DataKaryawan(id={self.id}, nip='{self.nip}', tgl_gabung='{self.tgl_gabung}', "
