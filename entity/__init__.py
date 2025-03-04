@@ -22,3 +22,6 @@ from .approval_koreksi import ApprovalKoreksi
 from .face_embeddings import FaceEmbeddings
 from .config_props import ConfigProps
 from .kuota_cuti import KuotaCuti
+from .lembur import Lembur
+from .approval_lembur import ApprovalLembur
+from .harga_gaji import HargaGaji

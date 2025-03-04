@@ -11,9 +11,7 @@ class DataPribadi(db.Model):
     tmpt_lahir = db.Column(db.String(150), nullable=False)
     status_kawin = db.Column(db.String(20), nullable=True) 
     agama = db.Column(db.String(30), nullable=True)  
-    gol_darah = db.Column(db.String(3), nullable=True) 
-    pekerja_asing = db.Column(db.Boolean, nullable=False, default=False)  
-    kewarganegaraan = db.Column(db.String(50), nullable=True)  
+    gol_darah = db.Column(db.String(3), nullable=True)  
     
     user = db.relationship('Users', back_populates='data_pribadi')
 

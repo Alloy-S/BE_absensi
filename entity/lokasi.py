@@ -9,6 +9,7 @@ class Lokasi(db.Model):
     nama = db.Column(db.String(50), nullable=False) 
     latitude = db.Column(db.Numeric(9, 6), nullable=False)
     longitude = db.Column(db.Numeric(9, 6), nullable=False)
+    toleransi = db.Column(db.SmallInteger, nullable=False)
     
     data_karyawan = db.relationship("DataKaryawan", back_populates="lokasi")
     

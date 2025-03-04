@@ -25,9 +25,11 @@ class Users(db.Model):
     approval_reimburse = db.relationship("ApprovalReimburse", back_populates="user")
     approval_izin = db.relationship("ApprovalIzin", back_populates="user")
     approval_kehadiran = db.relationship("ApprovalKehadiran", back_populates="user")
+    approval_lembur = db.relationship("ApprovalLembur", back_populates="user")
     izin = db.relationship("Izin", back_populates="user")
     face_embeddings = db.relationship("FaceEmbeddings", back_populates="user", uselist=False)
     absensi = db.relationship("Absensi", back_populates="user")
+    lembur = db.relationship('Lembur', back_populates="user")
     
     def set_password(self, password):
         self.password = generate_password_hash(password)
