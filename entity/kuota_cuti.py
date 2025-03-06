@@ -7,7 +7,7 @@ class KuotaCuti(db.Model):
     
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     key = db.Column(db.String(50), unique=True, nullable=False)
-    value = db.Column(db.String(256), unique=True, nullable=False)
+    value = db.Column(db.String(256), nullable=False)
     data_karyawan_id = db.Column(UUID(as_uuid=True), db.ForeignKey('data_karyawan.id'), nullable=False)
     
     data_karyawan = db.relationship("DataKaryawan", back_populates="kuota_cuti")

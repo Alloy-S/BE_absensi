@@ -7,8 +7,8 @@ class Users(db.Model):
     __tablename__ = 'users'
 
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    name = db.Column(db.String(80), unique=True, nullable=False)
-    email = db.Column(db.String(80), unique=False, nullable=False)
+    name = db.Column(db.String(80), nullable=False)
+    username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(256), nullable=False)
     user_role_id = db.Column(UUID(as_uuid=True), db.ForeignKey('user_role.id'), nullable=False)
     data_kontak_id = db.Column(UUID(as_uuid=True), db.ForeignKey('data_kontak.id'), nullable=False)

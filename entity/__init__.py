@@ -25,3 +25,4 @@ from .kuota_cuti import KuotaCuti
 from .lembur import Lembur
 from .approval_lembur import ApprovalLembur
 from .harga_gaji import HargaGaji
+from .pengumuman import Pengumuman
