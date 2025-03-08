@@ -2,6 +2,7 @@ from database import db
 from werkzeug.security import generate_password_hash, check_password_hash
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.ext.declarative import declared_attr
 
 class Users(db.Model):
     __tablename__ = 'users'
@@ -22,10 +23,11 @@ class Users(db.Model):
     data_karyawan = db.relationship('DataKaryawan', back_populates='user', uselist=False)
     login_log = db.relationship('UserLoginLog', back_populates='user')
     reimburse = db.relationship('Reimburse', back_populates='user')
-    approval_reimburse = db.relationship("ApprovalReimburse", back_populates="user")
     approval_izin = db.relationship("ApprovalIzin", back_populates="user")
     approval_kehadiran = db.relationship("ApprovalKehadiran", back_populates="user")
     approval_lembur = db.relationship("ApprovalLembur", back_populates="user")
+    approval_reimburse = db.relationship("ApprovalReimburse", back_populates="user")
+    approval_koreksi = db.relationship("ApprovalKoreksi", back_populates="user")
     izin = db.relationship("Izin", back_populates="user")
     face_embeddings = db.relationship("FaceEmbeddings", back_populates="user", uselist=False)
     absensi = db.relationship("Absensi", back_populates="user")

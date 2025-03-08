@@ -12,7 +12,7 @@ class ApprovalIzin(db.Model):
     izin_id = db.Column(UUID(as_uuid=True), db.ForeignKey('izin.id'), nullable=False)
     
     user = db.relationship("Users", back_populates="approval_izin")
-    izin = db.relationship("Reimburse", back_populates="approval_izin")
+    izin = db.relationship("Izin", back_populates="approval_izin")
     
     def __repr__(self):
         return (

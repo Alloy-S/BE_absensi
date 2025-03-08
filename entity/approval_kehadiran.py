@@ -11,8 +11,8 @@ class ApprovalKehadiran(db.Model):
     approval_user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False)
     absensi_id = db.Column(UUID(as_uuid=True), db.ForeignKey('absensi.id'), nullable=False)
     
-    user = db.relationship("Users", back_populates="approval_izin")
-    absensi = db.relationship("Absensi", back_populates="approval_absensi")
+    user = db.relationship("Users", back_populates="approval_kehadiran")
+    absensi = db.relationship("Absensi", back_populates="approval_kehadiran")
     
     def __repr__(self):
         return (

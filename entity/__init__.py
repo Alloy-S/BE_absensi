@@ -11,7 +11,7 @@ from .user_login_log import UserLoginLog
 from .libur import Libur
 from .reimburse import Reimburse
 from .photo import Photo
-from .approval_reimburse import ApporvalReimburse
+from .approval_reimburse import ApprovalReimburse
 from .izin import Izin
 from .jenis_izin import JenisIzin
 from .approval_izin import ApprovalIzin

@@ -1,18 +1,9 @@
 from flask_restful import Resource, reqparse, fields, marshal_with, abort
 from services.user_service import UserService
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from models.user.add_user_req import user_fields, user_args
 
-user_args = reqparse.RequestParser()
-user_args.add_argument('name', type=str, required=True, help="Name cannot be blank")
-user_args.add_argument('email', type=str, required=True, help="Email cannot be blank")
-
-user_fields = {
-    'id': fields.Integer,
-    'name': fields.String,
-    'email': fields.String,
-}
-
-class Users(Resource):
+class UserController(Resource):
     @marshal_with(user_fields)
     @jwt_required
     def get(self):
@@ -24,8 +15,7 @@ class Users(Resource):
         args = user_args.parse_args()
         new_user = UserService.create_user(args["name"], args["email"])
         return new_user, 201
-
-class User(Resource):
+    
     @marshal_with(user_fields)
     @jwt_required
     def get(self, id):
@@ -49,3 +39,4 @@ class User(Resource):
         if not success:
             abort(404, message="User not found")
         return {'message': 'User deleted successfully'}, 200
+

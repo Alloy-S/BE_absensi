@@ -4,8 +4,11 @@ from config import Config
 from database import db
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
-from controllers.user_controller import Users, User
+from controllers.user_controller import UserController
 from controllers.auth_controller import Login, Register
+from sqlalchemy.orm import configure_mappers
+
+configure_mappers()
 
 
 app = Flask(__name__)
@@ -21,8 +24,8 @@ api = Api(app)
 # Register API Routes
 api.add_resource(Login, '/api/auth/login')
 api.add_resource(Register, '/api/auth/register')
-api.add_resource(Users, '/api/users/')
-api.add_resource(User, '/api/users/<int:id>')
+api.add_resource(UserController, '/api/users/', '/api/users/<int:id>')
+# api.add_resource(User, '/api/users/<int:id>')
 
 @app.route('/')
 def home():

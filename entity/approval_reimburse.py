@@ -2,7 +2,7 @@ from database import db
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
 
-class ApporvalReimburse(db.Model):
+class ApprovalReimburse(db.Model):
     __tablename__ = 'approval_reimburse'
     
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
