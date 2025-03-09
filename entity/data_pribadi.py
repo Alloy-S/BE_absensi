@@ -8,7 +8,7 @@ class DataPribadi(db.Model):
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     gender = db.Column(db.String(10), nullable=False)  
     tgl_lahir = db.Column(db.Date, nullable=False)  
-    tmpt_lahir = db.Column(db.String(150), nullable=False)
+    tmpt_lahir = db.Column(db.String(150), nullable=True)
     status_kawin = db.Column(db.String(20), nullable=True) 
     agama = db.Column(db.String(30), nullable=True)  
     gol_darah = db.Column(db.String(3), nullable=True)  

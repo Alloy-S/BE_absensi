@@ -11,12 +11,12 @@ class UserRepository:
         return Users.query.filter_by(id=user_id).first()
     
     @staticmethod
-    def get_user_by_email(email):
-        return Users.query.filter_by(email=email).first()
+    def get_user_by_username(username):
+        return Users.query.filter_by(username=username).first()
 
     @staticmethod
-    def create_user(name, email, password):
-        new_user = Users(name=name, email=email)
+    def create_user(name, username, password):
+        new_user = Users(name=name, username=username)
         new_user.set_password(password)
         db.session.add(new_user)
         db.session.commit()

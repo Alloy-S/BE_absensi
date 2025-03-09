@@ -11,13 +11,13 @@ class Users(db.Model):
     name = db.Column(db.String(80), nullable=False)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(256), nullable=False)
-    user_role_id = db.Column(UUID(as_uuid=True), db.ForeignKey('user_role.id'), nullable=False)
-    data_kontak_id = db.Column(UUID(as_uuid=True), db.ForeignKey('data_kontak.id'), nullable=False)
-    data_pribadi_id = db.Column(UUID(as_uuid=True), db.ForeignKey('data_pribadi.id'), nullable=False)
-    data_karyawan_id = db.Column(UUID(as_uuid=True), db.ForeignKey('data_karyawan.id'), nullable=False)
-    face_embedding_id = db.Column(UUID(as_uuid=True), db.ForeignKey('face_embeddings.id'), nullable=False)
+    user_role_id = db.Column(UUID(as_uuid=True), db.ForeignKey('user_role.id'), nullable=True)
+    data_kontak_id = db.Column(UUID(as_uuid=True), db.ForeignKey('data_kontak.id'), nullable=True)
+    data_pribadi_id = db.Column(UUID(as_uuid=True), db.ForeignKey('data_pribadi.id'), nullable=True)
+    data_karyawan_id = db.Column(UUID(as_uuid=True), db.ForeignKey('data_karyawan.id'), nullable=True)
+    face_embedding_id = db.Column(UUID(as_uuid=True), db.ForeignKey('face_embeddings.id'), nullable=True)
     
-    user_role = db.relationship('UserRole', back_populates='users')
+    user_role = db.relationship('UserRole', back_populates='users', lazy="joined")
     data_kontak = db.relationship('DataKontak', back_populates='user', uselist=False)
     data_pribadi = db.relationship('DataPribadi', back_populates='user', uselist=False)
     data_karyawan = db.relationship('DataKaryawan', back_populates='user', uselist=False)
@@ -40,6 +40,6 @@ class Users(db.Model):
         return check_password_hash(self.password, password)
 
     def __repr__(self):
-        return f"<User(name={self.name}, email={self.email}, user_role_id={self.user_role_id}, data_kontak_id={self.data_kontak_id}, data_pribadi_id={self.data_pribadi_id}, data_karyawan_id={self.data_karyawan_id},)>"
+        return f"<User(name={self.name}, email={self.username}, user_role_id={self.user_role_id}, data_kontak_id={self.data_kontak_id}, data_pribadi_id={self.data_pribadi_id}, data_karyawan_id={self.data_karyawan_id},)>"
     
     
