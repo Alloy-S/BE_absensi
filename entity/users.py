@@ -32,6 +32,7 @@ class Users(db.Model):
     face_embeddings = db.relationship("FaceEmbeddings", back_populates="user", uselist=False)
     absensi = db.relationship("Absensi", back_populates="user")
     lembur = db.relationship('Lembur', back_populates="user")
+    grup_gaji_user = db.relationship("GrupGajiUser", back_populates="user")
     
     def set_password(self, password):
         self.password = generate_password_hash(password)

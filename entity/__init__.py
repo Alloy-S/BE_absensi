@@ -4,9 +4,10 @@ from .data_kontak import DataKontak
 from .data_pribadi import DataPribadi
 from .data_karyawan import DataKaryawan
 from .jadwal_kerja import JadwalKerja
+from .detail_jadwal_kerja import DetailJadwalKerja
 from .lokasi import Lokasi
 from .perusahaan import Perusahaan
-from .grup import Grup
+from .jabatan import Jabatan
 from .user_login_log import UserLoginLog
 from .libur import Libur
 from .reimburse import Reimburse
@@ -24,5 +25,9 @@ from .config_props import ConfigProps
 from .kuota_cuti import KuotaCuti
 from .lembur import Lembur
 from .approval_lembur import ApprovalLembur
-from .harga_gaji import HargaGaji
 from .pengumuman import Pengumuman
+from .komponen_gaji import KomponenGaji
+from .grup_gaji import GrupGaji
+from .grup_gaji_kom import GrupGajiKom
+from .grup_gaji_user import GrupGajiUser
+from .jatah_kuota_cuti import JatahKuotaCuti
