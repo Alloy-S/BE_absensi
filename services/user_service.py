@@ -1,4 +1,5 @@
 from repositories.user_repository import UserRepository
+from services.notification_service import NotificationService
 
 class UserService:
     @staticmethod
@@ -10,8 +11,18 @@ class UserService:
         return UserRepository.get_user_by_id(user_id)
 
     @staticmethod
-    def create_user(name, email, password):
-        return UserRepository.create_user(name, email, password)
+    def create_user(name, username, phone):
+
+        password = "123456"
+
+        result = UserRepository.create_user(name, username, password)
+
+        if not result:
+            return None
+
+        NotificationService.send_notification(phone=phone, username=username, password=password)
+
+        return result
 
     @staticmethod
     def update_user(user_id, name, email):

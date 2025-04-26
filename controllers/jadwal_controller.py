@@ -1,7 +1,6 @@
-from flask_restful import Resource, reqparse, fields, marshal_with, abort
+from flask_restful import Resource, marshal_with, abort
 from services.jadwal_kerja_service import JadwalKerjaService
-from flask_jwt_extended import jwt_required, get_jwt_identity
-from models.jadwal_kerja_model import jadwal_args, jadwal_fields
+from models.lokasiKerja.jadwal_kerja_model import jadwal_args, jadwal_fields
 
 class JadwalListController(Resource):
     # method_decorators = [jwt_required()]

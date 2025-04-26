@@ -15,8 +15,8 @@ class UserRepository:
         return Users.query.filter_by(username=username).first()
 
     @staticmethod
-    def create_user(name, username, password):
-        new_user = Users(name=name, username=username)
+    def create_user(fullname, username, password):
+        new_user = Users(fullname=fullname, username=username)
         new_user.set_password(password)
         db.session.add(new_user)
         db.session.commit()

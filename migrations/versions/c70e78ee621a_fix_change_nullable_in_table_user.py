@@ -1,4 +1,4 @@
-"""fix change nullable in table user
+"""fix change nullable in table users
 
 Revision ID: c70e78ee621a
 Revises: 1500e835d1b2

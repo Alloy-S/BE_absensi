@@ -1,7 +1,6 @@
-from flask_restful import Resource, reqparse, fields, marshal_with, abort
+from flask_restful import Resource, marshal_with, abort
 from services.lokasi_service import LokasiService
-from flask_jwt_extended import jwt_required, get_jwt_identity
-from models.lokasi_model import lokasi_fields, lokasi_args
+from models.lokasi.lokasi_model import lokasi_fields, lokasi_args
 
 class LokasiListController(Resource):
     # method_decorators = [jwt_required()]

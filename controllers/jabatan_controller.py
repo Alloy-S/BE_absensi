@@ -1,8 +1,10 @@
-from flask import Blueprint
+import marshmallow
+from flask import Blueprint, request, jsonify
 from flask_restful import Api, Resource, marshal_with
 from services.jabatan_service import JabatanService
-
-from models.jabatan_model import jabatan_fields, pagination_args, jabatan_pagination_fields, jabatan_args, jabatan_field
+from marshmallow import ValidationError
+from models.jabatan.jabatan_req_model import JabatanPaginationReq, JabatanReq
+from models.jabatan.jabatan_res_model import jabatan_fields, jabatan_field, jabatan_pagination_fields
 
 jabatan_bp = Blueprint('jabatan_bp', __name__, url_prefix='/api/jabatan')
 jabatan_api = Api(jabatan_bp)
@@ -12,30 +14,46 @@ class JabatanListResource(Resource):
     def get(self):
         print("Fetching all jabatan")
         
-        args = pagination_args.parse_args()
-        
-        print(f"Fetching all Jabatan page={args['page']}, per_page={args['size']}")
-    
-        data = JabatanService.get_all_pagination(args['page'], args['size'], args['search'])
-        
-        response = {
-            "pages": data.pages,
-            "total": data.total,
-            "items": data.items
-        }
-        return response, 200
+        queryparams = request.args
+
+        schema = JabatanPaginationReq()
+
+        try:
+            validated = schema.load(queryparams)
+
+            print(f"Fetching all Jabatan page={validated['page']}, per_page={validated['size']}")
+
+            data = JabatanService.get_all_pagination(validated['page'], validated['size'], validated['search'])
+
+            response = {
+                "pages": data.pages,
+                "total": data.total,
+                "items": data.items
+            }
+            return response, 200
+        except ValidationError as e:
+            return {"message": e.messages}, 400
+
+
     
     def post(self):
         print("Creating jabatan")
-        
-        args = jabatan_args.parse_args()
-        
-        jabatan = JabatanService.create(args["nama"], args["parent_id"])
-        
-        if not jabatan:
-            return {"message": "Jabatan Sudah Terdaftar"}, 400
-        
-        return None, 201
+
+        json_data = request.get_json()
+
+        schema = JabatanReq()
+
+        try:
+            validated = schema.load(json_data)
+
+            jabatan = JabatanService.create(validated["nama"], validated["parent_id"])
+
+            if not jabatan:
+                return {"message": "Jabatan Sudah Terdaftar"}, 400
+
+            return None, 201
+        except ValidationError as e:
+            return {"message": e.messages}, 400
     
 
 class JabatanAllResource(Resource):
@@ -66,13 +84,21 @@ class JabatanResource(Resource):
     @marshal_with(jabatan_field)
     def put(self, id):
         print(f"Edit Jabatan: {id}")
-        args = jabatan_args.parse_args()
-        jabatan = JabatanService.update(id, args["nama"], args["parent_id"])
-        
-        if not jabatan:
-            return {"message": "Gagal Melakukan Update jabatan"}, 400
-        
-        return jabatan, 200
+        json_data = request.get_json()
+
+        schema = JabatanReq()
+
+        try:
+            validated = schema.load(json_data)
+
+            jabatan = JabatanService.update(id, validated["nama"], validated["parent_id"])
+
+            if not jabatan:
+                return {"message": "Gagal Melakukan Update jabatan"}, 400
+
+            return jabatan, 200
+        except ValidationError as e:
+            return {"message": e.messages}, 400
     
     
     def delete(self, id):
