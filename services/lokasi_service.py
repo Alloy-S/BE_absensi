@@ -4,6 +4,10 @@ class LokasiService:
     @staticmethod
     def get_all_lokasi():
         return LokasiRepository.get_all_lokasi()
+
+    @staticmethod
+    def get_all_lokasi_pagination(page, size, search):
+        return LokasiRepository.get_all_pagination(page=page, per_page=size, search=search)
     
     @staticmethod
     def get_lokasi_by_id(id):
@@ -11,6 +15,7 @@ class LokasiService:
     
     @staticmethod
     def create_lokasi(name , latitude, longitude, toleransi):
+        print("========== ADD NEW LOKASI")
         lokasi = LokasiRepository.get_lokasi_by_name(name=name)
         
         if lokasi:

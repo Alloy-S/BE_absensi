@@ -6,6 +6,10 @@ class JadwalKerjaRepository:
     @staticmethod
     def get_all():
         return JadwalKerja.query.all()
+
+    @staticmethod
+    def get_all_pagination(page: int = 1, per_page: int = 10, search: str = None):
+        print(f"Fetching all Jabatan with pagination: page={page}, per_page={per_page}, search={search}")
     
     @staticmethod
     def get_by_id(id) -> JadwalKerja:

@@ -6,6 +6,24 @@ class LokasiRepository:
     @staticmethod
     def get_all_lokasi():
         return Lokasi.query.filter_by(is_deleted=False).all()
+
+    @staticmethod
+    def get_all_pagination(page: int = 1, per_page: int = 10, search: str = None):
+        print(f"Fetching all Jabatan with pagination: page={page}, per_page={per_page}, search={search}")
+
+        query = db.session.query(
+            Lokasi.id,
+            Lokasi.name
+        ).filter(Lokasi.is_deleted.is_(False))
+
+        if search:
+            query = query.filter(Lokasi.name.ilike(f"%{search}%"))
+
+        query = query.order_by(Lokasi.name.asc())
+
+        pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+
+        return pagination
     
     @staticmethod
     def get_lokasi_by_id(id) -> Lokasi:

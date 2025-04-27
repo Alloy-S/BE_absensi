@@ -1,9 +1,11 @@
 import marshmallow
 from flask import Blueprint, request, jsonify
 from flask_restful import Api, Resource, marshal_with
+
+from models.pagination_model import PaginationReq
 from services.jabatan_service import JabatanService
 from marshmallow import ValidationError
-from models.jabatan.jabatan_req_model import JabatanPaginationReq, JabatanReq
+from models.jabatan.jabatan_req_model import JabatanReq
 from models.jabatan.jabatan_res_model import jabatan_fields, jabatan_field, jabatan_pagination_fields
 
 jabatan_bp = Blueprint('jabatan_bp', __name__, url_prefix='/api/jabatan')
@@ -16,7 +18,7 @@ class JabatanListResource(Resource):
         
         queryparams = request.args
 
-        schema = JabatanPaginationReq()
+        schema = PaginationReq()
 
         try:
             validated = schema.load(queryparams)
