@@ -22,3 +22,15 @@ class DetailJadwalKerja(db.Model):
     
     def __repr__(self):
         return f"<DetailJadwalKerja(id={self.id}, jadwal_kerja_id='{self.jadwal_kerja_id}', time_in='{self.time_in}', time_out='{self.time_out}', toler_in={self.toler_in}, toler_out={self.toler_out})>"
+
+    @property
+    def jam_in_str(self):
+        return self.time_in.strftime("%H:%M:%S") if self.time_in else None
+
+    @property
+    def jam_out_str(self):
+        return self.time_out.strftime("%H:%M:%S") if self.time_out else None
+
+    @property
+    def hari_str(self):
+        return self.hari.value if self.hari else None

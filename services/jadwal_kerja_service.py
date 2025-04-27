@@ -4,25 +4,29 @@ class JadwalKerjaService:
     @staticmethod
     def get_all():
         return JadwalKerjaRepository.get_all()
+
+    @staticmethod
+    def get_all_pagination(page, size, search):
+        return JadwalKerjaRepository.get_all_pagination(page=page, size=size, search=search)
     
     @staticmethod
     def get_by_id(id):
-        return JadwalKerjaRepository.get_by_id(id);
+        return JadwalKerjaRepository.get_by_id(id)
     
     @staticmethod
-    def create(shift, timeIn, timeOut, tolerIn, tolerOut):
-        jadwal = JadwalKerjaRepository.get_by_name(shift=shift)
+    def create(kode, shift, details: list):
+        jadwal = JadwalKerjaRepository.get_by_kode(kode=kode)
     
         if jadwal:
             return None
-        return JadwalKerjaRepository.create(shift, timeIn, timeOut, tolerIn, tolerOut);
+        return JadwalKerjaRepository.create(kode, shift, details)
     
     @staticmethod
-    def update(id, shift, timeIn, timeOut, tolerIn, tolerOut):
+    def update(id, kode, shift, details: list):
         jadwal = JadwalKerjaRepository.get_by_id(id)
         if not jadwal:
             return None
-        return JadwalKerjaRepository.update(jadwal, shift, timeIn, timeOut, tolerIn, tolerOut);
+        return JadwalKerjaRepository.update(jadwal, kode, shift, details)
     
     @staticmethod
     def delete(id):
