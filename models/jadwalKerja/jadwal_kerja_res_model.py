@@ -35,6 +35,7 @@ jadwal_kerja_field = {
     'id': fields.String,
     'kode': fields.String,
     'shift': fields.String,
+    'is_same_hour': fields.Boolean,
     'detail_jadwal_kerja': fields.List(fields.Nested(jadwal_kerja_detail_fields))
 }
 

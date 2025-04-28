@@ -53,7 +53,7 @@ class JadwalListController(Resource):
         try:
             validated = schema.load(json)
         
-            jadwal = JadwalKerjaService.create(kode=validated["kode"], shift=validated["shift"], details=validated["details"])
+            jadwal = JadwalKerjaService.create(kode=validated["kode"], shift=validated["shift"], isSameHour=validated["is_same_hour"], details=validated["detail_jadwal_kerja"])
 
             if not jadwal:
                 return abort(400, message="Jadwal tidak dapat dibuat")
@@ -81,7 +81,7 @@ class JadwalController(Resource):
 
         try:
             validated = schema.load(json)
-            jadwal = JadwalKerjaService.update(id, kode=validated["kode"], shift=validated["shift"], details=validated["detail_jadwal_kerja"])
+            jadwal = JadwalKerjaService.update(id, kode=validated["kode"], shift=validated["shift"], isSameHour=validated["is_same_hour"], details=validated["detail_jadwal_kerja"])
             if not jadwal:
                 return  abort(404, message="Jadwal not found")
             return jadwal

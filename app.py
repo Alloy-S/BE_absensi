@@ -8,7 +8,7 @@ from flask_migrate import Migrate
 from sqlalchemy.orm import configure_mappers
 from controllers.auth_controller import Login, Register
 from controllers.lokasi_controller import lokasi_bp
-from controllers.jadwal_controller import JadwalController, JadwalListController, jadwal_bp
+from controllers.jadwal_controller import jadwal_bp
 from controllers.jabatan_controller import jabatan_bp
 from controllers.user_controller import user_bp
 from flask_cors import CORS

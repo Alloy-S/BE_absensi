@@ -14,19 +14,19 @@ class JadwalKerjaService:
         return JadwalKerjaRepository.get_by_id(id)
     
     @staticmethod
-    def create(kode, shift, details: list):
+    def create(kode, shift, isSameHour, details: list):
         jadwal = JadwalKerjaRepository.get_by_kode(kode=kode)
     
         if jadwal:
             return None
-        return JadwalKerjaRepository.create(kode, shift, details)
+        return JadwalKerjaRepository.create(kode, shift, isSameHour, details)
     
     @staticmethod
-    def update(id, kode, shift, details: list):
+    def update(id, kode, shift, isSameHour, details: list):
         jadwal = JadwalKerjaRepository.get_by_id(id)
         if not jadwal:
             return None
-        return JadwalKerjaRepository.update(jadwal, kode, shift, details)
+        return JadwalKerjaRepository.update(jadwal, kode, shift, isSameHour, details)
     
     @staticmethod
     def delete(id):

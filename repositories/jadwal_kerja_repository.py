@@ -55,8 +55,8 @@ class JadwalKerjaRepository:
         return JadwalKerja.query.filter_by(kode=kode).first()
 
     @staticmethod
-    def create(kode, shift, details: list) -> JadwalKerja:
-        jadwalKerja = JadwalKerja(kode=kode, shift=shift)
+    def create(kode, shift, isSameHour, details: list) -> JadwalKerja:
+        jadwalKerja = JadwalKerja(kode=kode, shift=shift, is_same_hour=isSameHour)
         db.session.add(jadwalKerja)
         db.session.flush()
 
@@ -75,9 +75,10 @@ class JadwalKerjaRepository:
         return jadwalKerja
 
     @staticmethod
-    def update(jadwalKerja: JadwalKerja, kode, shift, details: list) -> JadwalKerja:
+    def update(jadwalKerja: JadwalKerja, kode, shift, isSameHour, details: list) -> JadwalKerja:
         jadwalKerja.kode = kode
         jadwalKerja.shift = shift
+        JadwalKerja.is_same_hour = isSameHour
 
         DetailJadwalKerja.query.filter_by(jadwal_kerja_id=jadwalKerja.id).delete()
 
