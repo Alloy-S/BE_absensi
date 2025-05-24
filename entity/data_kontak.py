@@ -7,9 +7,6 @@ class DataKontak(db.Model):
     
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     alamat = db.Column(db.String(255), nullable=False)
-    kota_kabupaten = db.Column(db.String(100), nullable=False)
-    provinsi = db.Column(db.String(100), nullable=False)
-    negara = db.Column(db.String(50), nullable=True)
     no_telepon = db.Column(db.String(20), nullable=True)
     nama_darurat = db.Column(db.String(150), nullable=True)
     no_telepon_darurat = db.Column(db.String(20), nullable=True)

@@ -1,5 +1,8 @@
 from repositories.user_repository import UserRepository
 from services.notification_service import NotificationService
+from utils.global_utils import generate_password, generate_username
+from repositories.data_karyawan_repository import DataKaryawanRepository
+
 
 class UserService:
     @staticmethod
@@ -11,16 +14,23 @@ class UserService:
         return UserRepository.get_user_by_id(user_id)
 
     @staticmethod
-    def create_user(name, username, phone):
+    def create_user(fullname, data_pribadi, data_kontak, data_karyawan):
 
-        password = "123456"
+        username = generate_username()
+        password = generate_password()
 
-        result = UserRepository.create_user(name, username, password)
+        nip = DataKaryawanRepository.generate_new_nip()
+
+        result = UserRepository.create_user(fullname, username, password, data_pribadi, data_kontak, data_karyawan, nip)
 
         if not result:
             return None
 
-        NotificationService.send_notification(phone=phone, username=username, password=password)
+        try:
+            NotificationService.send_notification(phone=result.phone, username=username, password=password, fullname=fullname, nip=nip)
+        except Exception as e:
+            print(f"Sending notification failed: {str(e)}")
+            return None
 
         return result
 
@@ -38,3 +48,7 @@ class UserService:
             return None
         UserRepository.delete_user(user)
         return True
+
+    @staticmethod
+    def get_latest_nip():
+        return DataKaryawanRepository.get_latest_nip()

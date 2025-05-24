@@ -1,4 +1,7 @@
 from entity.users import Users
+from entity.data_karyawan import DataKaryawan
+from entity.data_kontak import DataKontak
+from entity.data_pribadi import DataPribadi
 from database import db
 
 class UserRepository:
@@ -15,11 +18,46 @@ class UserRepository:
         return Users.query.filter_by(username=username).first()
 
     @staticmethod
-    def create_user(fullname, username, password):
-        new_user = Users(fullname=fullname, username=username)
+    def create_user(fullname, username, password, data_pribadi, data_kontak, data_karyawan, nip):
+        new_data_pribadi = DataPribadi(
+            gender=data_pribadi['gender'],
+            tmpt_lahir=data_pribadi['tmpt_lahir'],
+            tgl_lahir=data_pribadi['tgl_lahir'],
+            status_kawin=data_pribadi['status_kawin'],
+            agama=data_pribadi['agama'],
+            gol_darah=data_pribadi['gol_darah']
+        )
+
+        new_data_kontak = DataKontak(
+            alamat=data_kontak['alamat'],
+            no_telepon=data_kontak['no_telepon'],
+            nama_darurat=data_kontak['nama_darurat'],
+            no_telepon_darurat=data_kontak['no_telepon_darurat'],
+            relasi_darurat=data_kontak['relasi_darurat'],
+        )
+
+        new_data_karyawan = DataKaryawan(
+            nip=nip,
+            tgl_gabung=data_karyawan['tgl_gabung'],
+            tipe_karyawan=data_karyawan['tipe_karyawan'],
+            lokasi_id=data_karyawan['lokasi_id'],
+            jadwal_kerja_id=data_karyawan['jadwal_kerja_id'],
+            jabatan_id=data_karyawan['jabatan_id']
+        )
+
+        new_user = Users(
+            fullname=fullname,
+            username=username,
+            phone=data_kontak['no_telepon'],
+            data_pribadi=new_data_pribadi,
+            data_kontak=new_data_kontak,
+            data_karyawan=new_data_karyawan
+        )
+
         new_user.set_password(password)
         db.session.add(new_user)
         db.session.commit()
+
         return new_user
 
     @staticmethod
