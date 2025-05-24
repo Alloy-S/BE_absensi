@@ -52,3 +52,7 @@ class UserService:
     @staticmethod
     def get_latest_nip():
         return DataKaryawanRepository.get_latest_nip()
+
+    @staticmethod
+    def get_posible_pic(jabatan_id):
+        return UserRepository.get_posible_pic(jabatan_id)

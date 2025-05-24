@@ -3,6 +3,7 @@ from entity.data_karyawan import DataKaryawan
 from entity.data_kontak import DataKontak
 from entity.data_pribadi import DataPribadi
 from database import db
+from sqlalchemy import text
 
 class UserRepository:
     @staticmethod
@@ -71,3 +72,30 @@ class UserRepository:
     def delete_user(user):
         db.session.delete(user)
         db.session.commit()
+
+    @staticmethod
+    def get_posible_pic(jabatan_id):
+        query = text("""
+            WITH RECURSIVE atasan AS (
+                SELECT id, nama, parent_id
+                FROM jabatan
+                WHERE id = :jabatan_id
+
+                UNION ALL
+
+                SELECT j.id, j.nama, j.parent_id
+                FROM jabatan j
+                INNER JOIN atasan a ON j.id = a.parent_id
+            )
+            SELECT u.fullname, a.id, a.nama as jabatan FROM atasan a
+            join data_karyawan dk on dk.jabatan_id=a.id
+            join users u on u.data_karyawan_id=dk.id
+            where a.id != :jabatan_id
+        """)
+
+        result = db.session.execute(query, {'jabatan_id': jabatan_id})
+
+        users = result.mappings().all()
+        users = [dict(row) for row in users]
+        return users
+

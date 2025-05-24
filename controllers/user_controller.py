@@ -1,8 +1,8 @@
 from flask_restful import Resource, marshal_with, Api
 from services.user_service import UserService
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from models.users.users_req_model import UserSchema
-from models.users.users_res_model import user_fields
+from models.users.users_res_model import user_fields, posibe_user_pic
 from marshmallow import ValidationError
 
 user_bp = Blueprint('user_bp', __name__, url_prefix='/api/users')
@@ -35,6 +35,7 @@ class UserListController(Resource):
         except ValidationError as e:
             return {"message": e.messages}, 400
         except Exception as e:
+            print(e)
             return {"message": "Terjadi Kesalahan pada Server"}, 500
         # new_user = UserService.create_user(args["name"], args["username"], args["phone"])
         return None, 201
@@ -71,6 +72,18 @@ class UserUtilController(Resource):
         
         return {"nip": nip}, 200
 
+class UserGetPIC(Resource):
+    @marshal_with(posibe_user_pic)
+    def get(self, id):
+        try:
+            print("Get Posible PIC From jabatan id: " + id)
+            result = UserService.get_posible_pic(id)
+            return result, 200
+        except Exception as e:
+            print(e)
+            return {"message": "Internal Server Error"}, 500
+
 user_api.add_resource(UserListController, '')
 # user_api.add_resource(UserController, '/<string:id>')
+user_api.add_resource(UserGetPIC, '/posible-pic/<string:id>')
 user_api.add_resource(UserUtilController, '/latest-nip')
