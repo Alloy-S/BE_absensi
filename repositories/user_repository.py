@@ -1,3 +1,4 @@
+from entity import Lokasi, Jabatan, UserRole
 from entity.users import Users
 from entity.data_karyawan import DataKaryawan
 from entity.data_kontak import DataKontak
@@ -5,18 +6,53 @@ from entity.data_pribadi import DataPribadi
 from database import db
 from sqlalchemy import text
 
+
 class UserRepository:
     @staticmethod
     def get_all_users():
-        return Users.query.all()
+        query = db.session.query(
+            Users.id,
+            Users.fullname,
+            Users.username,
+            UserRole.name.label("role"),
+            Lokasi.name.label("lokasi"),
+            Jabatan.nama.label("jabatan")
+        ).join(Users.data_karyawan).join(DataKaryawan.lokasi).join(DataKaryawan.jabatan).join(Users.user_role)
+
+        result = query.all()
+
+        return result
+
+    @staticmethod
+    def get_users_pagination(page: int = 1, per_page: int = 10, search: str = None):
+        query = db.session.query(
+            Users.id,
+            Users.fullname,
+            Users.username,
+            UserRole.name.label("role"),
+            Lokasi.name.label("lokasi"),
+            Jabatan.nama.label("jabatan")
+        ).join(Users.data_karyawan).join(DataKaryawan.lokasi).join(DataKaryawan.jabatan).join(Users.user_role)
+
+        if search:
+            query = query.filter(Users.fullname.ilike(f"%{search}%"))
+
+        query = query.order_by(DataKaryawan.nip.asc())
+
+        result = query.paginate(page=page, per_page=per_page, error_out=False)
+
+        return result
+
 
     @staticmethod
     def get_user_by_id(user_id):
         return Users.query.filter_by(id=user_id).first()
-    
+
+
     @staticmethod
     def get_user_by_username(username):
         return Users.query.filter_by(username=username).first()
+
 
     @staticmethod
     def create_user(fullname, username, password, data_pribadi, data_kontak, data_karyawan, nip):
@@ -61,6 +97,7 @@ class UserRepository:
 
         return new_user
 
+
     @staticmethod
     def update_user(user, name, email):
         user.name = name
@@ -68,34 +105,34 @@ class UserRepository:
         db.session.commit()
         return user
 
+
     @staticmethod
     def delete_user(user):
         db.session.delete(user)
         db.session.commit()
 
+
     @staticmethod
     def get_posible_pic(jabatan_id):
         query = text("""
-            WITH RECURSIVE atasan AS (
-                SELECT id, nama, parent_id
-                FROM jabatan
-                WHERE id = :jabatan_id
-
-                UNION ALL
-
-                SELECT j.id, j.nama, j.parent_id
-                FROM jabatan j
-                INNER JOIN atasan a ON j.id = a.parent_id
-            )
-            SELECT u.fullname, a.id, a.nama as jabatan FROM atasan a
-            join data_karyawan dk on dk.jabatan_id=a.id
-            join users u on u.data_karyawan_id=dk.id
-            where a.id != :jabatan_id
-        """)
+                     WITH RECURSIVE atasan AS (SELECT id, nama, parent_id
+                                               FROM jabatan
+                                               WHERE id = :jabatan_id
+    
+                                               UNION ALL
+    
+                                               SELECT j.id, j.nama, j.parent_id
+                                               FROM jabatan j
+                                                        INNER JOIN atasan a ON j.id = a.parent_id)
+                     SELECT u.fullname, a.id, a.nama as jabatan
+                     FROM atasan a
+                              join data_karyawan dk on dk.jabatan_id = a.id
+                              join users u on u.data_karyawan_id = dk.id
+                     where a.id != :jabatan_id
+                     """)
 
         result = db.session.execute(query, {'jabatan_id': jabatan_id})
 
         users = result.mappings().all()
         users = [dict(row) for row in users]
         return users
-

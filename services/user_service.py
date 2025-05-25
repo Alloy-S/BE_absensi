@@ -10,6 +10,10 @@ class UserService:
         return UserRepository.get_all_users()
 
     @staticmethod
+    def get_users_pagination(page, per_page, search):
+        return UserRepository.get_users_pagination(page=page, per_page=per_page, search=search)
+
+    @staticmethod
     def get_user_by_id(user_id):
         return UserRepository.get_user_by_id(user_id)
 

@@ -40,4 +40,4 @@ class NotificationService:
 
         response = requests.post(url, headers=headers, json=payload)
 
-        return response.json()
+        print(response)

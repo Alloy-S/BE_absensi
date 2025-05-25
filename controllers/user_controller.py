@@ -1,8 +1,10 @@
 from flask_restful import Resource, marshal_with, Api
+
+from models.pagination_model import PaginationReq
 from services.user_service import UserService
 from flask import Blueprint, request, jsonify
 from models.users.users_req_model import UserSchema
-from models.users.users_res_model import user_fields, posibe_user_pic
+from models.users.users_res_model import users_pagination_fields, posibe_user_pic
 from marshmallow import ValidationError
 
 user_bp = Blueprint('user_bp', __name__, url_prefix='/api/users')
@@ -11,11 +13,29 @@ user_api = Api(user_bp)
 class UserListController(Resource):
      # method_decorators = [jwt_required()]
      
-    # @marshal_with(user_fields)
+    @marshal_with(users_pagination_fields)
     def get(self):
-        users = UserService.get_all_users()
-        print(users)
-        return users if users else {"message": "User not found"}, 200
+        try:
+            queryparams = request.args
+            schema = PaginationReq()
+
+            validated = schema.load(queryparams)
+
+            print(f"Fetching all user page={validated['page']}, per_page={validated['size']}")
+
+            data = UserService.get_users_pagination(validated['page'], validated['size'], validated['search'])
+
+            response = {
+                "pages": data.pages,
+                "total": data.total,
+                "items": data.items
+            }
+            return response, 200
+        except ValidationError as e:
+            return {"message": e.messages}, 400
+        except Exception as e:
+            return {"message": "Internal server error"}, 500
+
 
 
     

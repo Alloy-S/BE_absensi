@@ -9,6 +9,7 @@ class DataKaryawan(db.Model):
     nip = db.Column(db.String(8), nullable=False)
     tgl_gabung = db.Column(db.Date, nullable=False)
     tipe_karyawan = db.Column(db.String(30), nullable=True)
+    is_active = db.Column(db.Boolean, nullable=False, default=True)
     
     lokasi_id = db.Column(UUID(as_uuid=True), db.ForeignKey('lokasi.id'), nullable=False)
     jadwal_kerja_id = db.Column(UUID(as_uuid=True), db.ForeignKey('jadwal_kerja.id'), nullable=False)

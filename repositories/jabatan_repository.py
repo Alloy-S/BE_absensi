@@ -13,7 +13,7 @@ class JabatanRepository:
             Jabatan.id,
             Jabatan.nama,
             parent.nama.label('parent_name')
-        ).select_from(Jabatan)  # <<<<<< tambahkan select_from ini
+        ).select_from(Jabatan)
         query = query.outerjoin(parent, Jabatan.parent_id == parent.id)
 
         if search:

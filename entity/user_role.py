@@ -7,6 +7,7 @@ class UserRole(db.Model):
     
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = db.Column(db.String(256), nullable=False)
+    kode = db.Column(db.Integer, nullable=True)
     
     users =  db.relationship('Users', back_populates='user_role')
     
