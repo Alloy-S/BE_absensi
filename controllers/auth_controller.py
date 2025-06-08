@@ -1,38 +1,43 @@
-from flask_restful import Resource, reqparse
+from flask_restful import Resource, reqparse, Api, marshal_with
+from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token
 from services.auth_service import AuthService
-from repositories.user_repository import UserRepository
+from models.auth.login_req import LoginReq
+from models.auth.login_res import login_res
 
-auth_parser = reqparse.RequestParser()
-auth_parser.add_argument('username', type=str, required=True, help="Username cannot be blank")
-auth_parser.add_argument('password', type=str, required=True, help="Password cannot be blank")
+auth_bp = Blueprint('auth_bp', __name__, url_prefix='/api/auth')
+auth_api = Api(auth_bp)
 
-register_parser = auth_parser.copy()
-register_parser.add_argument('name', type=str, required=True, help="Name cannot be blank")
 
-class Login(Resource):
+class LoginController(Resource):
+
+    @marshal_with(login_res)
     def post(self):
-        args = auth_parser.parse_args()
-        user = AuthService.authenticate_user(args['username'], args['password'])
-        if not user:
-            return {'message': 'Invalid username or password'}, 401
-        
-        access_token = create_access_token(
-            identity=user.username,
-            additional_claims={
-                'name': user.fullname,
+        try:
+            schema = LoginReq()
+            req = schema.load(request.get_json())
+            user = AuthService.authenticate_user(req['username'], req['password'])
+            if not user:
+                return {'message': 'Invalid username or password'}, 401
+
+            access_token = create_access_token(
+                identity=user.username,
+                additional_claims={
+                    'name': user.fullname,
+                    'role': user.user_role.name
+                },
+                expires_delta=False
+            )
+
+            response = {
+                'token': access_token,
+                'username': user.username,
+                'fullname': user.fullname,
                 'role': user.user_role.name
-            },
-            expires_delta=False
-        )
-        return {'token': access_token}, 200
+            }
+            return response, 200
 
-class Register(Resource):
-    def post(self):
-        args = register_parser.parse_args()
-        # existing_user = UserRepository.get_user_by_email(args['username'])
-        # if existing_user:
-        #     return {'message': 'User already exists'}, 400
+        except Exception as e:
+            return {'message': 'Internal server error'}, 500
 
-        user = UserRepository.create_user(args['name'], args['username'], args['password'])
-        return {'message': 'User created successfully'}, 201
+auth_api.add_resource(LoginController, '/login')
