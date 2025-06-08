@@ -17,8 +17,15 @@ class Login(Resource):
         if not user:
             return {'message': 'Invalid username or password'}, 401
         
-        access_token = create_access_token(identity=user.id)
-        return {'access_token': access_token}, 200
+        access_token = create_access_token(
+            identity=user.username,
+            additional_claims={
+                'name': user.fullname,
+                'role': user.user_role.name
+            },
+            expires_delta=False
+        )
+        return {'token': access_token}, 200
 
 class Register(Resource):
     def post(self):
