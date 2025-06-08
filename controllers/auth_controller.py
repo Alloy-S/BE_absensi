@@ -1,5 +1,5 @@
-from flask_restful import Resource, reqparse, Api, marshal_with
-from flask import Blueprint, request, jsonify
+from flask_restful import Resource, Api, marshal_with
+from flask import Blueprint, request
 from flask_jwt_extended import create_access_token
 from services.auth_service import AuthService
 from models.auth.login_req import LoginReq
@@ -37,7 +37,8 @@ class LoginController(Resource):
             }
             return response, 200
 
-        except Exception as e:
+        except Exception as _:
             return {'message': 'Internal server error'}, 500
+
 
 auth_api.add_resource(LoginController, '/login')

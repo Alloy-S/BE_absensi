@@ -18,6 +18,10 @@ class UserService:
         return UserRepository.get_user_by_id(user_id)
 
     @staticmethod
+    def get_user_by_username(username):
+        return UserRepository.get_user_by_username(username)
+
+    @staticmethod
     def create_user(fullname, data_pribadi, data_kontak, data_karyawan):
 
         username = generate_username()
