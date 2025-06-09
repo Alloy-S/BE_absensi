@@ -1,9 +1,8 @@
-from app import app
-from database import db
+from app import create_app
 
-# Create tables before starting the app
-with app.app_context():
-    db.create_all()
+# Buat aplikasi menggunakan factory
+app = create_app()
 
-if __name__ == "__main__":
+if __name__ == '__main__':
+    # Jalankan aplikasi
     app.run(debug=True)

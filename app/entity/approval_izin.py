@@ -1,0 +1,21 @@
+from app.database import db
+import uuid
+from sqlalchemy.dialects.postgresql import UUID
+
+class ApprovalIzin(db.Model):
+    __tablename__ = 'approval_izin'
+    
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    date = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())  
+    status = db.Column(db.String(10), nullable=False)
+    approval_user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False)
+    izin_id = db.Column(UUID(as_uuid=True), db.ForeignKey('izin.id'), nullable=False)
+    
+    user = db.relationship("Users", back_populates="approval_izin")
+    izin = db.relationship("Izin", back_populates="approval_izin")
+    
+    def __repr__(self):
+        return (
+            f"<ApprovalIzin(id={self.id}, date='{self.date}', status='{self.status}', "
+            f"approval_user_id={self.approval_user_id}, izin_id={self.izin_id})>"
+        )
