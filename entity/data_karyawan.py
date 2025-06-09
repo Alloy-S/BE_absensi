@@ -1,3 +1,5 @@
+from sqlalchemy.orm import foreign
+
 from database import db
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
@@ -14,9 +16,10 @@ class DataKaryawan(db.Model):
     lokasi_id = db.Column(UUID(as_uuid=True), db.ForeignKey('lokasi.id'), nullable=False)
     jadwal_kerja_id = db.Column(UUID(as_uuid=True), db.ForeignKey('jadwal_kerja.id'), nullable=False)
     jabatan_id = db.Column(UUID(as_uuid=True), db.ForeignKey('jabatan.id'), nullable=False)
+    user_pic_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=True)
     
-    
-    user = db.relationship('Users', back_populates='data_karyawan')
+    pic = db.relationship('Users', foreign_keys=[user_pic_id], back_populates='user_pic')
+    user = db.relationship('Users', foreign_keys='[Users.data_karyawan_id]', back_populates='data_karyawan')
     lokasi = db.relationship('Lokasi', back_populates='data_karyawan')
     jadwal_kerja = db.relationship('JadwalKerja', back_populates='data_karyawan')
     jabatan = db.relationship('Jabatan', back_populates='data_karyawan')

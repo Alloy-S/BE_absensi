@@ -79,7 +79,8 @@ class UserRepository:
             tipe_karyawan=data_karyawan['tipe_karyawan'],
             lokasi_id=data_karyawan['lokasi_id'],
             jadwal_kerja_id=data_karyawan['jadwal_kerja_id'],
-            jabatan_id=data_karyawan['jabatan_id']
+            jabatan_id=data_karyawan['jabatan_id'],
+            user_pic_id=data_karyawan['user_pic_id']
         )
 
         new_user = Users(
@@ -88,7 +89,8 @@ class UserRepository:
             phone=data_kontak['no_telepon'],
             data_pribadi=new_data_pribadi,
             data_kontak=new_data_kontak,
-            data_karyawan=new_data_karyawan
+            data_karyawan=new_data_karyawan,
+            user_role_id='ea3cf287-fcb4-411e-a07a-f5b609f0e2b5'
         )
 
         new_user.set_password(password)
@@ -124,7 +126,7 @@ class UserRepository:
                                                SELECT j.id, j.nama, j.parent_id
                                                FROM jabatan j
                                                         INNER JOIN atasan a ON j.id = a.parent_id)
-                     SELECT u.fullname, a.id, a.nama as jabatan
+                     SELECT u.fullname, u.id, a.nama as jabatan
                      FROM atasan a
                               join data_karyawan dk on dk.jabatan_id = a.id
                               join users u on u.data_karyawan_id = dk.id

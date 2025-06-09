@@ -11,7 +11,7 @@ class LokasiService:
     
     @staticmethod
     def get_lokasi_by_id(id):
-        return LokasiRepository.get_lokasi_by_id(id);
+        return LokasiRepository.get_lokasi_by_id(id)
     
     @staticmethod
     def create_lokasi(name , latitude, longitude, toleransi):

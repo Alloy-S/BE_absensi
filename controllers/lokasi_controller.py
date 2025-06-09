@@ -12,9 +12,8 @@ lokasi_bp = Blueprint('lokasi_bp', __name__, url_prefix='/api/lokasi')
 lokasi_api = Api(lokasi_bp)
 
 class LokasiListController(Resource):
-    # method_decorators = [jwt_required()]
 
-    @role_required(AppConstants.adminRole, AppConstants.hrdRole)
+    # @role_required(AppConstants.adminRole, AppConstants.hrdRole)
     def get(self):
 
         params = request.args
@@ -63,7 +62,7 @@ class LokasiController(Resource):
         lokasi = LokasiService.get_lokasi_by_id(id)
         if not lokasi:
             return  abort(404, message="Lokasi not found")
-        return marshal(lokasi, lokasi_fields), 200
+        return marshal(lokasi, lokasi_field), 200
 
     def put(self, id):
         json = request.get_json()

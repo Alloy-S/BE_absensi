@@ -1,17 +1,16 @@
-from flask_restful import Resource, marshal_with, Api
+from flask_restful import Resource, marshal_with, Api, marshal
 
 from models.pagination_model import PaginationReq
 from services.user_service import UserService
 from flask import Blueprint, request, jsonify
 from models.users.users_req_model import UserSchema
-from models.users.users_res_model import users_pagination_fields, posibe_user_pic
+from models.users.users_res_model import users_pagination_fields, posibe_user_pic, user_field
 from marshmallow import ValidationError
 
 user_bp = Blueprint('user_bp', __name__, url_prefix='/api/users')
 user_api = Api(user_bp)
 
 class UserListController(Resource):
-     # method_decorators = [jwt_required()]
      
     @marshal_with(users_pagination_fields)
     def get(self):
@@ -60,30 +59,34 @@ class UserListController(Resource):
         # new_user = UserService.create_user(args["name"], args["username"], args["phone"])
         return None, 201
 
-# class UserController(Resource):
-#     # method_decorators = [jwt_required()]
-#
-#     @marshal_with(user_fields)
-#     def get(self, id):
-#         users = UserService.get_user_by_id(id)
-#         if not users:
-#             abort(404, message="User not found")
-#         return users
-#
-#     @marshal_with(user_fields)
-#     def put(self, id):
-#         args = user_args.parse_args()
-#         updated_user = UserService.update_user(id, args["name"], args["username"])
-#         if not updated_user:
-#             abort(404, message="User not found")
-#         return updated_user
-#
-#     @staticmethod
-#     def delete(self, id):
-#         success = UserService.delete_user(id)
-#         if not success:
-#             abort(404, message="User not found")
-#         return {'message': 'User deleted successfully'}, 200
+class UserController(Resource):
+
+
+    def get(self, id):
+        try :
+            users = UserService.get_user_by_id(id)
+            if not users:
+               return {"message": "User not found"}, 404
+            return marshal(users, user_field), 200
+        except Exception as e:
+            print("error")
+            print(e)
+            return {"message": "Internal server error"}, 500
+
+
+    # def put(self, id):
+    #     args = user_args.parse_args()
+    #     updated_user = UserService.update_user(id, args["name"], args["username"])
+    #     if not updated_user:
+    #
+    #     return updated_user
+    #
+    # @staticmethod
+    # def delete(self, id):
+    #     success = UserService.delete_user(id)
+    #     if not success:
+    #
+    #     return {'message': 'User deleted successfully'}, 200
 
 class UserUtilController(Resource):
 
@@ -104,6 +107,6 @@ class UserGetPIC(Resource):
             return {"message": "Internal Server Error"}, 500
 
 user_api.add_resource(UserListController, '')
-# user_api.add_resource(UserController, '/<string:id>')
+user_api.add_resource(UserController, '/<string:id>')
 user_api.add_resource(UserGetPIC, '/posible-pic/<string:id>')
 user_api.add_resource(UserUtilController, '/latest-nip')
