@@ -2,10 +2,12 @@ from dotenv import load_dotenv
 import os
 import requests
 
+from app.repositories.user_repository import UserRepository
+
 
 class NotificationService:
     @staticmethod
-    def send_notification(phone, username, password, fullname, nip):
+    def send_notification_login_data(phone, username, password, fullname, nip):
         print("Send notification.")
 
         load_dotenv()
@@ -41,3 +43,7 @@ class NotificationService:
         response = requests.post(url, headers=headers, json=payload)
 
         print(response)
+
+        user = UserRepository.get_user_by_username(username)
+
+        UserRepository.mark_done_notif_login(user)

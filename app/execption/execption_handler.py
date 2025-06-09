@@ -1,4 +1,7 @@
 from flask import Blueprint, jsonify
+from marshmallow import ValidationError
+from flask import jsonify, current_app
+from app.database import db
 from app.execption.custom_execption import GeneralExceptionWithParam, GeneralException
 
 errors_bp = Blueprint('execption_handler', __name__)
@@ -18,11 +21,28 @@ def handle_general_exception(error):
         "message": error.message
     }
     response = jsonify(response_data)
+    response.status_code = error.status_code
+    return response
+
+@errors_bp.app_errorhandler(ValidationError)
+def validation_error_handler(error):
+    response_data = {
+        "message": error.messages
+    }
+    response = jsonify(response_data)
     response.status_code = 400
     return response
 
 @errors_bp.app_errorhandler(Exception)
-def handle_internal_error():
+def handle_internal_error(error):
+    # print(error)
+    current_app.logger.error(f"Unhandled Exception: {error}", exc_info=True)
+
+    try:
+        db.session.rollback()
+    except Exception as e:
+        current_app.logger.error(f"Failed to rollback database session: {e}")
+
     response_data = {
         "message": 'Internal Server Error'
     }

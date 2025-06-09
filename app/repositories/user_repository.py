@@ -5,6 +5,7 @@ from app.entity.data_kontak import DataKontak
 from app.entity.data_pribadi import DataPribadi
 from app.database import db
 from sqlalchemy import text
+from werkzeug.security import generate_password_hash
 
 
 class UserRepository:
@@ -18,6 +19,8 @@ class UserRepository:
             Lokasi.name.label("lokasi"),
             Jabatan.nama.label("jabatan")
         ).join(Users.data_karyawan).join(DataKaryawan.lokasi).join(DataKaryawan.jabatan).join(Users.user_role)
+
+        query = query.filter(Users.is_active.is_(True))
 
         result = query.all()
 
@@ -34,6 +37,8 @@ class UserRepository:
             Jabatan.nama.label("jabatan")
         ).join(Users.data_karyawan).join(DataKaryawan.lokasi).join(DataKaryawan.jabatan).join(Users.user_role)
 
+        query = query.filter(Users.is_active.is_(True))
+
         if search:
             query = query.filter(Users.fullname.ilike(f"%{search}%"))
 
@@ -46,12 +51,12 @@ class UserRepository:
 
     @staticmethod
     def get_user_by_id(user_id):
-        return Users.query.filter_by(id=user_id).first()
+        return Users.query.filter_by(id=user_id, is_active=True).first()
 
 
     @staticmethod
     def get_user_by_username(username):
-        return Users.query.filter_by(username=username).first()
+        return Users.query.filter_by(username=username, is_active=True).first()
 
 
     @staticmethod
@@ -102,15 +107,44 @@ class UserRepository:
 
     @staticmethod
     def update_user(user, data):
-        # user.name = name
-        # user.email = email
+        user.fullname = data.get('fullname', user.fullname)
+
+        if 'data_pribadi' in data and user.data_pribadi:
+            data_pribadi_update = data['data_pribadi']
+            user.data_pribadi.gender = data_pribadi_update.get('gender', user.data_pribadi.gender)
+            user.data_pribadi.tmpt_lahir = data_pribadi_update.get('tmpt_lahir', user.data_pribadi.tmpt_lahir)
+            user.data_pribadi.tgl_lahir = data_pribadi_update.get('tgl_lahir', user.data_pribadi.tgl_lahir)
+            user.data_pribadi.status_kawin = data_pribadi_update.get('status_kawin', user.data_pribadi.status_kawin)
+            user.data_pribadi.agama = data_pribadi_update.get('agama', user.data_pribadi.agama)
+            user.data_pribadi.gol_darah = data_pribadi_update.get('gol_darah', user.data_pribadi.gol_darah)
+
+        if 'data_kontak' in data and user.data_kontak:
+            data_kontak_update = data['data_kontak']
+            user.data_kontak.alamat = data_kontak_update.get('alamat', user.data_kontak.alamat)
+            user.data_kontak.no_telepon = data_kontak_update.get('no_telepon', user.data_kontak.no_telepon)
+            user.data_kontak.nama_darurat = data_kontak_update.get('nama_darurat', user.data_kontak.nama_darurat)
+            user.data_kontak.no_telepon_darurat = data_kontak_update.get('no_telepon_darurat',
+                                                                         user.data_kontak.no_telepon_darurat)
+            user.data_kontak.relasi_darurat = data_kontak_update.get('relasi_darurat', user.data_kontak.relasi_darurat)
+            user.phone = user.data_kontak.no_telepon
+
+        if 'data_karyawan' in data and user.data_karyawan:
+            data_karyawan_update = data['data_karyawan']
+            user.data_karyawan.tgl_gabung = data_karyawan_update.get('tgl_gabung', user.data_karyawan.tgl_gabung)
+            user.data_karyawan.tipe_karyawan = data_karyawan_update.get('tipe_karyawan',
+                                                                        user.data_karyawan.tipe_karyawan)
+            user.data_karyawan.lokasi_id = data_karyawan_update.get('lokasi_id', user.data_karyawan.lokasi_id)
+            user.data_karyawan.jadwal_kerja_id = data_karyawan_update.get('jadwal_kerja_id',
+                                                                          user.data_karyawan.jadwal_kerja_id)
+            user.data_karyawan.jabatan_id = data_karyawan_update.get('jabatan_id', user.data_karyawan.jabatan_id)
+            user.data_karyawan.user_pic_id = data_karyawan_update.get('user_pic_id', user.data_karyawan.user_pic_id)
         db.session.commit()
         return user
 
 
     @staticmethod
-    def delete_user(user):
-        db.session.delete(user)
+    def non_active_user(user):
+        user.is_active = False
         db.session.commit()
 
 
@@ -130,7 +164,7 @@ class UserRepository:
                      FROM atasan a
                               join data_karyawan dk on dk.jabatan_id = a.id
                               join users u on u.data_karyawan_id = dk.id
-                     where a.id != :jabatan_id
+                     where a.id != :jabatan_id and u.is_active is true
                      """)
 
         result = db.session.execute(query, {'jabatan_id': jabatan_id})
@@ -138,3 +172,14 @@ class UserRepository:
         users = result.mappings().all()
         users = [dict(row) for row in users]
         return users
+
+    @staticmethod
+    def mark_done_notif_login(user):
+        user.is_notif_login_send = True
+
+        db.session.commit()
+
+    @staticmethod
+    def change_password(user, password):
+        user.password = generate_password_hash(password)
+        db.session.commit()

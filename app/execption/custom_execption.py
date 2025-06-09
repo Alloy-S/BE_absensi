@@ -2,8 +2,14 @@ from app.utils.error_code import ErrorCode
 
 
 class GeneralException(Exception):
-    def __init__(self, message):
-        super().__init__(message)
+    def __init__(self, error_code):
+        if not isinstance(error_code, ErrorCode):
+            raise TypeError("error_code harus merupakan instance dari ErrorCode")
+
+        self.message = error_code.message
+        self.error_code = error_code.status_code
+
+        super().__init__(self.message)
 
 
 class GeneralExceptionWithParam(Exception):

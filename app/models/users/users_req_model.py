@@ -42,3 +42,9 @@ class UserSchema(Schema):
     data_kontak = fields.Nested(DataKontakSchema, required=True)
     data_karyawan = fields.Nested(DataKaryawanSchema, required=True)
 
+class ResendLoginSchema(Schema):
+    class Meta:
+        unknown = EXCLUDE
+
+    user_id = fields.String(required=True)
+

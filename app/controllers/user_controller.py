@@ -3,7 +3,7 @@ from flask_restful import Resource, marshal_with, Api, marshal
 from app.models.pagination_model import PaginationReq
 from app.services.user_service import UserService
 from flask import Blueprint, request
-from app.models.users.users_req_model import UserSchema
+from app.models.users.users_req_model import UserSchema, ResendLoginSchema
 from app.models.users.users_res_model import users_pagination_fields, posibe_user_pic, user_field
 from marshmallow import ValidationError
 
@@ -41,22 +41,16 @@ class UserListController(Resource):
         data = request.get_json()
 
         schema = UserSchema()
-        try:
-            validated = schema.load(data)
-            print(validated)
 
-            result = UserService.create_user(fullname=validated['fullname'], data_pribadi=validated['data_pribadi'],
-                                             data_kontak=validated['data_kontak'],
-                                             data_karyawan=validated['data_karyawan'])
+        validated = schema.load(data)
+        print(validated)
 
+        response = UserService.create_user(fullname=validated['fullname'], data_pribadi=validated['data_pribadi'],
+                                         data_kontak=validated['data_kontak'],
+                                         data_karyawan=validated['data_karyawan'])
 
-        except ValidationError as e:
-            return {"message": e.messages}, 400
-        except Exception as e:
-            print(e)
-            return {"message": "Terjadi Kesalahan pada Server"}, 500
-        # new_user = UserService.create_user(args["name"], args["username"], args["phone"])
-        return None, 201
+        return response, 201
+
 
 
 class UserController(Resource):
@@ -73,22 +67,19 @@ class UserController(Resource):
             return {"message": "Internal server error"}, 500
 
     def put(self, id):
-
         data = request.get_json()
 
         schema = UserSchema()
 
         validated = schema.load(data)
 
-        UserService.update_user(id, validated)
+        response = UserService.update_user(id, validated)
 
-    #
-    # @staticmethod
-    # def delete(self, id):
-    #     success = UserService.delete_user(id)
-    #     if not success:
-    #
-    #     return {'message': 'User deleted successfully'}, 200
+        return response, 200
+
+    def delete(self, id):
+        response = UserService.non_active_user(id)
+        return response, 200
 
 
 class UserUtilController(Resource):
@@ -110,8 +101,21 @@ class UserGetPIC(Resource):
             print(e)
             return {"message": "Internal Server Error"}, 500
 
+class ResendLoginData(Resource):
+    def post(self):
+        data = request.get_json()
+
+        schema = ResendLoginSchema()
+
+        validated = schema.load(data)
+
+        response = UserService.resend_login_data(validated['user_id'])
+
+        return response, 200
+
 
 user_api.add_resource(UserListController, '')
 user_api.add_resource(UserController, '/<string:id>')
 user_api.add_resource(UserGetPIC, '/posible-pic/<string:id>')
 user_api.add_resource(UserUtilController, '/latest-nip')
+user_api.add_resource(ResendLoginData, '/resend-login-data')

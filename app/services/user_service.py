@@ -1,4 +1,4 @@
-from app.execption.custom_execption import GeneralExceptionWithParam
+from app.execption.custom_execption import GeneralExceptionWithParam, GeneralException
 from app.repositories.user_repository import UserRepository
 from app.services.notification_service import NotificationService
 from app.utils.app_constans import AppConstants
@@ -34,31 +34,29 @@ class UserService:
 
         result = UserRepository.create_user(fullname, username, password, data_pribadi, data_kontak, data_karyawan, nip)
 
-        if not result:
-            return None
-
         try:
-            NotificationService.send_notification(phone=result.phone, username=username, password=password, fullname=fullname, nip=nip)
+            NotificationService.send_notification_login_data(phone=result.phone, username=username, password=password, fullname=fullname, nip=nip)
         except Exception as e:
             print(f"Sending notification failed: {str(e)}")
-            return None
 
-        return result
+        return None
 
     @staticmethod
     def update_user(user_id, data):
         user = UserRepository.get_user_by_id(user_id)
         if not user:
             raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND, params={'resource': AppConstants.USER_RESOURCE.value})
-        return UserRepository.update_user(user, data)
+        UserRepository.update_user(user, data)
+        return None
 
     @staticmethod
-    def delete_user(user_id):
+    def non_active_user(user_id):
         user = UserRepository.get_user_by_id(user_id)
         if not user:
-            return None
-        UserRepository.delete_user(user)
-        return True
+            raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND, params={'resource': AppConstants.USER_RESOURCE.value})
+        UserRepository.non_active_user(user)
+        return None
+
 
     @staticmethod
     def get_latest_nip():
@@ -67,3 +65,30 @@ class UserService:
     @staticmethod
     def get_posible_pic(jabatan_id):
         return UserRepository.get_posible_pic(jabatan_id)
+
+    @staticmethod
+    def change_password(user, password):
+        UserRepository.change_password(user, password)
+
+    @staticmethod
+    def resend_login_data(user_id):
+        print(f"user_id: {user_id}")
+        user = UserRepository.get_user_by_id(user_id)
+
+        if not user:
+            raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND, params={'resource': AppConstants.USER_RESOURCE.value})
+
+        password = generate_password()
+
+        UserService.change_password(user, password)
+
+        try:
+            NotificationService.send_notification_login_data(
+                phone=user.phone,
+                username=user.username,
+                password=password,
+                fullname=user.fullname,
+                nip=user.data_karyawan.nip
+            )
+        except Exception as e:
+            print(f"Sending notification failed: {str(e)}")
