@@ -19,7 +19,6 @@ class Users(db.Model):
     data_kontak_id = db.Column(UUID(as_uuid=True), db.ForeignKey('data_kontak.id'), nullable=True)
     data_pribadi_id = db.Column(UUID(as_uuid=True), db.ForeignKey('data_pribadi.id'), nullable=True)
     data_karyawan_id = db.Column(UUID(as_uuid=True), db.ForeignKey('data_karyawan.id'), nullable=True)
-    face_embedding_id = db.Column(UUID(as_uuid=True), db.ForeignKey('face_embeddings.id'), nullable=True)
     
     user_role = db.relationship('UserRole', back_populates='users', lazy="joined")
     user_pic = db.relationship('DataKaryawan', foreign_keys='[DataKaryawan.user_pic_id]', back_populates='pic')
@@ -34,7 +33,7 @@ class Users(db.Model):
     approval_reimburse = db.relationship("ApprovalReimburse", back_populates="user")
     approval_koreksi = db.relationship("ApprovalKoreksi", back_populates="user")
     izin = db.relationship("Izin", back_populates="user")
-    face_embeddings = db.relationship("FaceEmbeddings", back_populates="user", uselist=False)
+    face_embeddings = db.relationship("FaceEmbeddings", back_populates="user")
     absensi = db.relationship("Absensi", back_populates="user")
     lembur = db.relationship('Lembur', back_populates="user")
     grup_gaji_user = db.relationship("GrupGajiUser", back_populates="user")

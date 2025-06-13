@@ -7,13 +7,12 @@ class GeneralException(Exception):
             raise TypeError("error_code harus merupakan instance dari ErrorCode")
 
         self.message = error_code.message
-        self.error_code = error_code.status_code
+        self.status_code = error_code.status_code
 
         super().__init__(self.message)
 
 
 class GeneralExceptionWithParam(Exception):
-
     def __init__(self, error_code, params):
         if not isinstance(error_code, ErrorCode):
             raise TypeError("error_code harus merupakan instance dari ErrorCode")

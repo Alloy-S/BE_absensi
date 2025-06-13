@@ -39,6 +39,8 @@ def create_app(config_class=Config):
     from app.controllers.jabatan_controller import jabatan_bp
     from app.controllers.lokasi_controller import lokasi_bp
     from app.controllers.jadwal_controller import jadwal_bp
+    from app.controllers.face_recognition_controller import face_recognition_bp
+    from app.controllers.libur_controller import libur_bp
 
     app.register_blueprint(errors_bp)
     app.register_blueprint(auth_bp, url_prefix='/api/auth') # Sangat disarankan memberi prefix
@@ -46,6 +48,8 @@ def create_app(config_class=Config):
     app.register_blueprint(jabatan_bp, url_prefix='/api/jabatan')
     app.register_blueprint(lokasi_bp, url_prefix='/api/lokasi')
     app.register_blueprint(jadwal_bp, url_prefix='/api/jadwal')
+    app.register_blueprint(face_recognition_bp, url_prefix='/api/face-recognition')
+    app.register_blueprint(libur_bp)
 
     # Jika ada route sederhana, bisa ditaruh di sini
     @app.route('/test-health')

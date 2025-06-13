@@ -6,6 +6,7 @@ from app.execption.custom_execption import GeneralExceptionWithParam, GeneralExc
 
 errors_bp = Blueprint('execption_handler', __name__)
 
+
 @errors_bp.app_errorhandler(GeneralExceptionWithParam)
 def handle_general_exception_with_param(error):
     response_data = {
@@ -14,6 +15,7 @@ def handle_general_exception_with_param(error):
     response = jsonify(response_data)
     response.status_code = error.status_code
     return response
+
 
 @errors_bp.app_errorhandler(GeneralException)
 def handle_general_exception(error):
@@ -24,6 +26,7 @@ def handle_general_exception(error):
     response.status_code = error.status_code
     return response
 
+
 @errors_bp.app_errorhandler(ValidationError)
 def validation_error_handler(error):
     response_data = {
@@ -32,6 +35,7 @@ def validation_error_handler(error):
     response = jsonify(response_data)
     response.status_code = 400
     return response
+
 
 @errors_bp.app_errorhandler(Exception)
 def handle_internal_error(error):
@@ -48,4 +52,14 @@ def handle_internal_error(error):
     }
     response = jsonify(response_data)
     response.status_code = 500
+    return response
+
+
+@errors_bp.app_errorhandler(404)
+def handle_not_found_error(error):
+    response_data = {
+        "message": "Resource yang Anda tuju tidak dapat ditemukan di server."
+    }
+    response = jsonify(response_data)
+    response.status_code = 404
     return response

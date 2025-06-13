@@ -8,3 +8,4 @@ class Libur(db.Model):
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     date = db.Column(db.Date, nullable=False)  
     is_holiday = db.Column(db.Boolean, nullable=False)
+    description = db.Column(db.String(255), nullable=False)

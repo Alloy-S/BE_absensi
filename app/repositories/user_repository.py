@@ -180,6 +180,12 @@ class UserRepository:
         db.session.commit()
 
     @staticmethod
+    def mark_done_register_face(user):
+        user.is_face_registration_required = False
+
+        db.session.commit()
+
+    @staticmethod
     def change_password(user, password):
         user.password = generate_password_hash(password)
         db.session.commit()
