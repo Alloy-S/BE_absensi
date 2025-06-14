@@ -10,8 +10,10 @@ class ApprovalReimburse(db.Model):
     status = db.Column(db.String(10), nullable=False)
     approval_user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False)
     reimburse_id = db.Column(UUID(as_uuid=True), db.ForeignKey('reimburse.id'), nullable=False)
-    
-    user = db.relationship("Users", back_populates="approval_reimburse")
+    user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False)
+
+    approval_user = db.relationship("Users", back_populates="approval_user_izin", foreign_keys=[approval_user_id])
+    user = db.relationship("Users", back_populates="approval_izin", foreign_keys=[user_id])
     reimburse = db.relationship("Reimburse", back_populates="approval_reimburse")
     
     def __repr__(self):

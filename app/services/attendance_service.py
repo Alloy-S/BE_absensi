@@ -82,7 +82,7 @@ class AttendanceService:
                 absensi = AbsensiRepository.create_absensi({
                     'date': today.date(),
                     'lokasi': user.data_karyawan.lokasi.name,
-                    'metode': "Face Recognition",
+                    'metode': AppConstants.FACE_RECOGNITION.value,
                     'status': status,
                     'user_id': user_id
                 })
@@ -92,7 +92,7 @@ class AttendanceService:
                 'absensi_id': absensi.id,
                 'date': today,
                 'type': attendance_type,
-                'status_appv': "Approved",
+                'status_appv': AppConstants.APPROVED.value,
                 'status_absensi': status,
                 'latitude': data['latitude'],
                 'longitude': data['longitude'],

@@ -10,8 +10,10 @@ class ApprovalKoreksi(db.Model):
     status = db.Column(db.String(10), nullable=False)
     approval_user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False)
     detail_absensi_id = db.Column(UUID(as_uuid=True), db.ForeignKey('detail_absensi.id'), nullable=False)
+    user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False)
     
-    user = db.relationship("Users", back_populates="approval_koreksi")
+    approval_user = db.relationship("Users", back_populates="approval_user_koreksi", foreign_keys=[approval_user_id])
+    user = db.relationship("Users", back_populates="approval_koreksi", foreign_keys=[user_id])
     detail_absensi = db.relationship("DetailAbsensi", back_populates="approval_koreksi")
     
     def __repr__(self):

@@ -18,7 +18,6 @@ from .jenis_izin import JenisIzin
 from .approval_izin import ApprovalIzin
 from .absensi import Absensi
 from .detail_absensi import DetailAbsensi
-from .approval_kehadiran import ApprovalKehadiran
 from .approval_koreksi import ApprovalKoreksi
 from .face_embeddings import FaceEmbeddings
 from .config_props import ConfigProps
