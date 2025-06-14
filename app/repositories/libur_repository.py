@@ -54,3 +54,7 @@ class LiburRepository:
         db.session.commit()
 
         return new_libur
+
+    @staticmethod
+    def get_libur_by_date(date):
+        return Libur.query.filter_by(date=date).first()

@@ -9,8 +9,7 @@ class Absensi(db.Model):
     date = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp()) 
     lokasi = db.Column(db.String(50), nullable=False)
     metode = db.Column(db.String(30), nullable=False)
-    catatan = db.Column(db.Text, nullable=True)
-    status = db.Column(db.String(10), nullable=False)
+    status = db.Column(db.String(20), nullable=False)
     user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False)
     
     user = db.relationship('Users', back_populates="absensi")

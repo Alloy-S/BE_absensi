@@ -14,14 +14,13 @@ class DetailJadwalKerja(db.Model):
     toler_in = db.Column(db.SmallInteger , nullable=False)
     toler_out = db.Column(db.SmallInteger , nullable=False)
     
-    
     jadwal_kerja_id = db.Column(UUID(as_uuid=True), db.ForeignKey('jadwal_kerja.id'), nullable=False)
     
     jadwal_kerja = db.relationship('JadwalKerja', back_populates='detail_jadwal_kerja')
     
     
     def __repr__(self):
-        return f"<DetailJadwalKerja(id={self.id}, jadwal_kerja_id='{self.jadwal_kerja_id}', time_in='{self.time_in}', time_out='{self.time_out}', toler_in={self.toler_in}, toler_out={self.toler_out})>"
+        return f"<DetailJadwalKerja(id={self.id}, jadwal_kerja_id='{self.jadwal_kerja_id}', hari='{self.hari}', time_in='{self.time_in}', time_out='{self.time_out}', toler_in={self.toler_in}, toler_out={self.toler_out})>"
 
     @property
     def jam_in_str(self):
