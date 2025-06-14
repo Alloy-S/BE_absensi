@@ -12,13 +12,13 @@ from datetime import datetime
 class KoreksiKehadiranService:
 
     @staticmethod
-    def get_list_koreksi(username, page, size):
+    def get_list_koreksi(username, page, size, filter_status):
         user = UserRepository.get_user_by_username(username)
 
         if not user:
             raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
                                             params={'resource': AppConstants.USER_RESOURCE.value})
-        return ApprovalKoreksiRepository.get_list_pagination(user.id, page, size)
+        return ApprovalKoreksiRepository.get_list_pagination(user.id, filter_status, page, size)
 
     @staticmethod
     def get_detail_koreksi(username, approval_id):

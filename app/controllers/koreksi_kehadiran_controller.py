@@ -2,7 +2,7 @@ from flask_jwt_extended import get_jwt_identity
 from app.filter.jwt_filter import role_required
 from app.models.koreksi_kehadiran.koreksi_kehadiran_req import KoreksiKehadiranRequestSchema
 from app.models.koreksi_kehadiran.koreksi_kehadiran_res import approval_koreksi_fields, approval_koreksi_pagination_fields
-from app.models.pagination_model import PaginationReq
+from app.models.pagination_model import PaginationReq, PaginationApprovalReq
 from app.utils.app_constans import AppConstants
 from flask_restful import Resource, Api, marshal
 from flask import Blueprint, request
@@ -18,11 +18,11 @@ class KoreksiKehadiranController(Resource):
         current_user_id = get_jwt_identity()
         params = request.args
 
-        schema = PaginationReq()
+        schema = PaginationApprovalReq()
 
         validated = schema.load(params)
 
-        result = KoreksiKehadiranService.get_list_koreksi(username=current_user_id, page=validated['page'], size=validated['size'])
+        result = KoreksiKehadiranService.get_list_koreksi(username=current_user_id, page=validated['page'], size=validated['size'], filter_status=validated['filter_status'])
         response = {
             "pages": result.pages,
             "total": result.total,

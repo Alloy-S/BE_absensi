@@ -24,6 +24,7 @@ class AppConstants(Enum):
     APPROVED = "Disetujui"
     WAITING_FOR_APPROVAL = "Menunggu Persetujuan"
     REJECTED = "Ditolak"
+    APPROVAL_STATUS_ALL = "All"
 
     FACE_RECOGNITION = "Face Recognition"
     KOREKSI_KEHADIRAN = "Koreksi Kehadiran"
@@ -33,3 +34,4 @@ class AppConstants(Enum):
     DATE_FORMAT = "%Y-%m-%d"
     TIME_FORMAT = "%H:%M"
     DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
+

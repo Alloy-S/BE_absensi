@@ -10,7 +10,7 @@ from app.utils.app_constans import AppConstants
 class ApprovalKoreksiRepository:
 
     @staticmethod
-    def get_list_pagination(user_id, page = 1, size = 10):
+    def get_list_pagination(user_id, filter_status, page = 1, size = 10):
 
         today = date.today()
         three_months_ago = today - relativedelta(months=3)
@@ -18,7 +18,14 @@ class ApprovalKoreksiRepository:
         query = ApprovalKoreksi.query.filter(
             ApprovalKoreksi.user_id == user_id,
             ApprovalKoreksi.created_date >= three_months_ago
-        ).order_by(ApprovalKoreksi.created_date.desc())
+        )
+
+        if filter_status != AppConstants.APPROVAL_STATUS_ALL.value:
+            query = query.filter(
+                ApprovalKoreksi.status == filter_status,
+            )
+
+        query = query.order_by(ApprovalKoreksi.created_date.desc())
 
         return query.paginate(page=page, per_page=size, error_out=False)
 
