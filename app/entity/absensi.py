@@ -14,7 +14,7 @@ class Absensi(db.Model):
     
     user = db.relationship('Users', back_populates="absensi")
     detail_absensi = db.relationship("DetailAbsensi", back_populates="absensi")
-    approval_kehadiran = db.relationship("ApprovalKehadiran", back_populates="absensi")
+    approval = db.relationship("ApprovalKoreksi", back_populates="absensi")
     
     def __repr__(self):
         return (f"<Absensi(id={self.id}, date='{self.date}', lokasi='{self.lokasi}', metode='{self.metode}', "

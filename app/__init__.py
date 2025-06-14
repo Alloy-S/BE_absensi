@@ -41,6 +41,7 @@ def create_app(config_class=Config):
     from app.controllers.libur_controller import libur_bp
     from app.controllers.attendance_controller import attendance_bp
     from app.controllers.absensi_controller import absensi_bp
+    from app.controllers.koreksi_kehadiran_controller import koreksi_kehadiran_bp
 
     app.register_blueprint(errors_bp)
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
@@ -52,6 +53,7 @@ def create_app(config_class=Config):
     app.register_blueprint(libur_bp)
     app.register_blueprint(attendance_bp)
     app.register_blueprint(absensi_bp)
+    app.register_blueprint(koreksi_kehadiran_bp)
 
     @app.route('/test-health')
     def test_health():

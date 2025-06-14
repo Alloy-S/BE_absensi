@@ -16,7 +16,6 @@ class DetailAbsensi(db.Model):
     catatan = db.Column(db.Text, nullable=True)
     
     absensi = db.relationship("Absensi", back_populates="detail_absensi")
-    approval_koreksi = db.relationship("ApprovalKoreksi", back_populates="detail_absensi")
     
     def __repr__(self):
         return (f"<DetailAbsensi(id={self.id}, date='{self.date}', type='{self.type}', status_appv='{self.status_appv}', "

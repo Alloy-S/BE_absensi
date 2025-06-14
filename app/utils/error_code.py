@@ -9,6 +9,8 @@ class ErrorCode(Enum):
     USER_FACE_NOT_MATCH_REQUIREMENT = ("Verifikasi wajah gagal. Pastikan wajah terlihat jelas dan sesuai.", 400)
     TODAY_IS_HOLIDAY = ("Hari Ini Merupakan Hari Libur. Tidak Perlu Melakukan Presensi", 400)
     ATTENDANCE_TYPE_NOT_VALID = ("Jenis Presensi Tidak Ada", 400)
+    INVALID_DATE_FORMAT = ("Format waktu salah.", 400)
+    CANCELLATION_NOT_ALLOWED = ("Tidak Dapat Melakukan Pembatalan Pengajuan", 400)
 
     @property
     def message(self):

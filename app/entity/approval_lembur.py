@@ -12,8 +12,8 @@ class ApprovalLembur(db.Model):
     lembur_id = db.Column(UUID(as_uuid=True), db.ForeignKey('lembur.id'), nullable=False)
     user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False)
 
-    approval_user = db.relationship("Users", back_populates="approval_user_izin", foreign_keys=[approval_user_id])
-    user = db.relationship("Users", back_populates="approval_izin", foreign_keys=[user_id])
+    approval_user = db.relationship("Users", back_populates="approval_user_lembur", foreign_keys=[approval_user_id])
+    user = db.relationship("Users", back_populates="approval_lembur", foreign_keys=[user_id])
     lembur = db.relationship("Lembur", back_populates="approval_lembur")
     
     def __repr__(self):

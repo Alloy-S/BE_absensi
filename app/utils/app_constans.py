@@ -10,6 +10,7 @@ class AppConstants(Enum):
 
     USER_RESOURCE = "User"
     ABSENSI_RESOURCE = "Absensi"
+    APPROVAL_KOREKSI_RESOURCE = "Approval Koreksi"
 
     LOCATION = "Lokasi Absen"
 
@@ -21,9 +22,14 @@ class AppConstants(Enum):
     EARLY = "Pulang Terlalu Cepat"
 
     APPROVED = "Disetujui"
+    WAITING_FOR_APPROVAL = "Menunggu Persetujuan"
+    REJECTED = "Ditolak"
 
     FACE_RECOGNITION = "Face Recognition"
+    KOREKSI_KEHADIRAN = "Koreksi Kehadiran"
 
     UPLOAD_FOLDER = 'temp_uploads'
 
     DATE_FORMAT = "%Y-%m-%d"
+    TIME_FORMAT = "%H:%M"
+    DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"

@@ -31,3 +31,4 @@ from .grup_gaji_kom import GrupGajiKom
 from .grup_gaji_user import GrupGajiUser
 from .jatah_kuota_cuti import JatahKuotaCuti
 from .routes import Route
+from .detail_approval_koreksi import DetailApprovalKoreksi
