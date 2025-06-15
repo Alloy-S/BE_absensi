@@ -12,6 +12,7 @@ class ErrorCode(Enum):
     INVALID_DATE_FORMAT = ("Format waktu salah.", 400)
     CANCELLATION_NOT_ALLOWED = ("Tidak Dapat Melakukan Pembatalan Pengajuan", 400)
 
+
     @property
     def message(self):
         return self.value[0]

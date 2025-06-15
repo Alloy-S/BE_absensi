@@ -7,15 +7,16 @@ class Izin(db.Model):
     
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     date = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp()) 
-    tgl_izin = db.Column(db.Date, nullable=False)
+    tgl_izin_start = db.Column(db.Date, nullable=False)
+    tgl_izin_end = db.Column(db.Date, nullable=False)
     keterangan = db.Column(db.Text, nullable=True)
-    status = db.Column(db.String(10), nullable=False)
+    status = db.Column(db.String(30), nullable=False)
     jenis_izin_id = db.Column(UUID(as_uuid=True), db.ForeignKey('jenis_izin.id'), nullable=False)
     user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False)
     
     jenis_izin = db.relationship("JenisIzin", back_populates="izin")
     user = db.relationship("Users", back_populates='izin')
-    approval_izin = db.relationship("ApprovalIzin", back_populates="izin")
+    approval_izin = db.relationship("ApprovalIzin", back_populates="izin", uselist=False, cascade="all, delete-orphan")
     
     def __repr__(self):
         return (f"<Izin(id={self.id}, date='{self.date}', tgl_izin='{self.tgl_izin}', status='{self.status}', "
