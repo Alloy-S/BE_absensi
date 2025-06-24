@@ -3,6 +3,7 @@ from enum import Enum
 class ErrorCode(Enum):
 
     RESOURCE_NOT_FOUND = ("{resource} not found", 404)
+    ALREADY_INACTIVE = ("{resource} sudah tidak aktif", 400)
     INCORRECT_PASSWORD_OR_USERNAME = ("Username atau Password salah", 400)
     SEND_NOTIFICATION_FAILED = ("GAGAL_MENGIRIM_NOTIFIKASI", 400)
     USER_LOCATION_NOT_MATCH_REQUIREMENT = ("Anda berada di luar jangkauan lokasi kerja yang diizinkan.", 400)

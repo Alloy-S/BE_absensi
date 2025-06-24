@@ -13,6 +13,7 @@ class AppConstants(Enum):
     APPROVAL_KOREKSI_RESOURCE = "Approval Koreksi"
     IZIN_RESOURCE = "Izin"
     LEMBUR_RESOURCE = "Lembur"
+    HARGA_RESOURCE = "Harga Harian Borongan"
 
     LOCATION = "Lokasi Absen"
 
@@ -27,6 +28,9 @@ class AppConstants(Enum):
     WAITING_FOR_APPROVAL = "Menunggu Persetujuan"
     REJECTED = "Ditolak"
     APPROVAL_STATUS_ALL = "All"
+
+    HOLIDAY = "Libur"
+    WORK = "Masuk"
 
     FACE_RECOGNITION = "Face Recognition"
     KOREKSI_KEHADIRAN = "Koreksi Kehadiran"

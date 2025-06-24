@@ -31,3 +31,8 @@ absensi_detail_fields = {
         'catatan': fields.String,
     }))
 }
+
+check_today_attendance = {
+    "status": fields.String,
+    "required_attendance_type": fields.String,
+}

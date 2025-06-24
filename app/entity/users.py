@@ -49,11 +49,18 @@ class Users(db.Model):
     approval_user_koreksi = db.relationship("ApprovalKoreksi", back_populates="approval_user",
                                             foreign_keys='[ApprovalKoreksi.approval_user_id]')
 
+    approval_absensi_borongan = db.relationship("ApprovalAbsensiBorongan", back_populates="user",
+                                       foreign_keys='[ApprovalAbsensiBorongan.user_id]')
+    approval_user_absensi_borongan = db.relationship("ApprovalAbsensiBorongan", back_populates="approval_user",
+                                            foreign_keys='[ApprovalAbsensiBorongan.approval_user_id]')
+
     izin = db.relationship("Izin", back_populates="user")
     face_embeddings = db.relationship("FaceEmbeddings", back_populates="user")
     absensi = db.relationship("Absensi", back_populates="user")
     lembur = db.relationship('Lembur', back_populates="user")
     grup_gaji_user = db.relationship("GrupGajiUser", back_populates="user")
+    jatah_kuota_cuti = db.relationship("JatahKuotaCuti", back_populates="user")
+    detail_absensi_borongan = db.relationship("DetailAbsensiBorongan", back_populates="user", lazy="joined")
 
     def set_password(self, password):
         self.password = generate_password_hash(password)

@@ -33,13 +33,13 @@ class AttendanceService:
         return distance <= work_location.toleransi
 
     @staticmethod
-    def create_attendance(user_id: str, data, image_path):
+    def create_attendance(username: str, data, image_path):
         try:
             today = datetime.today()
             attendance_type = data["type"]
 
             # cek user valid
-            user = UserRepository.get_user_by_id(user_id)
+            user = UserRepository.get_user_by_username(username)
             if not user:
                 raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
                                                 params={'resource': AppConstants.USER_RESOURCE.value})
@@ -56,7 +56,7 @@ class AttendanceService:
                 raise GeneralException(ErrorCode.USER_LOCATION_NOT_MATCH_REQUIREMENT)
 
             # # cek wajah
-            is_face_valid = FaceRecognitionService.verify_face(user_id=user_id, image_path=image_path)
+            is_face_valid = FaceRecognitionService.verify_face(user_id=user.id, image_path=image_path)
             if not is_face_valid:
                 raise GeneralException(ErrorCode.USER_FACE_NOT_MATCH_REQUIREMENT)
 
@@ -76,7 +76,7 @@ class AttendanceService:
             status = AttendanceService.check_attendance_time(attendance_type, detail_jadwal, today)
 
             # save data presensi
-            absensi = AbsensiRepository.get_absensi_by_user_id_and_date(user_id=user_id, date=today.date())
+            absensi = AbsensiRepository.get_absensi_by_user_id_and_date(user_id=user.id, date=today.date())
 
             if not absensi:
                 absensi = AbsensiRepository.create_absensi({
@@ -84,7 +84,7 @@ class AttendanceService:
                     'lokasi': user.data_karyawan.lokasi.name,
                     'metode': AppConstants.FACE_RECOGNITION.value,
                     'status': status,
-                    'user_id': user_id
+                    'user_id': user.id
                 })
 
             DetailAbsensiRepository.delete_detail_absensi_by_absensi_id_and_type(absensi.id, attendance_type)
@@ -133,3 +133,66 @@ class AttendanceService:
         else:
             raise GeneralException(ErrorCode.ATTENDANCE_TYPE_NOT_VALID)
         return status
+
+
+    @staticmethod
+    def check_today_attendance(username):
+        today = datetime.today()
+        status = None
+        required_attendance_type = None
+
+        # cek user valid
+        user = UserRepository.get_user_by_username(username)
+        if not user:
+            raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
+                                            params={'resource': AppConstants.USER_RESOURCE.value})
+
+        if LiburRepository.get_libur_by_date(today.date()):
+            status = AppConstants.HOLIDAY.value
+        else:
+            # cek jadwal kerja
+            jadwal_kerja = user.data_karyawan.jadwal_kerja
+
+            detail_jadwal = DetailJadwalKerjaRepository.get_detail_jadwal_kerja_by_jadwal_id_and_hari(jadwal_kerja.id,
+                                                                                                      today.strftime(
+                                                                                                          "%A").upper())
+
+            if not detail_jadwal:
+                status = AppConstants.HOLIDAY.value
+
+        if status == AppConstants.HOLIDAY.value:
+            return {
+                'status': status,
+                'required_attendance_type': None
+            }
+
+        absensi = AbsensiRepository.get_absensi_by_user_id_and_date(user_id=user.id, date=today.date())
+
+        if not absensi:
+
+            required_attendance_type = AppConstants.ATTENDANCE_IN.value
+        else:
+            has_checked_in = DetailAbsensiRepository.get_detail_absensi_by_absensi_id_and_type_and_status_appv(
+                absensi.id, AppConstants.ATTENDANCE_IN.value, AppConstants.APPROVED.value
+            ) is not None
+
+            has_checked_out = DetailAbsensiRepository.get_detail_absensi_by_absensi_id_and_type_and_status_appv(
+                absensi.id, AppConstants.ATTENDANCE_OUT.value, AppConstants.APPROVED.value
+            ) is not None
+
+            if has_checked_in and has_checked_out:
+                required_attendance_type = None
+            elif has_checked_in:
+                required_attendance_type = AppConstants.ATTENDANCE_OUT.value
+            else:
+                required_attendance_type = AppConstants.ATTENDANCE_IN.value
+
+        response = {
+            'status': status,
+            'required_attendance_type': required_attendance_type,
+        }
+
+        return response
+
+
+

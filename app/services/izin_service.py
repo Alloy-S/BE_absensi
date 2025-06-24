@@ -3,6 +3,7 @@ from app.database import db
 from app.repositories.user_repository import UserRepository
 from app.repositories.izin_repository import IzinRepository
 from app.repositories.approval_izin_repository import ApprovalIzinRepository
+from app.repositories.jenis_izin_repository import JenisIzinRepository
 from app.execption.custom_execption import GeneralException, GeneralExceptionWithParam
 from app.utils.app_constans import AppConstants
 from app.utils.error_code import ErrorCode
@@ -91,3 +92,7 @@ class IzinService:
         except Exception as e:
             db.session.rollback()
             raise e
+
+    @staticmethod
+    def get_all_jenis_izin():
+        return JenisIzinRepository.get_all_jenis_izin()

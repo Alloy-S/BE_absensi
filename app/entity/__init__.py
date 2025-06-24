@@ -21,7 +21,6 @@ from .detail_absensi import DetailAbsensi
 from .approval_koreksi import ApprovalKoreksi
 from .face_embeddings import FaceEmbeddings
 from .config_props import ConfigProps
-from .kuota_cuti import KuotaCuti
 from .lembur import Lembur
 from .approval_lembur import ApprovalLembur
 from .pengumuman import Pengumuman
@@ -32,3 +31,7 @@ from .grup_gaji_user import GrupGajiUser
 from .jatah_kuota_cuti import JatahKuotaCuti
 from .routes import Route
 from .detail_approval_koreksi import DetailApprovalKoreksi
+from .approval_absensi_borongan import ApprovalAbsensiBorongan
+from .absensi_borongan import AbsensiBorongan
+from .detail_absensi_borongan import DetailAbsensiBorongan
+from .harga_harian_borongan import HargaHarianBorongan

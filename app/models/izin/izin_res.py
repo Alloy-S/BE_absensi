@@ -41,3 +41,8 @@ approval_izin_field_detail = {
     'user_id': fields.String,
     'izin': fields.Nested(izin_field)
 }
+
+jenis_izin_field = {
+    'id': fields.String,
+    'nama': fields.String
+}

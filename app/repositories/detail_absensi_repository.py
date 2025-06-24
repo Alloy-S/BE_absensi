@@ -1,5 +1,7 @@
 from app.database import db
 from app.entity import DetailAbsensi
+from app.utils.app_constans import AppConstants
+
 
 class DetailAbsensiRepository:
 
@@ -30,3 +32,7 @@ class DetailAbsensiRepository:
 
         if detail_to_delete:
             db.session.delete(detail_to_delete)
+
+    @staticmethod
+    def get_detail_absensi_by_absensi_id_and_type_and_status_appv(absensi_id, type, status_appv):
+        return DetailAbsensi.query.filter_by(absensi_id=absensi_id, type=type, status_appv=status_appv).all()

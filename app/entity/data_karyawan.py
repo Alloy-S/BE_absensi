@@ -20,7 +20,6 @@ class DataKaryawan(db.Model):
     lokasi = db.relationship('Lokasi', back_populates='data_karyawan')
     jadwal_kerja = db.relationship('JadwalKerja', back_populates='data_karyawan')
     jabatan = db.relationship('Jabatan', back_populates='data_karyawan')
-    jatah_kuota_cuti = db.relationship("JatahKuotaCuti", back_populates="data_karyawan")
 
     def __repr__(self):
         return (f"<DataKaryawan(id={self.id}, nip='{self.nip}', tgl_gabung='{self.tgl_gabung}', "
