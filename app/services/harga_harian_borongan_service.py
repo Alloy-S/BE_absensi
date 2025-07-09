@@ -7,6 +7,10 @@ from app.database import db
 class HargaHarianBoronganService:
 
     @staticmethod
+    def get_all_harga_harian_borongan():
+        return HargaHarianBoronganRepository.get_all_harga_active()
+
+    @staticmethod
     def get_harga_pagination(page, size, search):
         return HargaHarianBoronganRepository.get_harga_pagination(page, size, search)
 

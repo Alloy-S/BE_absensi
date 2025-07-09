@@ -10,7 +10,9 @@ class AppConstants(Enum):
 
     USER_RESOURCE = "User"
     ABSENSI_RESOURCE = "Absensi"
+    ABSENSI_BORONGAN_RESOURCE = "Absensi Borongan"
     APPROVAL_KOREKSI_RESOURCE = "Approval Koreksi"
+    APPROVAL_ABSENSI_BORONGAN_RESOURCE = "Approval Absensi borongan"
     IZIN_RESOURCE = "Izin"
     LEMBUR_RESOURCE = "Lembur"
     HARGA_RESOURCE = "Harga Harian Borongan"

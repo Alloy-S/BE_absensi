@@ -67,3 +67,18 @@ class HargaHarianBoronganRepository:
         harga.is_deleted = True
 
 
+    @staticmethod
+    def get_all_harga_active():
+        query = db.session.query(
+            HargaHarianBorongan
+        )
+
+        query = query.filter(
+            HargaHarianBorongan.is_deleted.is_(False)
+        )
+
+        query = query.order_by(HargaHarianBorongan.grup_id)
+
+        return query.all()
+
+

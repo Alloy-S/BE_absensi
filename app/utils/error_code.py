@@ -12,7 +12,7 @@ class ErrorCode(Enum):
     ATTENDANCE_TYPE_NOT_VALID = ("Jenis Presensi Tidak Ada", 400)
     INVALID_DATE_FORMAT = ("Format waktu salah.", 400)
     CANCELLATION_NOT_ALLOWED = ("Tidak Dapat Melakukan Pembatalan Pengajuan", 400)
-
+    APPROVER_NOT_FOUND = ("PIC Karyawan Tidak Ditemukan. Hubungi Admin untuk lebih lanjut", 400)
 
     @property
     def message(self):

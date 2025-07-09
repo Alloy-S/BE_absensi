@@ -1,7 +1,7 @@
 from flask_jwt_extended import get_jwt_identity
 from app.filter.jwt_filter import role_required
 from app.models.harga_harian_borongan.harga_req import HargaReq
-from app.models.harga_harian_borongan.harga_res import harga_field, pagination_fields
+from app.models.harga_harian_borongan.harga_res import harga_field, pagination_fields, all_harga_field
 from app.utils.app_constans import AppConstants
 from app.models.pagination_model import PaginationReq, PaginationApprovalReq
 from flask_restful import Resource, Api, marshal
@@ -71,5 +71,19 @@ class HargaDetailHarianBoronganController(Resource):
 
         return marshal(response, harga_field), 200
 
+class HargaHarianBoronganALl(Resource):
+
+    @role_required(AppConstants.USER_GROUP.value)
+    def get(self):
+
+        data = HargaHarianBoronganService.get_all_harga_harian_borongan()
+
+        response = {
+            "items": data
+        }
+
+        return marshal(response, all_harga_field), 200
+
 harga_api.add_resource(HargaHarianBoronganController, '')
 harga_api.add_resource(HargaDetailHarianBoronganController, '/<string:harga_id>')
+harga_api.add_resource(HargaHarianBoronganALl, '/all')

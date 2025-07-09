@@ -45,6 +45,7 @@ def create_app(config_class=Config):
     from app.controllers.izin_controller import izin_bp
     from app.controllers.lembur_controller import lembur_bp
     from app.controllers.harga_harian_borongan_controller import harga_bp
+    from app.controllers.approval_absensi_borongan_controller import borongan_bp
 
 
     app.register_blueprint(errors_bp)
@@ -61,6 +62,7 @@ def create_app(config_class=Config):
     app.register_blueprint(izin_bp)
     app.register_blueprint(lembur_bp)
     app.register_blueprint(harga_bp)
+    app.register_blueprint(borongan_bp)
 
     @app.route('/test-health')
     def test_health():

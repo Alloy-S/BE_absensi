@@ -2,7 +2,7 @@ from flask_jwt_extended import get_jwt_identity
 from app.filter.jwt_filter import role_required
 from app.models.koreksi_kehadiran.koreksi_kehadiran_req import KoreksiKehadiranRequestSchema
 from app.models.koreksi_kehadiran.koreksi_kehadiran_res import approval_koreksi_fields, approval_koreksi_pagination_fields
-from app.models.pagination_model import PaginationReq, PaginationApprovalReq
+from app.models.pagination_model import PaginationApprovalReq
 from app.utils.app_constans import AppConstants
 from flask_restful import Resource, Api, marshal
 from flask import Blueprint, request

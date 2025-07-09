@@ -25,3 +25,7 @@ harga_field = {
     "type": fields.String
 }
 
+all_harga_field = {
+    "items": fields.List(fields.Nested(harga_field)),
+}
+
