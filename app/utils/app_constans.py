@@ -16,6 +16,7 @@ class AppConstants(Enum):
     IZIN_RESOURCE = "Izin"
     LEMBUR_RESOURCE = "Lembur"
     HARGA_RESOURCE = "Harga Harian Borongan"
+    PENGUMUMAN_RESOURCE = "Pengumuman"
 
     LOCATION = "Lokasi Absen"
 

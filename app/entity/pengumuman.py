@@ -11,6 +11,8 @@ class Pengumuman(db.Model):
     is_active = db.Column(db.Boolean, nullable=False)
     date_created = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
     created_by = db.Column(db.String(50), nullable=False)
+    date_updated = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
+    updated_by = db.Column(db.String(50), nullable=False)
     
     def __repr__(self):
         return f"<Pengumuman(id={self.id}, judul={self.judul}, is_active={self.is_active}, date_created={self.date_created})>"
