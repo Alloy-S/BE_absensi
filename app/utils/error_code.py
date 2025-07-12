@@ -13,6 +13,8 @@ class ErrorCode(Enum):
     INVALID_DATE_FORMAT = ("Format waktu salah.", 400)
     CANCELLATION_NOT_ALLOWED = ("Tidak Dapat Melakukan Pembatalan Pengajuan", 400)
     APPROVER_NOT_FOUND = ("PIC Karyawan Tidak Ditemukan. Hubungi Admin untuk lebih lanjut", 400)
+    NEW_PASSWORD_NOT_MATCH = ("Password Baru Tidak Cocok", 400)
+    INCORRECT_PASSWORD = ("Password Lama Tidak Sesuai", 400)
 
     @property
     def message(self):

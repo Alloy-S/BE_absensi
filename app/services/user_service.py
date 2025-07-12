@@ -67,8 +67,21 @@ class UserService:
         return UserRepository.get_posible_pic(jabatan_id)
 
     @staticmethod
-    def change_password(user, password):
-        UserRepository.change_password(user, password)
+    def change_password(username, validated):
+        user = UserRepository.get_user_by_username(username)
+
+        if not user:
+            raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
+                                            params={'resource': AppConstants.USER_RESOURCE.value})
+
+        if validated['new_pass'] != validated['verify_pass']:
+            raise GeneralException(ErrorCode.NEW_PASSWORD_NOT_MATCH)
+
+        if not user.check_password(validated['old_pass']):
+            raise GeneralException(ErrorCode.INCORRECT_PASSWORD)
+
+        UserRepository.change_password(user, validated['new_pass'])
+
 
     @staticmethod
     def resend_login_data(user_id):
@@ -80,7 +93,7 @@ class UserService:
 
         password = generate_password()
 
-        UserService.change_password(user, password)
+        UserRepository.change_password(user, password)
 
         try:
             NotificationService.send_notification_login_data(
@@ -92,3 +105,27 @@ class UserService:
             )
         except Exception as e:
             print(f"Sending notification failed: {str(e)}")
+
+
+    @staticmethod
+    def edit_data_pribadi(username, validated):
+        user = UserRepository.get_user_by_username(username)
+
+        if not user:
+            raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
+                                            params={'resource': AppConstants.USER_RESOURCE.value})
+
+        UserRepository.edit_data_pribadi(user, validated)
+
+
+
+
+    @staticmethod
+    def edit_data_kontak(username, validated):
+        user = UserRepository.get_user_by_username(username)
+
+        if not user:
+            raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
+                                            params={'resource': AppConstants.USER_RESOURCE.value})
+
+        UserRepository.edit_data_kontak(user, validated)

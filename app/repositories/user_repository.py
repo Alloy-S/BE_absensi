@@ -141,6 +141,28 @@ class UserRepository:
         db.session.commit()
         return user
 
+    @staticmethod
+    def edit_data_pribadi(user, data):
+        user.data_pribadi.gender = data.get('gender', user.data_pribadi.gender)
+        user.data_pribadi.tmpt_lahir = data.get('tmpt_lahir', user.data_pribadi.tmpt_lahir)
+        user.data_pribadi.tgl_lahir = data.get('tgl_lahir', user.data_pribadi.tgl_lahir)
+        user.data_pribadi.status_kawin = data.get('status_kawin', user.data_pribadi.status_kawin)
+        user.data_pribadi.agama = data.get('agama', user.data_pribadi.agama)
+        user.data_pribadi.gol_darah = data.get('gol_darah', user.data_pribadi.gol_darah)
+
+        db.session.commit()
+
+    @staticmethod
+    def edit_data_kontak(user, data):
+        user.data_kontak.alamat = data.get('alamat', user.data_kontak.alamat)
+        user.data_kontak.no_telepon = data.get('no_telepon', user.data_kontak.no_telepon)
+        user.data_kontak.nama_darurat = data.get('nama_darurat', user.data_kontak.nama_darurat)
+        user.data_kontak.no_telepon_darurat = data.get('no_telepon_darurat',
+                                                                     user.data_kontak.no_telepon_darurat)
+        user.data_kontak.relasi_darurat = data.get('relasi_darurat', user.data_kontak.relasi_darurat)
+        user.phone = user.data_kontak.no_telepon
+
+        db.session.commit()
 
     @staticmethod
     def non_active_user(user):

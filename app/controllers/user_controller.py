@@ -1,11 +1,14 @@
 from flask_restful import Resource, marshal_with, Api, marshal
-
+from flask_jwt_extended import get_jwt_identity
+from app.filter.jwt_filter import role_required
 from app.models.pagination_model import PaginationReq
 from app.services.user_service import UserService
 from flask import Blueprint, request
-from app.models.users.users_req_model import UserSchema, ResendLoginSchema
+from app.models.users.users_req_model import UserSchema, ResendLoginSchema, ResetPasswordSchema, DataPribadiSchema, \
+    DataKontakSchema
 from app.models.users.users_res_model import users_pagination_fields, posibe_user_pic, user_field
 from marshmallow import ValidationError
+from app.utils.app_constans import AppConstants
 
 user_bp = Blueprint('user_bp', __name__, url_prefix='/api/users')
 user_api = Api(user_bp)
@@ -13,7 +16,7 @@ user_api = Api(user_bp)
 
 class UserListController(Resource):
 
-    @marshal_with(users_pagination_fields)
+    @role_required(AppConstants.ADMIN_GROUP.value)
     def get(self):
         try:
             queryparams = request.args
@@ -30,12 +33,13 @@ class UserListController(Resource):
                 "total": data.total,
                 "items": data.items
             }
-            return response, 200
+            return marshal(response, users_pagination_fields), 200
         except ValidationError as e:
             return {"message": e.messages}, 400
         except Exception as e:
             return {"message": "Internal server error"}, 500
 
+    @role_required(AppConstants.ADMIN_GROUP.value)
     def post(self):
 
         data = request.get_json()
@@ -55,17 +59,16 @@ class UserListController(Resource):
 
 class UserController(Resource):
 
+    @role_required(AppConstants.ADMIN_GROUP.value)
     def get(self, id):
-        try:
-            users = UserService.get_user_by_id(id)
-            if not users:
-                return {"message": "User not found"}, 404
-            return marshal(users, user_field), 200
-        except Exception as e:
-            print("error")
-            print(e)
-            return {"message": "Internal server error"}, 500
 
+        users = UserService.get_user_by_id(id)
+        if not users:
+            return {"message": "User not found"}, 404
+        return marshal(users, user_field), 200
+
+
+    @role_required(AppConstants.ADMIN_GROUP.value)
     def put(self, id):
         data = request.get_json()
 
@@ -77,6 +80,7 @@ class UserController(Resource):
 
         return response, 200
 
+    @role_required(AppConstants.ADMIN_GROUP.value)
     def delete(self, id):
         response = UserService.non_active_user(id)
         return response, 200
@@ -84,6 +88,7 @@ class UserController(Resource):
 
 class UserUtilController(Resource):
 
+    @role_required(AppConstants.ADMIN_GROUP.value)
     def get(self):
         nip = UserService.get_latest_nip()
 
@@ -91,17 +96,15 @@ class UserUtilController(Resource):
 
 
 class UserGetPIC(Resource):
-    @marshal_with(posibe_user_pic)
+    @role_required(AppConstants.ADMIN_GROUP.value)
     def get(self, id):
-        try:
-            print("Get Posible PIC From jabatan id: " + id)
-            result = UserService.get_posible_pic(id)
-            return result, 200
-        except Exception as e:
-            print(e)
-            return {"message": "Internal Server Error"}, 500
+        print("Get Posible PIC From jabatan id: " + id)
+        response = UserService.get_posible_pic(id)
+        return marshal(response, posibe_user_pic), 200
+
 
 class ResendLoginData(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
     def post(self):
         data = request.get_json()
 
@@ -113,9 +116,54 @@ class ResendLoginData(Resource):
 
         return response, 200
 
+class ResetPasswordController(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    def post(self):
+        username = get_jwt_identity()
+        json_data = request.get_json()
+
+        schema = ResetPasswordSchema()
+
+        validated = schema.load(json_data)
+
+        response = UserService.change_password(username, validated)
+
+        return response, 200
+
+class EditDataPribadiUserController(Resource):
+    @role_required(AppConstants.USER_GROUP.value)
+    def put(self):
+        username = get_jwt_identity()
+        json_data = request.get_json()
+
+        schema = DataPribadiSchema()
+
+        validated = schema.load(json_data)
+
+        response = UserService.edit_data_pribadi(username, validated)
+
+        return response, 200
+
+class EditDataKontakUserController(Resource):
+    @role_required(AppConstants.USER_GROUP.value)
+    def put(self):
+        username = get_jwt_identity()
+        json_data = request.get_json()
+
+        schema = DataKontakSchema()
+
+        validated = schema.load(json_data)
+
+        response = UserService.edit_data_kontak(username, validated)
+
+        return response, 200
+
 
 user_api.add_resource(UserListController, '')
 user_api.add_resource(UserController, '/<string:id>')
 user_api.add_resource(UserGetPIC, '/posible-pic/<string:id>')
 user_api.add_resource(UserUtilController, '/latest-nip')
 user_api.add_resource(ResendLoginData, '/resend-login-data')
+user_api.add_resource(ResetPasswordController, '/reset-password')
+user_api.add_resource(EditDataPribadiUserController, '/data-pribadi')
+user_api.add_resource(EditDataKontakUserController, '/data-kontak')

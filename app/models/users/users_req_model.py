@@ -48,3 +48,11 @@ class ResendLoginSchema(Schema):
 
     user_id = fields.String(required=True)
 
+class ResetPasswordSchema(Schema):
+    class Meta:
+        unknown = EXCLUDE
+
+    old_pass = fields.String(required=True)
+    new_pass = fields.String(required=True)
+    verify_pass = fields.String(required=True)
+
