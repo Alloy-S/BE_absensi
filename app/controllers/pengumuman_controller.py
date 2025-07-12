@@ -2,7 +2,6 @@ from flask_jwt_extended import get_jwt_identity
 from app.filter.jwt_filter import role_required
 from app.models.pagination_model import PaginationReq
 from app.models.pengumuman.pengumuman_res import pengumuman_field, pagination_fields
-from app.repositories.pengumuman_repository import PengumumanRepository
 from app.utils.app_constans import AppConstants
 from flask_restful import Resource, Api, marshal
 from flask import Blueprint, request
@@ -38,7 +37,7 @@ class PengumumanByidController(Resource):
 
     @role_required(AppConstants.USER_GROUP.value)
     def get(self, pengumuman_id):
-        result = PengumumanRepository.get_by_id(pengumuman_id)
+        result = PengumumanService.get_pengumuman_by_id(pengumuman_id)
 
         return marshal(result, pengumuman_field), 200
 

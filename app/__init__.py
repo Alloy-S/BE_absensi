@@ -47,6 +47,7 @@ def create_app(config_class=Config):
     from app.controllers.harga_harian_borongan_controller import harga_bp
     from app.controllers.approval_absensi_borongan_controller import borongan_bp
     from app.controllers.pengumuman_controller import pengumuman_bp
+    from app.controllers.perusahaan_controller import perusahaan_bp
 
     app.register_blueprint(errors_bp)
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
@@ -64,6 +65,7 @@ def create_app(config_class=Config):
     app.register_blueprint(harga_bp)
     app.register_blueprint(borongan_bp)
     app.register_blueprint(pengumuman_bp)
+    app.register_blueprint(perusahaan_bp)
 
     @app.route('/test-health')
     def test_health():
