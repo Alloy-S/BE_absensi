@@ -63,6 +63,21 @@ class UserRepository:
 
         return query.first()
 
+    @staticmethod
+    def create_user_admin(fullname, username, password, phone):
+
+        new_user = Users(
+            fullname=fullname,
+            username=username,
+            phone=phone,
+            user_role_id='11c155e7-a480-4697-9bc5-513cb2579b03'
+        )
+
+        new_user.set_password(password)
+        db.session.add(new_user)
+        db.session.commit()
+
+        return new_user
 
     @staticmethod
     def create_user(fullname, username, password, data_pribadi, data_kontak, data_karyawan, nip):
@@ -177,6 +192,12 @@ class UserRepository:
 
     @staticmethod
     def get_posible_pic(jabatan_id):
+        check_query = text("SELECT parent_id FROM jabatan WHERE id = :jabatan_id")
+        jabatan = db.session.execute(check_query, {'jabatan_id': jabatan_id}).first()
+
+        if not jabatan or jabatan.parent_id is None:
+            return []
+
         query = text("""
                      WITH RECURSIVE atasan AS (SELECT id, nama, parent_id
                                                FROM jabatan
@@ -190,7 +211,7 @@ class UserRepository:
                      SELECT u.fullname, u.id, a.nama as jabatan
                      FROM atasan a
                               join data_karyawan dk on dk.jabatan_id = a.id
-                              join users u on u.data_karyawan_id = dk.id
+                              join users u on u.id = dk.user_id
                      where a.id != :jabatan_id and u.is_active is true
                      """)
 

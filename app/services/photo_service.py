@@ -72,16 +72,22 @@ class PhotoService:
     @staticmethod
     def get_photo_as_base64(photo_id):
         if not photo_id:
-            return None
+            raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND, params={'resource': AppConstants.PHOTO_RESOURCE.value})
 
         photo = PhotoRepository.get_photo_by_id(photo_id)
         if not photo or not os.path.exists(photo.path):
-            return None
+            raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND, params={'resource': AppConstants.PHOTO_RESOURCE.value})
 
         try:
             with open(photo.path, "rb") as image_file:
                 encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
 
-            return f"data:{photo.mimetype};base64,{encoded_string}"
+            return {
+                "id": photo_id,
+                "filename": photo.filename,
+                "type": photo.type,
+                "mimetype": photo.mimetype,
+                "image": f"data:{photo.mimetype};base64,{encoded_string}",
+            }
         except Exception:
-            return None
+            raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND, params={'resource': AppConstants.PHOTO_RESOURCE.value})

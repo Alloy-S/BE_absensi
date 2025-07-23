@@ -15,6 +15,8 @@ class ErrorCode(Enum):
     APPROVER_NOT_FOUND = ("PIC Karyawan Tidak Ditemukan. Hubungi Admin untuk lebih lanjut", 400)
     NEW_PASSWORD_NOT_MATCH = ("Password Baru Tidak Cocok", 400)
     INCORRECT_PASSWORD = ("Password Lama Tidak Sesuai", 400)
+    MANDATORY_PIC = ("Karyawan dengan jabatan ini wajib memiliki PIC/Atasan.", 400)
+    HIGHEST_POSITION = ("Jabatan tertinggi tidak boleh memiliki PIC/Atasan.", 400)
 
     @property
     def message(self):

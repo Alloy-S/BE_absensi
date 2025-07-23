@@ -5,6 +5,8 @@ from flask_migrate import Migrate
 from flask_cors import CORS
 from sqlalchemy.orm import configure_mappers
 import locale
+
+from .controllers import photo_controller
 from .database import db
 from .config import Config
 import os
@@ -51,6 +53,7 @@ def create_app(config_class=Config):
     from app.controllers.pengumuman_controller import pengumuman_bp
     from app.controllers.perusahaan_controller import perusahaan_bp
     from app.controllers.approval_reimburse_controller import reimburse_bp
+    from app.controllers.photo_controller import photo_bp
 
     app.register_blueprint(errors_bp)
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
@@ -70,6 +73,7 @@ def create_app(config_class=Config):
     app.register_blueprint(pengumuman_bp)
     app.register_blueprint(perusahaan_bp)
     app.register_blueprint(reimburse_bp)
+    app.register_blueprint(photo_bp)
 
     os.makedirs(AppConstants.UPLOAD_FOLDER_PHOTO.value, exist_ok=True)
 

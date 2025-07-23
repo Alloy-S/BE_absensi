@@ -16,16 +16,13 @@ class Users(db.Model):
     is_notif_login_send = db.Column(db.Boolean, nullable=True, default=False)
     is_active = db.Column(db.Boolean, nullable=True, default=True)
     user_role_id = db.Column(UUID(as_uuid=True), db.ForeignKey('user_role.id'), nullable=True)
-    data_kontak_id = db.Column(UUID(as_uuid=True), db.ForeignKey('data_kontak.id'), nullable=True)
-    data_pribadi_id = db.Column(UUID(as_uuid=True), db.ForeignKey('data_pribadi.id'), nullable=True)
-    data_karyawan_id = db.Column(UUID(as_uuid=True), db.ForeignKey('data_karyawan.id'), nullable=True)
 
     user_role = db.relationship('UserRole', back_populates='users', lazy="joined")
     user_pic = db.relationship('DataKaryawan', foreign_keys='[DataKaryawan.user_pic_id]', back_populates='pic')
-    data_kontak = db.relationship('DataKontak', back_populates='user', uselist=False)
-    data_pribadi = db.relationship('DataPribadi', back_populates='user', uselist=False)
-    data_karyawan = db.relationship('DataKaryawan', foreign_keys=[data_karyawan_id], back_populates='user',
-                                    uselist=False)
+
+    data_kontak = db.relationship('DataKontak', back_populates='user', uselist=False, cascade="all, delete-orphan")
+    data_pribadi = db.relationship('DataPribadi', back_populates='user', uselist=False, cascade="all, delete-orphan")
+    data_karyawan = db.relationship('DataKaryawan', back_populates='user', foreign_keys='[DataKaryawan.user_id]', uselist=False, cascade="all, delete-orphan")
     login_log = db.relationship('UserLoginLog', back_populates='user')
     reimburse = db.relationship('Reimburse', back_populates='user')
 

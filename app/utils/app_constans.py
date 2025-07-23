@@ -9,16 +9,21 @@ class AppConstants(Enum):
     USER_GROUP = (KARYAWAN_ROLE, ADMIN_ROLE, HRD_ROLE)
 
     USER_RESOURCE = "User"
+    DATA_KONTAK_RESOURCE = "Data Kontak"
+    DATA_PRIBADI_RESOURCE = "Data Pribadi"
+    DATA_KARYAWAN_RESOURCE = "Data Karyawan"
     ABSENSI_RESOURCE = "Absensi"
     ABSENSI_BORONGAN_RESOURCE = "Absensi Borongan"
     APPROVAL_KOREKSI_RESOURCE = "Approval Koreksi"
     APPROVAL_ABSENSI_BORONGAN_RESOURCE = "Approval Absensi borongan"
     APPROVAL_REIMBURSE_RESOURCE = "Approval Reimburse"
+    PHOTO_RESOURCE = "Photo"
     IZIN_RESOURCE = "Izin"
     LEMBUR_RESOURCE = "Lembur"
     HARGA_RESOURCE = "Harga Harian Borongan"
     PENGUMUMAN_RESOURCE = "Pengumuman"
     REIMBURSE_RESOURCE = "Reimburse"
+    JABATAN_RESOURCE = "Jabatan"
 
     LOCATION = "Lokasi Absen"
 

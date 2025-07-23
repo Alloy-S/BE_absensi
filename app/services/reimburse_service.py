@@ -100,9 +100,13 @@ class ReimburseService:
         approval = ApprovalReimburseRepository.get_approval_by_id(approval_id, user.id)
 
 
+
+
         ApprovalReimburseRepository.delete_approval_reimburse(approval.id)
         DetailReimburseRepository.delete_detail_reimburse(approval.reimburse.id)
         ReimburseRepository.delete_reimburse(approval.reimburse.id)
+
+        PhotoService.delete_photo(approval.reimburse.photo_id)
 
         db.session.commit()
 

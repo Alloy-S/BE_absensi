@@ -14,9 +14,10 @@ class DataKaryawan(db.Model):
     jadwal_kerja_id = db.Column(UUID(as_uuid=True), db.ForeignKey('jadwal_kerja.id'), nullable=False)
     jabatan_id = db.Column(UUID(as_uuid=True), db.ForeignKey('jabatan.id'), nullable=False)
     user_pic_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=True)
+    user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False, unique=True)
     
     pic = db.relationship('Users', foreign_keys=[user_pic_id], back_populates='user_pic')
-    user = db.relationship('Users', foreign_keys='[Users.data_karyawan_id]', back_populates='data_karyawan')
+    user = db.relationship('Users', back_populates='data_karyawan', foreign_keys=[user_id])
     lokasi = db.relationship('Lokasi', back_populates='data_karyawan')
     jadwal_kerja = db.relationship('JadwalKerja', back_populates='data_karyawan')
     jabatan = db.relationship('Jabatan', back_populates='data_karyawan')

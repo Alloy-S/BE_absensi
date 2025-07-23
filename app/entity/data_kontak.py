@@ -11,8 +11,9 @@ class DataKontak(db.Model):
     nama_darurat = db.Column(db.String(150), nullable=True)
     no_telepon_darurat = db.Column(db.String(20), nullable=True)
     relasi_darurat = db.Column(db.String(50), nullable=True)
+    user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False, unique=True)
     
     user = db.relationship('Users', back_populates='data_kontak')
     
     def __repr__(self):
-        return f"<DataKontak(id={self.id}, alamat='{self.alamat}', kota_kabupaten='{self.kota_kabupaten}', provinsi='{self.provinsi}')>"
+        return f"<DataKontak(id={self.id}, alamat='{self.alamat}', user_id='{self.user_id}')>"

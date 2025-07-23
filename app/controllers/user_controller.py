@@ -6,7 +6,7 @@ from app.services.user_service import UserService
 from flask import Blueprint, request
 from app.models.users.users_req_model import UserSchema, ResendLoginSchema, ResetPasswordSchema, DataPribadiSchema, \
     DataKontakSchema
-from app.models.users.users_res_model import users_pagination_fields, posibe_user_pic, user_field
+from app.models.users.users_res_model import users_pagination_fields, posibe_user_pic, user_field, data_pribadi_fields, data_kontak_fields, data_karyawan_fields
 from marshmallow import ValidationError
 from app.utils.app_constans import AppConstants
 
@@ -117,7 +117,7 @@ class ResendLoginData(Resource):
         return response, 200
 
 class ResetPasswordController(Resource):
-    @role_required(AppConstants.ADMIN_GROUP.value)
+    @role_required(AppConstants.USER_GROUP.value)
     def post(self):
         username = get_jwt_identity()
         json_data = request.get_json()
@@ -144,6 +144,14 @@ class EditDataPribadiUserController(Resource):
 
         return response, 200
 
+    @role_required(AppConstants.USER_GROUP.value)
+    def get(self):
+        username = get_jwt_identity()
+
+        response = UserService.get_data_pribadi(username)
+
+        return marshal(response, data_pribadi_fields), 200
+
 class EditDataKontakUserController(Resource):
     @role_required(AppConstants.USER_GROUP.value)
     def put(self):
@@ -158,12 +166,37 @@ class EditDataKontakUserController(Resource):
 
         return response, 200
 
+    @role_required(AppConstants.USER_GROUP.value)
+    def get(self):
+        username = get_jwt_identity()
+
+        response = UserService.get_data_kontak(username)
+
+        return marshal(response, data_kontak_fields), 200
+
+class DataKaryawanUserController(Resource):
+    @role_required(AppConstants.USER_GROUP.value)
+    def get(self):
+        username = get_jwt_identity()
+
+        response = UserService.get_data_karyawan(username)
+
+        return marshal(response, data_karyawan_fields), 200
+
+class CreateUserAdmin(Resource):
+    def post(self):
+        UserService.create_user_admin()
+
+        return None, 201
+
 
 user_api.add_resource(UserListController, '')
 user_api.add_resource(UserController, '/<string:id>')
 user_api.add_resource(UserGetPIC, '/posible-pic/<string:id>')
 user_api.add_resource(UserUtilController, '/latest-nip')
 user_api.add_resource(ResendLoginData, '/resend-login-data')
-user_api.add_resource(ResetPasswordController, '/reset-password')
+user_api.add_resource(ResetPasswordController, '/change-password')
 user_api.add_resource(EditDataPribadiUserController, '/data-pribadi')
 user_api.add_resource(EditDataKontakUserController, '/data-kontak')
+user_api.add_resource(DataKaryawanUserController, '/data-karyawan')
+user_api.add_resource(CreateUserAdmin, '/init-user')

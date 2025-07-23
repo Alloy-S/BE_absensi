@@ -28,3 +28,7 @@ class DataKaryawanRepository:
         nip = str(last_nip).zfill(8)
 
         return nip
+
+    @staticmethod
+    def get_data_karyawan_by_user_id(user_id):
+        return DataKaryawan.query.filter_by(user_id=user_id).first()

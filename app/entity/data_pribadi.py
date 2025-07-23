@@ -11,10 +11,10 @@ class DataPribadi(db.Model):
     tmpt_lahir = db.Column(db.String(150), nullable=True)
     status_kawin = db.Column(db.String(20), nullable=True) 
     agama = db.Column(db.String(30), nullable=True)  
-    gol_darah = db.Column(db.String(3), nullable=True)  
+    gol_darah = db.Column(db.String(3), nullable=True)
+    user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False, unique=True)
     
     user = db.relationship('Users', back_populates='data_pribadi')
 
     def __repr__(self):
-        return (f"<DataPribadi(id={self.id}, gender='{self.gender}', tgl_lahir='{self.tgl_lahir}', "
-                f"tmpt_lahir='{self.tmpt_lahir}', status_kawin='{self.status_kawin}', kewarganegaraan='{self.kewarganegaraan}')>")
+        return f"<DataPribadi(id={self.id}, gender='{self.gender}', tgl_lahir='{self.tgl_lahir}', user_id='{self.user_id}')>"

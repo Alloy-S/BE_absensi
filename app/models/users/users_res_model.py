@@ -40,6 +40,7 @@ data_karyawan_fields = {
     'lokasi_id': fields.String(attribute='lokasi.id'),
     'lokasi': fields.String(attribute="lokasi.name"),
     'user_pic_id': fields.String,
+    'user_pic_name': fields.String(attribute='pic.fullname'),
 }
 
 data_pribadi_fields = {

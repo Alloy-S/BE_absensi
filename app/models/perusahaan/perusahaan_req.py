@@ -1,6 +1,8 @@
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, EXCLUDE
 
 class PerusahaanSchema(Schema):
+    class Meta:
+        unknown = EXCLUDE
     nama = fields.Str(required=True)
     alamat = fields.Str(required=True)
     kota_kabupaten = fields.Str(required=True)
