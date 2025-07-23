@@ -76,6 +76,7 @@ def create_app(config_class=Config):
     app.register_blueprint(photo_bp)
 
     os.makedirs(AppConstants.UPLOAD_FOLDER_PHOTO.value, exist_ok=True)
+    os.makedirs(AppConstants.UPLOAD_FOLDER.value, exist_ok=True)
 
     @app.route('/test-health')
     def test_health():

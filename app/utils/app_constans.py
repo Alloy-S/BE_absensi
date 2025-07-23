@@ -39,6 +39,9 @@ class AppConstants(Enum):
     REJECTED = "Ditolak"
     APPROVAL_STATUS_ALL = "All"
 
+    REGISTERED = "Terdaftar"
+    NOT_REGISTERED = "Tidak Terdaftar"
+
     HOLIDAY = "Libur"
     WORK = "Masuk"
 

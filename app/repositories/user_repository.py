@@ -231,7 +231,6 @@ class UserRepository:
     def mark_done_register_face(user):
         user.is_face_registration_required = False
 
-        db.session.commit()
 
     @staticmethod
     def change_password(user, password):
