@@ -6,6 +6,7 @@ from app.entity.data_pribadi import DataPribadi
 from app.database import db
 from sqlalchemy import text
 from werkzeug.security import generate_password_hash
+from sqlalchemy.orm import joinedload
 
 
 class UserRepository:
@@ -56,7 +57,11 @@ class UserRepository:
 
     @staticmethod
     def get_user_by_username(username):
-        return Users.query.filter_by(username=username, is_active=True).first()
+        query = Users.query.options(
+            joinedload(Users.user_role)
+        ).filter_by(username=username, is_active=True)
+
+        return query.first()
 
 
     @staticmethod

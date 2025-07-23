@@ -1,0 +1,13 @@
+be_absensi
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+.idea
+.vscode
+.git
+.gitignore
+docker-compose.yml
+Dockerfile
+README.md

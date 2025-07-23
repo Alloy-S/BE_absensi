@@ -14,6 +14,16 @@ flask db migrate -m "Initial migration"
 
 flask db upgrade
 
+## docker
+docker-compose up --build
+
+docker-compose up
+
+docker-compose down
+
+### untuk init db
+docker-compose exec web flask db upgrade
+
 ## API Endpoint List
 
 ### **1. Authentication & User Management**

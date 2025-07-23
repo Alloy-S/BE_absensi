@@ -7,6 +7,8 @@ from sqlalchemy.orm import configure_mappers
 import locale
 from .database import db
 from .config import Config
+import os
+from app.utils.app_constans import AppConstants
 
 migrate = Migrate()
 jwt = JWTManager()
@@ -48,6 +50,7 @@ def create_app(config_class=Config):
     from app.controllers.approval_absensi_borongan_controller import borongan_bp
     from app.controllers.pengumuman_controller import pengumuman_bp
     from app.controllers.perusahaan_controller import perusahaan_bp
+    from app.controllers.approval_reimburse_controller import reimburse_bp
 
     app.register_blueprint(errors_bp)
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
@@ -66,6 +69,9 @@ def create_app(config_class=Config):
     app.register_blueprint(borongan_bp)
     app.register_blueprint(pengumuman_bp)
     app.register_blueprint(perusahaan_bp)
+    app.register_blueprint(reimburse_bp)
+
+    os.makedirs(AppConstants.UPLOAD_FOLDER_PHOTO.value, exist_ok=True)
 
     @app.route('/test-health')
     def test_health():

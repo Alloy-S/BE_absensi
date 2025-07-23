@@ -35,3 +35,4 @@ from .approval_absensi_borongan import ApprovalAbsensiBorongan
 from .absensi_borongan import AbsensiBorongan
 from .detail_absensi_borongan import DetailAbsensiBorongan
 from .harga_harian_borongan import HargaHarianBorongan
+from .detail_reimburse import DetailReimburse

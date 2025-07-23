@@ -1,7 +1,7 @@
 from enum import Enum
 
 class AppConstants(Enum):
-    ADMIN_ROLE = "admin"
+    ADMIN_ROLE = "Admin"
     HRD_ROLE = "HRD"
     KARYAWAN_ROLE = "Karyawan"
 
@@ -13,10 +13,12 @@ class AppConstants(Enum):
     ABSENSI_BORONGAN_RESOURCE = "Absensi Borongan"
     APPROVAL_KOREKSI_RESOURCE = "Approval Koreksi"
     APPROVAL_ABSENSI_BORONGAN_RESOURCE = "Approval Absensi borongan"
+    APPROVAL_REIMBURSE_RESOURCE = "Approval Reimburse"
     IZIN_RESOURCE = "Izin"
     LEMBUR_RESOURCE = "Lembur"
     HARGA_RESOURCE = "Harga Harian Borongan"
     PENGUMUMAN_RESOURCE = "Pengumuman"
+    REIMBURSE_RESOURCE = "Reimburse"
 
     LOCATION = "Lokasi Absen"
 
@@ -43,4 +45,7 @@ class AppConstants(Enum):
     DATE_FORMAT = "%Y-%m-%d"
     TIME_FORMAT = "%H:%M"
     DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
+
+    UPLOAD_FOLDER_PHOTO = "uploads/photos"
+
 

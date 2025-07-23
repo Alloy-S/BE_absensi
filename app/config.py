@@ -1,5 +1,11 @@
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 class Config:
-    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:root@localhost:5432/presensi'
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
+
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    JWT_SECRET_KEY = 'uj6dsaodgfhalihbti2uyrc8912hd'
-    SQLALCHEMY_ECHO = True  # Enable SQL query logging for debugging
+    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'kunci-rahasia-default-untuk-dev')
+    SQLALCHEMY_ECHO = os.getenv('SQLALCHEMY_ECHO', 'False').lower() in ('true', '1', 't')
