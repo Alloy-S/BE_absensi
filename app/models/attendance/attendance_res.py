@@ -35,4 +35,8 @@ absensi_detail_fields = {
 check_today_attendance = {
     "status": fields.String,
     "required_attendance_type": fields.String,
+    "time_clock_in": fields.String,
+    "time_clock_out": fields.String,
+    "today": fields.String,
+    "shift": fields.String,
 }

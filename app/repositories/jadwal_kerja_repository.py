@@ -55,9 +55,9 @@ class JadwalKerjaRepository:
         return JadwalKerja.query.filter_by(kode=kode).first()
 
     @staticmethod
-    def create(kode, shift, isSameHour, details: list) -> JadwalKerja:
-        jadwalKerja = JadwalKerja(kode=kode, shift=shift, is_same_hour=isSameHour)
-        db.session.add(jadwalKerja)
+    def create(kode, shift, details: list) -> JadwalKerja:
+        jadwal_kerja = JadwalKerja(kode=kode, shift=shift)
+        db.session.add(jadwal_kerja)
         db.session.flush()
 
         for detail in details:
@@ -67,20 +67,20 @@ class JadwalKerjaRepository:
                 time_out=detail['time_out'],
                 toler_in=detail['toler_in'],
                 toler_out=detail['toler_out'],
-                jadwal_kerja_id=jadwalKerja.id
+                jadwal_kerja_id=jadwal_kerja.id,
+                is_active=detail['is_active'],
             )
             db.session.add(detail_jadwal)
 
         db.session.commit()
-        return jadwalKerja
+        return jadwal_kerja
 
     @staticmethod
-    def update(jadwalKerja: JadwalKerja, kode, shift, isSameHour, details: list) -> JadwalKerja:
-        jadwalKerja.kode = kode
-        jadwalKerja.shift = shift
-        JadwalKerja.is_same_hour = isSameHour
+    def update(jadwal_kerja: JadwalKerja, kode, shift, details: list) -> JadwalKerja:
+        jadwal_kerja.kode = kode
+        jadwal_kerja.shift = shift
 
-        DetailJadwalKerja.query.filter_by(jadwal_kerja_id=jadwalKerja.id).delete()
+        DetailJadwalKerja.query.filter_by(jadwal_kerja_id=jadwal_kerja.id).delete()
 
         for detail in details:
             new_detail = DetailJadwalKerja(
@@ -89,18 +89,20 @@ class JadwalKerjaRepository:
                 time_out=detail['time_out'],
                 toler_in=detail['toler_in'],
                 toler_out=detail['toler_out'],
-                jadwal_kerja_id=jadwalKerja.id
+                jadwal_kerja_id=jadwal_kerja.id,
+                is_active=detail['is_active']
+
             )
             db.session.add(new_detail)
 
         db.session.commit()
-        return jadwalKerja
+        return jadwal_kerja
 
     @staticmethod
-    def delete(jadwalKerja: JadwalKerja):
+    def delete(jadwal_kerja: JadwalKerja):
 
-        DetailJadwalKerja.query.filter_by(jadwal_kerja_id=jadwalKerja.id).delete()
+        DetailJadwalKerja.query.filter_by(jadwal_kerja_id=jadwal_kerja.id).delete()
 
-        JadwalKerja.query.filter_by(id=jadwalKerja.id).delete()
+        JadwalKerja.query.filter_by(id=jadwal_kerja.id).delete()
 
         db.session.commit()

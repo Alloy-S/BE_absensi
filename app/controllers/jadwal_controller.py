@@ -1,5 +1,6 @@
-from flask_restful import Resource, marshal_with, abort, Api
+from flask_restful import Resource, abort, Api, marshal
 
+from app.models.jadwalKerja import jadwal_kerja_req_model
 from app.models.pagination_model import PaginationReq
 from app.repositories.jadwal_kerja_repository import JadwalKerjaRepository
 from app.services.jadwal_kerja_service import JadwalKerjaService
@@ -12,19 +13,19 @@ jadwal_bp = Blueprint('jadwal_bp', __name__, url_prefix='/api/jadwal')
 jadwal_api = Api(jadwal_bp)
 
 class JadwalFetchAllController(Resource):
-    @marshal_with(jadwal_fields)
+
     def get(self):
         results = JadwalKerjaRepository.get_all()
 
         res = {
             "items": results
         }
-        return res, 200
+        return marshal(res, jadwal_fields), 200
 
 class JadwalListController(Resource):
-    # method_decorators = [jwt_required()]
+
     
-    @marshal_with(jadwal_pagination_fields)
+
     def get(self):
         params = request.args
 
@@ -40,7 +41,7 @@ class JadwalListController(Resource):
                 "total": results.total,
                 "items": results.items
             }
-            return res, 200
+            return marshal(res, jadwal_pagination_fields), 200
 
         except ValidationError as e:
             return abort(400, message=e.messages)
@@ -53,7 +54,7 @@ class JadwalListController(Resource):
         try:
             validated = schema.load(json)
         
-            jadwal = JadwalKerjaService.create(kode=validated["kode"], shift=validated["shift"], isSameHour=validated["is_same_hour"], details=validated["detail_jadwal_kerja"])
+            jadwal = JadwalKerjaService.create(kode=validated["kode"], shift=validated["shift"], details=validated["detail_jadwal_kerja"])
 
             if not jadwal:
                 return abort(400, message="Jadwal tidak dapat dibuat")
@@ -63,37 +64,34 @@ class JadwalListController(Resource):
             return abort(400, message=e.messages)
     
 class JadwalController(Resource):
-    # method_decorators = [jwt_required()]
-    
-    @marshal_with(jadwal_kerja_field)
-    def get(self, id):
-        jadwal = JadwalKerjaService.get_by_id(id)
 
-        if not jadwal:
-            return  abort(404, message="Jadwal not found")
-        return jadwal
+    def get(self, jadwal_id):
+        response = JadwalKerjaService.get_by_id(jadwal_id)
+
+
+        return marshal(response, jadwal_kerja_field), 200
     
-    @marshal_with(jadwal_kerja_field)
-    def put(self, id):
+
+    def put(self, jadwal_id):
         json = request.get_json()
 
         schema = JadwalKerjaRequestSchema()
 
         try:
             validated = schema.load(json)
-            jadwal = JadwalKerjaService.update(id, kode=validated["kode"], shift=validated["shift"], isSameHour=validated["is_same_hour"], details=validated["detail_jadwal_kerja"])
+            jadwal = JadwalKerjaService.update(jadwal_id, kode=validated["kode"], shift=validated["shift"], details=validated["detail_jadwal_kerja"])
             if not jadwal:
                 return  abort(404, message="Jadwal not found")
-            return jadwal
+            return marshal(jadwal, jadwal_kerja_field), 200
         except ValidationError as e:
             return abort(400, message=e.messages)
     
-    def delete(self, id):
-        success = JadwalKerjaService.delete(id)
+    def delete(self, jadwal_id):
+        success = JadwalKerjaService.delete(jadwal_id)
         if not success:
             abort(404, message="Jadwal not found")
         return None, 200
     
 jadwal_api.add_resource(JadwalFetchAllController, '/all')
 jadwal_api.add_resource(JadwalListController, '')
-jadwal_api.add_resource(JadwalController, '/<string:id>')
+jadwal_api.add_resource(JadwalController, '/<string:jadwal_id>')

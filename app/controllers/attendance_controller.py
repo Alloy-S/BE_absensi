@@ -26,32 +26,7 @@ class AttendanceController(Resource):
 
         validated_data = schema.load(json_data)
 
-        if not json_data or 'image' not in json_data:
-            return {'message': "Payload JSON tidak valid atau key 'image' tidak ditemukan."}, 400
-
-        base64_string = json_data['image']
-
-        try:
-            if "," in base64_string:
-                _, base64_data = base64_string.split(",", 1)
-            else:
-                base64_data = base64_string
-
-            image_data = base64.b64decode(base64_data)
-        except (ValueError, TypeError):
-            return {'message': 'Format string Base64 tidak valid.'}, 400
-
-        filename = f"{uuid.uuid4()}.jpg"
-        temp_path = os.path.join(AppConstants.UPLOAD_FOLDER.value, filename)
-
-
-        with open(temp_path, 'wb') as f:
-            f.write(image_data)
-
-        response = AttendanceService.create_attendance(current_username, validated_data, temp_path)
-
-        if os.path.exists(temp_path):
-            os.remove(temp_path)
+        response = AttendanceService.create_attendance(current_username, validated_data)
 
         return {'message': response}, 200
 

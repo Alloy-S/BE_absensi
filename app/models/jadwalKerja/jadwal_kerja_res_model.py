@@ -28,6 +28,7 @@ jadwal_kerja_detail_fields = {
     'time_out': fields.String(attribute='jam_out_str'),
     'toler_in': fields.Integer,
     'toler_out': fields.Integer,
+    'is_active': fields.Boolean
 }
 
 # Jadwal Kerja
@@ -35,7 +36,6 @@ jadwal_kerja_field = {
     'id': fields.String,
     'kode': fields.String,
     'shift': fields.String,
-    'is_same_hour': fields.Boolean,
     'detail_jadwal_kerja': fields.List(fields.Nested(jadwal_kerja_detail_fields))
 }
 

@@ -13,6 +13,7 @@ class DetailJadwalKerja(db.Model):
     time_out = db.Column(db.Time, nullable=False)
     toler_in = db.Column(db.SmallInteger , nullable=False)
     toler_out = db.Column(db.SmallInteger , nullable=False)
+    is_active = db.Column(db.Boolean, nullable=False)
     
     jadwal_kerja_id = db.Column(UUID(as_uuid=True), db.ForeignKey('jadwal_kerja.id'), nullable=False)
     

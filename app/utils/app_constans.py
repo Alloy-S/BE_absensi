@@ -24,6 +24,7 @@ class AppConstants(Enum):
     PENGUMUMAN_RESOURCE = "Pengumuman"
     REIMBURSE_RESOURCE = "Reimburse"
     JABATAN_RESOURCE = "Jabatan"
+    JADWAL_KERJA_RESOURCE = "Jadwal Kerja"
 
     LOCATION = "Lokasi Absen"
 
@@ -32,7 +33,7 @@ class AppConstants(Enum):
 
     ON_TIME = "Hadir"
     LATE = "Datang Terlambat"
-    EARLY = "Pulang Terlalu Cepat"
+    EARLY = "Pulang Cepat"
 
     APPROVED = "Disetujui"
     WAITING_FOR_APPROVAL = "Menunggu Persetujuan"
