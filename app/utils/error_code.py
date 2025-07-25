@@ -24,6 +24,8 @@ class ErrorCode(Enum):
     FACE_MORE_THAN_ONE = ("Pendaftaran Gagal, terdeteksi lebih dari 1 wajah", 400)
 
     DUPLICATE_CORRECTION_REQUEST = ("Sudah ada pengajuan koreksi pada tanggal tersebut", 400)
+    DUPLICATE_RESOURCE = ("{resource} sudah terdaftar.", 400)
+    DELETION_NOT_ALLOWED = ("Tidak Dapat Melakukan Delete, Item sedang digunakan", 400)
 
     @property
     def message(self):
