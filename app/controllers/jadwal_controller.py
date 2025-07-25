@@ -2,7 +2,6 @@ from flask_restful import Resource, abort, Api, marshal
 
 from app.models.jadwalKerja import jadwal_kerja_req_model
 from app.models.pagination_model import PaginationReq
-from app.repositories.jadwal_kerja_repository import JadwalKerjaRepository
 from app.services.jadwal_kerja_service import JadwalKerjaService
 from app.models.jadwalKerja.jadwal_kerja_req_model import JadwalKerjaRequestSchema
 from app.models.jadwalKerja.jadwal_kerja_res_model import jadwal_kerja_field, jadwal_pagination_fields, jadwal_fields
@@ -15,7 +14,7 @@ jadwal_api = Api(jadwal_bp)
 class JadwalFetchAllController(Resource):
 
     def get(self):
-        results = JadwalKerjaRepository.get_all()
+        results = JadwalKerjaService.get_all()
 
         res = {
             "items": results
@@ -34,7 +33,7 @@ class JadwalListController(Resource):
         try:
             validated = schema.load(params)
 
-            results = JadwalKerjaRepository.get_all_pagination(page=validated["page"], size=validated["size"], search=validated["search"])
+            results = JadwalKerjaService.get_all_pagination(page=validated["page"], size=validated["size"], search=validated["search"])
 
             res = {
                 "pages": results.pages,
