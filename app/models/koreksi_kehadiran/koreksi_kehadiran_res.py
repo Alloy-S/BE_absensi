@@ -1,8 +1,13 @@
 from flask_restful import fields
 
+user_simple_field = {
+    "id": fields.String,
+    "fullname": fields.String
+}
+
 detail_approval_koreksi_fields = {
     'id': fields.String,
-    'time': fields.String,
+    'requested_datetime': fields.String,
     'type': fields.String
 }
 
@@ -13,7 +18,9 @@ approval_koreksi_fields = {
     'user_id': fields.String,
     'absensi_id': fields.String,
     'catatan_pengajuan': fields.String,
-    'detail_approval': fields.List(fields.Nested(detail_approval_koreksi_fields))
+    'detail_approval': fields.List(fields.Nested(detail_approval_koreksi_fields)),
+    "approval_user_id": fields.String,
+    'approval_user': fields.Nested(user_simple_field)
 }
 
 approval_koreksi_pagination_fields = {
@@ -28,3 +35,5 @@ approval_koreksi_pagination_fields = {
         'catatan_pengajuan': fields.String,
     }))
 }
+
+

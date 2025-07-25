@@ -9,15 +9,16 @@ class KoreksiKehadiranRequestSchema(Schema):
         format=AppConstants.DATE_FORMAT.value,
         error_messages={"required": "Tanggal wajib diisi."}
     )
-    time_in = fields.Time(
+    time_in = fields.DateTime(
         required=True,
-        format=AppConstants.TIME_FORMAT.value,
-        error_messages={"required": "Jam masuk wajib diisi."}
+        format='%Y-%m-%d %H:%M',
+        error_messages={"required": "Waktu masuk wajib diisi."}
     )
-    time_out = fields.Time(
+
+    time_out = fields.DateTime(
         required=True,
-        format=AppConstants.TIME_FORMAT.value,
-        error_messages={"required": "Jam pulang wajib diisi."}
+        format='%Y-%m-%d %H:%M',
+        error_messages={"required": "Waktu pulang wajib diisi."}
     )
     absensi_id = fields.String(
         required=False,

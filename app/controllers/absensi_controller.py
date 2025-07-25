@@ -1,6 +1,7 @@
 from flask_jwt_extended import get_jwt_identity
 from app.filter.jwt_filter import role_required
-from app.models.attendance.attendance_res import absensi_pagination_fields, absensi_detail_fields
+from app.models.attendance.attendance_res import absensi_pagination_fields, absensi_detail_fields, \
+    check_attendance_by_date
 from app.utils.app_constans import AppConstants
 from app.models.pagination_model import PaginationReq
 from flask_restful import Resource, Api, marshal
@@ -49,7 +50,7 @@ class AbsensiDetailByDateController(Resource):
 
         result = AbsensiService.get_attendance_history_detail_by_date(current_user_id, params['date'])
 
-        return marshal(result, absensi_detail_fields), 200
+        return marshal(result, check_attendance_by_date), 200
 
 absensi_api.add_resource(AbsensiHistoryController, '')
 absensi_api.add_resource(AbsensiDetailController, '/<string:absensi_id>')

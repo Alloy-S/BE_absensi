@@ -1,4 +1,5 @@
 from app.execption.custom_execption import GeneralException, GeneralExceptionWithParam
+from app.repositories.approval_koreksi_repository import ApprovalKoreksiRepository
 from app.repositories.user_repository import UserRepository
 from app.repositories.absensi_repository import AbsensiRepository
 from datetime import datetime
@@ -51,10 +52,43 @@ class AbsensiService:
                                             params={'resource': AppConstants.USER_RESOURCE.value})
 
         attendance_date = datetime.strptime(date, AppConstants.DATE_FORMAT.value).date()
-        data = AbsensiRepository.get_absensi_history_detail_by_date(user.id, attendance_date)
+        absensi_data = AbsensiRepository.get_absensi_history_detail_by_date(user.id, attendance_date)
+        if absensi_data:
+            return AbsensiService.map_absensi_response(absensi_data)
 
-        if not data:
-            raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
-                                                params={'resource': AppConstants.ABSENSI_RESOURCE.value})
+        existing_approval = ApprovalKoreksiRepository.find_by_user_and_date(user.id, attendance_date)
+        if existing_approval:
+            return AbsensiService.map_approval_response(existing_approval)
 
-        return data
+        raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,params={'resource': AppConstants.ABSENSI_RESOURCE.value})
+
+    @staticmethod
+    def map_absensi_response(absensi):
+        if not absensi:
+            return None
+
+        detail_in = next((d for d in absensi.detail_absensi if d.type == 'IN'), None)
+        detail_out = next((d for d in absensi.detail_absensi if d.type == 'OUT'), None)
+
+        return {
+            "date": absensi.date.isoformat(),
+            "absensi_id": absensi.id,
+            "time_in": detail_in.date.isoformat() if detail_in else None,
+            "time_out": detail_out.date.isoformat() if detail_out else None
+        }
+
+    @staticmethod
+    def map_approval_response(approval):
+        if not approval:
+            return None
+
+        detail_in = next((d for d in approval.detail_approval if d.type == 'IN'), None)
+        detail_out = next((d for d in approval.detail_approval if d.type == 'OUT'), None)
+
+        return {
+            "date": approval.absensi_date.isoformat(),
+            "absensi_id": None,
+            "time_in": detail_in.requested_datetime.isoformat() if detail_in else None,
+            "time_out": detail_out.requested_datetime.isoformat() if detail_out else None
+        }
+

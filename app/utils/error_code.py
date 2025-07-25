@@ -23,6 +23,8 @@ class ErrorCode(Enum):
     FACE_NOT_FOUND = ("Gagal Mendeteksi wajah, wajah tidak ditemukan.", 400)
     FACE_MORE_THAN_ONE = ("Pendaftaran Gagal, terdeteksi lebih dari 1 wajah", 400)
 
+    DUPLICATE_CORRECTION_REQUEST = ("Sudah ada pengajuan koreksi pada tanggal tersebut", 400)
+
     @property
     def message(self):
         return self.value[0]

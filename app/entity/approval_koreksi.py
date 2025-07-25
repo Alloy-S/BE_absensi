@@ -12,7 +12,7 @@ class ApprovalKoreksi(db.Model):
     catatan_pengajuan = db.Column(db.Text, nullable=True)
     approval_user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False)
     user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False)
-    absensi_id = db.Column(UUID(as_uuid=True), db.ForeignKey('absensi.id'), nullable=False)
+    absensi_id = db.Column(UUID(as_uuid=True), db.ForeignKey('absensi.id'), nullable=True)
     
     approval_user = db.relationship("Users", back_populates="approval_user_koreksi", foreign_keys=[approval_user_id])
     user = db.relationship("Users", back_populates="approval_koreksi", foreign_keys=[user_id])

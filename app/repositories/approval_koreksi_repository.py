@@ -3,6 +3,8 @@ from app.entity import ApprovalKoreksi
 from datetime import date
 from sqlalchemy.orm import joinedload
 from dateutil.relativedelta import relativedelta
+from sqlalchemy import extract
+from datetime import date, datetime
 
 from app.utils.app_constans import AppConstants
 
@@ -10,19 +12,25 @@ from app.utils.app_constans import AppConstants
 class ApprovalKoreksiRepository:
 
     @staticmethod
-    def get_list_pagination(user_id, filter_status, page = 1, size = 10):
-
-        today = date.today()
-        three_months_ago = today - relativedelta(months=3)
-
+    def get_list_pagination(user_id, page=1, size=10, search=None, filter_status=None):
         query = ApprovalKoreksi.query.filter(
-            ApprovalKoreksi.user_id == user_id,
-            ApprovalKoreksi.created_date >= three_months_ago
+            ApprovalKoreksi.user_id == user_id
         )
 
-        if filter_status != AppConstants.APPROVAL_STATUS_ALL.value:
+        if search:
+            try:
+                search_date = datetime.strptime(search, '%Y-%m')
+
+                query = query.filter(
+                    extract('year', ApprovalKoreksi.absensi_date) == search_date.year,
+                    extract('month', ApprovalKoreksi.absensi_date) == search_date.month
+                )
+            except ValueError:
+                pass
+
+        if filter_status and filter_status != AppConstants.APPROVAL_STATUS_ALL.value:
             query = query.filter(
-                ApprovalKoreksi.status == filter_status,
+                ApprovalKoreksi.status == filter_status
             )
 
         query = query.order_by(ApprovalKoreksi.created_date.desc())
@@ -31,7 +39,10 @@ class ApprovalKoreksiRepository:
 
     @staticmethod
     def get_detail_by_id(user_id, approval_id):
-        query = ApprovalKoreksi.query.options(joinedload(ApprovalKoreksi.detail_approval)).filter_by(id=approval_id,
+        query = ApprovalKoreksi.query.options(
+            joinedload(ApprovalKoreksi.detail_approval),
+            joinedload(ApprovalKoreksi.approval_user)
+        ).filter_by(id=approval_id,
                                                                                              user_id=user_id)
         return query.first()
 
@@ -42,7 +53,8 @@ class ApprovalKoreksiRepository:
             status=data['status'],
             approval_user_id=data['approval_user_id'],
             absensi_id=data['absensi_id'],
-            user_id=data['user_id']
+            user_id=data['user_id'],
+            catatan_pengajuan=data['catatan_pengajuan']
         )
 
         db.session.add(new_koreksi)
@@ -61,3 +73,10 @@ class ApprovalKoreksiRepository:
 
         if parent_absensi and parent_absensi.metode == AppConstants.KOREKSI_KEHADIRAN.value:
             db.session.delete(parent_absensi)
+
+    @staticmethod
+    def find_by_user_and_date(user_id, absensi_date):
+        return ApprovalKoreksi.query.filter_by(
+            user_id=user_id,
+            absensi_date=absensi_date
+        ).first()

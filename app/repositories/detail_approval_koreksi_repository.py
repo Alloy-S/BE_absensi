@@ -7,7 +7,7 @@ class DetailApprovalKoreksiRepository:
     def create_detaill_approval_koreksi_user(data):
         new_detail_koreksi = DetailApprovalKoreksi(
             approval_koreksi_id=data['approval_koreksi_id'],
-            time=data['time'],
+            requested_datetime=data['requested_datetime'],
             type=data['type'],
         )
 

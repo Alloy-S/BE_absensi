@@ -22,7 +22,7 @@ class KoreksiKehadiranController(Resource):
 
         validated = schema.load(params)
 
-        result = KoreksiKehadiranService.get_list_koreksi(username=current_user_id, page=validated['page'], size=validated['size'], filter_status=validated['filter_status'])
+        result = KoreksiKehadiranService.get_list_koreksi(username=current_user_id, request=validated)
         response = {
             "pages": result.pages,
             "total": result.total,
@@ -42,7 +42,7 @@ class KoreksiKehadiranController(Resource):
 
         response = KoreksiKehadiranService.create_koreksi_kehadiran(current_user_id, validated)
 
-        return marshal(response, approval_koreksi_fields), 200
+        return marshal(response, approval_koreksi_fields), 201
 
 
 class KoreksiKehadiranDetailController(Resource):

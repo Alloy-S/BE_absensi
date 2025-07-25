@@ -12,13 +12,13 @@ from datetime import datetime
 class KoreksiKehadiranService:
 
     @staticmethod
-    def get_list_koreksi(username, page, size, filter_status):
+    def get_list_koreksi(username, request):
         user = UserRepository.get_user_by_username(username)
 
         if not user:
             raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
                                             params={'resource': AppConstants.USER_RESOURCE.value})
-        return ApprovalKoreksiRepository.get_list_pagination(user.id, filter_status, page, size)
+        return ApprovalKoreksiRepository.get_list_pagination(user.id, request.get("page"),  request.get("size"), request.get("filter_month"), request.get("filter_status"))
 
     @staticmethod
     def get_detail_koreksi(username, approval_id):
@@ -42,35 +42,31 @@ class KoreksiKehadiranService:
                 raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
                                                 params={'resource': AppConstants.USER_RESOURCE.value})
 
-            if not data['absensi_id']:
-                absensi = AbsensiRepository.create_absensi({
-                    'date': data['date'],
-                    'lokasi': user.data_karyawan.lokasi.name,
-                    'metode': AppConstants.KOREKSI_KEHADIRAN.value,
-                    'status': AppConstants.WAITING_FOR_APPROVAL.value,
-                    'user_id': user.id,
-                })
-            else:
-                absensi = AbsensiRepository.get_absensi_by_id(absensi_id=data['absensi_id'])
+            attendance_date = data['date']
+            absensi_id = data.get('absensi_id')
+
+            existing_approval = ApprovalKoreksiRepository.find_by_user_and_date(user.id, attendance_date)
+            if existing_approval:
+                ApprovalKoreksiRepository.delete_koreksi(existing_approval)
 
             approval = ApprovalKoreksiRepository.create_approval_koreksi_user({
                 'absensi_date': data['date'],
                 'status': AppConstants.WAITING_FOR_APPROVAL.value,
                 'approval_user_id': user.data_karyawan.pic.id,
                 'user_id': user.id,
-                'absensi_id': absensi.id,
+                'absensi_id': absensi_id,
                 'catatan_pengajuan': data.get('catatan_pengajuan', '')
             })
 
             DetailApprovalKoreksiRepository.create_detaill_approval_koreksi_user({
                 'approval_koreksi_id': approval.id,
-                'time': data['time_in'],
+                'requested_datetime': data['time_in'],
                 'type': AppConstants.ATTENDANCE_IN.value,
             })
 
             DetailApprovalKoreksiRepository.create_detaill_approval_koreksi_user({
                 'approval_koreksi_id': approval.id,
-                'time': data['time_out'],
+                'requested_datetime': data['time_out'],
                 'type': AppConstants.ATTENDANCE_OUT.value,
             })
 

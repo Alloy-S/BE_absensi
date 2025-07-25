@@ -40,3 +40,10 @@ check_today_attendance = {
     "today": fields.String,
     "shift": fields.String,
 }
+
+check_attendance_by_date = {
+    "date": fields.String,
+    "absensi_id": fields.String,
+    "time_in": fields.String,
+    "time_out": fields.String,
+}
