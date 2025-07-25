@@ -27,6 +27,9 @@ class ErrorCode(Enum):
     DUPLICATE_RESOURCE = ("{resource} sudah terdaftar.", 400)
     DELETION_NOT_ALLOWED = ("Tidak Dapat Melakukan Delete, Item sedang digunakan", 400)
 
+    CUTI_INUSE = ("Tidak bisa menghapus jatah cuti yang sudah digunakan.", 400)
+    EXISTING_KUOTA_CUTI = ("Karyawan ini sudah memiliki jatah cuti tersebut untuk periode ini.", 400)
+
     @property
     def message(self):
         return self.value[0]

@@ -31,7 +31,7 @@ class DataKaryawanSchema(Schema):
     jabatan_id = fields.String(required=True)
     jadwal_kerja_id = fields.String(required=True)
     tipe_karyawan = fields.String(required=True)
-    user_pic_id = fields.String(required=True)
+    user_pic_id = fields.String(required=False, allow_none=True)
 
 class UserSchema(Schema):
     class Meta:

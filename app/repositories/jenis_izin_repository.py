@@ -45,3 +45,7 @@ class JenisIzinRepository:
     def delete(jenis_izin_obj):
         db.session.delete(jenis_izin_obj)
         db.session.commit()
+
+    @staticmethod
+    def find_by_reset_period(period: str):
+        return JenisIzin.query.filter_by(periode_reset=period).all()

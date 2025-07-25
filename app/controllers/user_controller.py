@@ -6,7 +6,7 @@ from app.services.user_service import UserService
 from flask import Blueprint, request
 from app.models.users.users_req_model import UserSchema, ResendLoginSchema, ResetPasswordSchema, DataPribadiSchema, \
     DataKontakSchema
-from app.models.users.users_res_model import users_pagination_fields, posibe_user_pic, user_field, data_pribadi_fields, data_kontak_fields, data_karyawan_fields
+from app.models.users.users_res_model import users_pagination_fields, posibe_user_pic, user_field, data_pribadi_fields, data_kontak_fields, data_karyawan_fields, users_cuti_kuota_pagination_fields
 from marshmallow import ValidationError
 from app.utils.app_constans import AppConstants
 
@@ -189,6 +189,25 @@ class CreateUserAdmin(Resource):
 
         return None, 201
 
+class UserListKuotaCutiController(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    def get(self):
+        queryparams = request.args
+        schema = PaginationReq()
+
+        validated = schema.load(queryparams)
+
+        print(f"Fetching all user page={validated['page']}, per_page={validated['size']}")
+
+        data = UserService.get_users_pagination_kuota_cuti(validated['page'], validated['size'], validated['search'])
+
+        response = {
+            "pages": data.pages,
+            "total": data.total,
+            "items": data.items
+        }
+        return marshal(response, users_cuti_kuota_pagination_fields), 200
+
 
 user_api.add_resource(UserListController, '')
 user_api.add_resource(UserController, '/<string:id>')
@@ -200,3 +219,4 @@ user_api.add_resource(EditDataPribadiUserController, '/data-pribadi')
 user_api.add_resource(EditDataKontakUserController, '/data-kontak')
 user_api.add_resource(DataKaryawanUserController, '/data-karyawan')
 user_api.add_resource(CreateUserAdmin, '/init-user')
+user_api.add_resource(UserListKuotaCutiController, '/kuota-cuti')

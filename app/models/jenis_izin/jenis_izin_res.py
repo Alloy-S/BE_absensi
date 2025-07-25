@@ -23,3 +23,11 @@ pagination_fields = {
     "total": fields.Integer,
     "items": fields.List(fields.Nested(jenis_izin_fields), attribute='items'),
 }
+
+jenis_izin_all_fields = {
+    "items": fields.List(fields.Nested({
+        'id': fields.String,
+        'nama': fields.String,
+        'kuota_default': fields.Integer,
+    }), attribute='items'),
+}

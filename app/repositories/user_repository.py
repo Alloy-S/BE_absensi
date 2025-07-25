@@ -1,15 +1,19 @@
-from app.entity import Lokasi, Jabatan, UserRole
+from app.entity import Lokasi, Jabatan, UserRole, JatahKuotaCuti
 from app.entity.users import Users
 from app.entity.data_karyawan import DataKaryawan
 from app.entity.data_kontak import DataKontak
 from app.entity.data_pribadi import DataPribadi
 from app.database import db
-from sqlalchemy import text
+from sqlalchemy import text, func
 from werkzeug.security import generate_password_hash
 from sqlalchemy.orm import joinedload
 
 
 class UserRepository:
+    @staticmethod
+    def get_all_active_users():
+        return Users.query.join(Users.data_karyawan).filter(Users.is_active == True).all()
+
     @staticmethod
     def get_all_users():
         query = db.session.query(
@@ -33,6 +37,7 @@ class UserRepository:
             Users.id,
             Users.fullname,
             Users.username,
+            Users.is_active,
             UserRole.name.label("role"),
             Lokasi.name.label("lokasi"),
             Jabatan.nama.label("jabatan")
@@ -48,6 +53,31 @@ class UserRepository:
         result = query.paginate(page=page, per_page=per_page, error_out=False)
 
         return result
+
+    @staticmethod
+    def get_users_pagination_kuota_cuti(page: int = 1, per_page: int = 10, search: str = None):
+        query = db.session.query(
+            Users.id,
+            Users.fullname,
+            func.sum(JatahKuotaCuti.sisa_kuota).label("sisa_cuti_tahunan"),
+            func.sum(JatahKuotaCuti.kuota_awal).label("total_cuti_tahunan")
+        ).outerjoin(Users.jatah_kuota_cuti)
+
+        query = query.join(Users.data_karyawan)
+
+        query = query.filter(Users.is_active.is_(True))
+        if search:
+            query = query.filter(Users.fullname.ilike(f"%{search}%"))
+
+        query = query.group_by(
+            Users.id,
+            Users.fullname,
+            DataKaryawan.nip
+        )
+
+        query = query.order_by(DataKaryawan.nip.asc())
+
+        return query.paginate(page=page, per_page=per_page, error_out=False)
 
 
     @staticmethod

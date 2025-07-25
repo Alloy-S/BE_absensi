@@ -11,16 +11,18 @@ from .database import db
 from .config import Config
 import os
 from app.utils.app_constans import AppConstants
+from flask_apscheduler import APScheduler
 
 migrate = Migrate()
 jwt = JWTManager()
-
+scheduler = APScheduler()
 configure_mappers()
 
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
-
+    scheduler.init_app(app)
+    scheduler.start()
     db.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
@@ -55,6 +57,7 @@ def create_app(config_class=Config):
     from app.controllers.approval_reimburse_controller import reimburse_bp
     from app.controllers.photo_controller import photo_bp
     from app.controllers.jenis_izin_controller import jenis_izin_bp
+    from app.controllers.kuota_cuti_controller import jatah_cuti_bp
 
     app.register_blueprint(errors_bp)
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
@@ -76,6 +79,7 @@ def create_app(config_class=Config):
     app.register_blueprint(reimburse_bp)
     app.register_blueprint(photo_bp)
     app.register_blueprint(jenis_izin_bp)
+    app.register_blueprint(jatah_cuti_bp)
 
     os.makedirs(AppConstants.UPLOAD_FOLDER_PHOTO.value, exist_ok=True)
     os.makedirs(AppConstants.UPLOAD_FOLDER.value, exist_ok=True)

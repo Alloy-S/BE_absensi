@@ -24,7 +24,19 @@ users_pagination_fields = {
         'username': fields.String,
         'role': fields.String,
         'lokasi': fields.String,
-        'jabatan': fields.String
+        'jabatan': fields.String,
+        'is_active': fields.Boolean,
+    }))
+}
+
+users_cuti_kuota_pagination_fields = {
+    "pages": fields.String,
+    "total": fields.String,
+    "items": fields.List(fields.Nested({
+        'id': fields.String,
+        'fullname': fields.String,
+        'sisa_cuti_tahunan': fields.Integer,
+        'total_cuti_tahunan': fields.Integer
     }))
 }
 
@@ -61,7 +73,6 @@ data_kontak_fields = {
     'no_telepon_darurat': fields.String,
     'relasi_darurat': fields.String,
 }
-
 
 user_field = {
     'id': fields.String,
