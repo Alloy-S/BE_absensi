@@ -52,7 +52,7 @@ class LemburService:
         if not user:
             raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
                                             params={'resource': AppConstants.USER_RESOURCE.value})
-        return ApprovalLemburRepository.get_list_pagination(user.id, data['filter_status'], data['page'], data['size'])
+        return ApprovalLemburRepository.get_list_pagination(user.id,data.get('filter_month'),  data.get('filter_status'), data.get('page'), data.get('size'))
 
     @staticmethod
     def get_detail_approval_lembur(username, approval_id):

@@ -1,9 +1,10 @@
 from app.database import db
 from app.entity import ApprovalLembur
-from datetime import date
 from sqlalchemy.orm import joinedload
 from dateutil.relativedelta import relativedelta
 from app.utils.app_constans import AppConstants
+from sqlalchemy import extract
+from datetime import date, datetime
 
 
 class ApprovalLemburRepository:
@@ -20,14 +21,19 @@ class ApprovalLemburRepository:
         return new_approval
 
     @staticmethod
-    def get_list_pagination(user_id, filter_status, page=1, size=10):
-        today = date.today()
-        three_months_ago = today - relativedelta(months=3)
+    def get_list_pagination(user_id, search, filter_status, page=1, size=10):
 
         query = ApprovalLembur.query.filter(
             ApprovalLembur.user_id == user_id,
-            ApprovalLembur.created_date >= three_months_ago
         )
+
+        if search:
+            search_date = datetime.strptime(search, '%Y-%m')
+
+            query = query.filter(
+                extract('year', ApprovalLembur.created_date) == search_date.year,
+                extract('month', ApprovalLembur.created_date) == search_date.month
+            )
 
         if filter_status != AppConstants.APPROVAL_STATUS_ALL.value:
             query = query.filter(

@@ -16,9 +16,6 @@ approval_lembur_pagination_fields = {
         'id': fields.String,
         'created_date': fields.String,
         'status': fields.String,
-        'approval_user_id': fields.String,
-        'lembur_id': fields.String,
-        'user_id': fields.String,
     }))
 }
 
@@ -31,11 +28,16 @@ lembur_field = {
     'user_id': fields.String
 }
 
+user_simple_field = {
+    "id": fields.String,
+    "fullname": fields.String
+}
+
 approval_lembur_field_detail = {
     'id': fields.String,
     'created_date': fields.String,
     'status': fields.String,
-    'approval_user_id': fields.String,
+    'approval_user': fields.Nested(user_simple_field),
     'user_id': fields.String,
     'lembur': fields.Nested(lembur_field)
 }
