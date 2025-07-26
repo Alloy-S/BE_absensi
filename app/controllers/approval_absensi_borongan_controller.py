@@ -22,7 +22,7 @@ class AbsensiBoronganListController(Resource):
 
         validated = schema.load(params)
 
-        pagination_result = AbsensiBoronganService.get_list_absensi_borongan(current_user_id, validated['page'], validated['size'])
+        pagination_result = AbsensiBoronganService.get_list_absensi_borongan(current_user_id, validated)
         return marshal(pagination_result, pagination_fields), 200
 
     @role_required(AppConstants.USER_GROUP.value)
@@ -48,8 +48,8 @@ class AbsensiBoronganDetailController(Resource):
     def delete(self, approval_id):
         current_user_id = get_jwt_identity()
         AbsensiBoronganService.cancel_absensi_borongan(current_user_id, approval_id)
-        return {'message': 'Pengajuan absensi borongan berhasil dibatalkan.'}, 200
+        return None, 200
 
 
-borongan_api.add_resource(AbsensiBoronganListController, '/')
+borongan_api.add_resource(AbsensiBoronganListController, '')
 borongan_api.add_resource(AbsensiBoronganDetailController, '/<string:approval_id>')

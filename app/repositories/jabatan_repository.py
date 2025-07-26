@@ -1,5 +1,6 @@
 from app.entity.jabatan import Jabatan
 from app.database import db
+from sqlalchemy import or_
 
 class JabatanRepository:
 
@@ -47,6 +48,17 @@ class JabatanRepository:
     @staticmethod
     def get_by_name(name) -> Jabatan:
         return Jabatan.query.filter_by(nama=name).first()
+
+    @staticmethod
+    def get_by_name_and_jabatan_id(name, jabatan_id) -> Jabatan:
+        return db.session.query(
+            Jabatan.id,
+        ).filter(
+            or_(
+                Jabatan.nama == name,
+                Jabatan.id == jabatan_id
+            )
+        )
     
     @staticmethod
     def create(nama, parent_id) -> Jabatan:
@@ -56,12 +68,7 @@ class JabatanRepository:
         return jabatan
     
     @staticmethod
-    def update(id, nama, parent_id) -> Jabatan:
-        jabatan = JabatanRepository.get_by_id(id)
-        
-        if not jabatan:
-            return None
-        
+    def update_jabatan(jabatan, nama, parent_id) -> Jabatan:
         jabatan.nama = nama
         jabatan.parent_id = parent_id
         
@@ -70,11 +77,7 @@ class JabatanRepository:
         return jabatan
     
     @staticmethod
-    def delete(id) -> bool:
-        jabatan = JabatanRepository.get_by_id(id)
-        
-        if not jabatan:
-            return False  
+    def delete_jabatan(jabatan) -> bool:
 
         db.session.delete(jabatan)
         db.session.commit()

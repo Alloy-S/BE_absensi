@@ -203,9 +203,6 @@ class UserService:
 
         UserRepository.edit_data_pribadi(user, validated)
 
-
-
-
     @staticmethod
     def edit_data_kontak(username, validated):
         user = UserRepository.get_user_by_username(username)
@@ -215,3 +212,12 @@ class UserService:
                                             params={'resource': AppConstants.USER_RESOURCE.value})
 
         UserRepository.edit_data_kontak(user, validated)
+
+    @staticmethod
+    def get_users_by_pic_id(username):
+        user_pic = UserRepository.get_user_by_username(username)
+        if not user_pic:
+            raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
+                                            params={'resource': AppConstants.USER_RESOURCE.value})
+
+        return UserRepository.get_users_by_pic(user_pic.id)

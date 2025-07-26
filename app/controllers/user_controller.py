@@ -6,7 +6,7 @@ from app.services.user_service import UserService
 from flask import Blueprint, request
 from app.models.users.users_req_model import UserSchema, ResendLoginSchema, ResetPasswordSchema, DataPribadiSchema, \
     DataKontakSchema
-from app.models.users.users_res_model import users_pagination_fields, posibe_user_pic, user_field, data_pribadi_fields, data_kontak_fields, data_karyawan_fields, users_cuti_kuota_pagination_fields
+from app.models.users.users_res_model import users_pagination_fields, posibe_user_pic, user_field, data_pribadi_fields, data_kontak_fields, data_karyawan_fields, users_cuti_kuota_pagination_fields, user_by_pic_field
 from marshmallow import ValidationError
 from app.utils.app_constans import AppConstants
 
@@ -208,6 +208,19 @@ class UserListKuotaCutiController(Resource):
         }
         return marshal(response, users_cuti_kuota_pagination_fields), 200
 
+class GetUserByPic(Resource):
+    @role_required(AppConstants.USER_GROUP.value)
+    def get(self):
+        username = get_jwt_identity()
+
+        result = UserService.get_users_by_pic_id(username)
+
+        response = {
+            'items': result
+        }
+
+        return marshal(response, user_by_pic_field), 200
+
 
 user_api.add_resource(UserListController, '')
 user_api.add_resource(UserController, '/<string:id>')
@@ -218,5 +231,6 @@ user_api.add_resource(ResetPasswordController, '/change-password')
 user_api.add_resource(EditDataPribadiUserController, '/data-pribadi')
 user_api.add_resource(EditDataKontakUserController, '/data-kontak')
 user_api.add_resource(DataKaryawanUserController, '/data-karyawan')
-user_api.add_resource(CreateUserAdmin, '/init-user')
+# user_api.add_resource(CreateUserAdmin, '/init-user')
 user_api.add_resource(UserListKuotaCutiController, '/kuota-cuti')
+user_api.add_resource(GetUserByPic, '/users-by-pic')

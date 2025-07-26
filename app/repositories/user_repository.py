@@ -266,3 +266,24 @@ class UserRepository:
     def change_password(user, password):
         user.password = generate_password_hash(password)
         db.session.commit()
+
+    @staticmethod
+    def get_users_by_pic(pic_user_id):
+
+        query = db.session.query(
+            Users.id,
+            Users.fullname,
+            DataKaryawan.nip,
+            Jabatan.nama.label('jabatan')
+        ).join(
+            DataKaryawan, Users.id == DataKaryawan.user_id
+        ).outerjoin(
+            Jabatan, DataKaryawan.jabatan_id == Jabatan.id
+        ).filter(
+            DataKaryawan.user_pic_id == pic_user_id,
+            Users.is_active.is_(True)
+        ).order_by(
+            Users.fullname.asc()
+        )
+
+        return query.all()

@@ -85,3 +85,12 @@ user_field = {
     'data_pribadi': fields.Nested(data_pribadi_fields),
     'data_kontak': fields.Nested(data_kontak_fields),
 }
+
+user_by_pic_field = {
+    'items': fields.List(fields.Nested({
+        'id': fields.String,
+        'fullname': fields.String,
+        'nip': fields.String,
+        'jabatan': fields.String
+    }))
+}

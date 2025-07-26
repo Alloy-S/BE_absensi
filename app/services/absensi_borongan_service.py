@@ -70,13 +70,13 @@ class AbsensiBoronganService:
             raise e
 
     @staticmethod
-    def get_list_absensi_borongan(username, page, size):
+    def get_list_absensi_borongan(username, data):
         user = UserRepository.get_user_by_username(username)
 
         if not user:
             raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
                                             params={'resource': AppConstants.APPROVAL_ABSENSI_BORONGAN_RESOURCE.value})
-        return ApprovalAbsensiBoronganRepository.get_list_pagination(user.id, page, size)
+        return ApprovalAbsensiBoronganRepository.get_list_pagination(user.id, data.get('filter_month'), data.get('filter_status'), data.get('page'), data.get('size'))
 
     @staticmethod
     def get_detail_absensi_borongan(username, approval_id):
@@ -84,17 +84,16 @@ class AbsensiBoronganService:
 
         if not user:
             raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
-                                            params={'resource': AppConstants.APPROVAL_ABSENSI_BORONGAN_RESOURCE.value})
+                                            params={'resource': AppConstants.USER_RESOURCE.value})
         approval = ApprovalAbsensiBoronganRepository.get_detail_by_id(approval_id)
 
         if not approval:
             raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
-                                            params={'resource': AppConstants.USER_RESOURCE.value})
+                                            params={'resource': AppConstants.APPROVAL_ABSENSI_BORONGAN_RESOURCE.value})
 
         result = {
             "id": approval.id,
-            'approval_user_id': approval.user.id,
-            'approval_user_name': approval.user.fullname,
+            "approval_user": approval.approval_user,
             "date": approval.absensi_borongan.date,
             "status": approval.absensi_borongan.status,
             "total": approval.absensi_borongan.total,
