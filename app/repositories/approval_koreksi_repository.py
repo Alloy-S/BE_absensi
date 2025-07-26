@@ -1,6 +1,5 @@
 from app.database import db
 from app.entity import ApprovalKoreksi
-from datetime import date
 from sqlalchemy.orm import joinedload
 from dateutil.relativedelta import relativedelta
 from sqlalchemy import extract
@@ -18,15 +17,13 @@ class ApprovalKoreksiRepository:
         )
 
         if search:
-            try:
-                search_date = datetime.strptime(search, '%Y-%m')
+            search_date = datetime.strptime(search, '%Y-%m')
 
-                query = query.filter(
-                    extract('year', ApprovalKoreksi.absensi_date) == search_date.year,
-                    extract('month', ApprovalKoreksi.absensi_date) == search_date.month
-                )
-            except ValueError:
-                pass
+            query = query.filter(
+                extract('year', ApprovalKoreksi.absensi_date) == search_date.year,
+                extract('month', ApprovalKoreksi.absensi_date) == search_date.month
+            )
+
 
         if filter_status and filter_status != AppConstants.APPROVAL_STATUS_ALL.value:
             query = query.filter(

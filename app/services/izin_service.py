@@ -19,7 +19,19 @@ class IzinService:
                 raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
                                                 params={'resource': AppConstants.USER_RESOURCE.value})
 
+
+
+            if not user.data_karyawan.pic:
+                raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
+                                                params={'resource': AppConstants.PIC_KARYAWAN.value})
+
             approver = user.data_karyawan.pic
+
+            existing_izin = IzinRepository.get_izin_by_date(user.id, data['tgl_izin_start'])
+
+            if existing_izin:
+                raise GeneralExceptionWithParam(ErrorCode.DUPLICATE_RESOURCE,
+                                                params={'resource': AppConstants.IZIN_RESOURCE.value})
 
             izin_payload = {
                 'tgl_izin_start': data['tgl_izin_start'],
@@ -54,7 +66,7 @@ class IzinService:
         if not user:
             raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
                                             params={'resource': AppConstants.USER_RESOURCE.value})
-        return ApprovalIzinRepository.get_list_pagination(user.id, data['filter_status'], data['page'], data['size'])
+        return ApprovalIzinRepository.get_list_pagination(user.id, data.get('filter_month'), data.get('filter_status'), data.get("page"),  data.get("size"))
 
     @staticmethod
     def get_detail_approval_izin(username, approval_id):

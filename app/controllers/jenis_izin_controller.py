@@ -63,7 +63,7 @@ class JenisIzinDetailController(Resource):
         return None, 200
 
 class JenisIzinAllController(Resource):
-    @role_required(AppConstants.ADMIN_GROUP.value)
+    @role_required(AppConstants.USER_GROUP.value)
     def get(self):
         result = JenisIzinService.get_jenis_izin_all()
 

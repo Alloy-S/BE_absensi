@@ -28,6 +28,8 @@ class AppConstants(Enum):
     JENIS_IZIN_RESOURCE = "Jenis Izin"
     KUOTA_CUTI_RESOURCE = "Kuota Cuti"
 
+    PIC_KARYAWAN = "PIC"
+
     LOCATION = "Lokasi Absen"
 
     ATTENDANCE_IN = "IN"

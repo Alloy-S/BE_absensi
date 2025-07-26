@@ -4,6 +4,8 @@ from datetime import date
 from sqlalchemy.orm import joinedload
 from dateutil.relativedelta import relativedelta
 from app.utils.app_constans import AppConstants
+from datetime import date, datetime
+from sqlalchemy import extract
 
 
 class ApprovalIzinRepository:
@@ -20,14 +22,18 @@ class ApprovalIzinRepository:
         return new_approval
 
     @staticmethod
-    def get_list_pagination(user_id, filter_status, page=1, size=10):
-        today = date.today()
-        three_months_ago = today - relativedelta(months=3)
-
+    def get_list_pagination(user_id, search, filter_status, page=1, size=10):
         query = ApprovalIzin.query.filter(
-            ApprovalIzin.user_id == user_id,
-            ApprovalIzin.created_date >= three_months_ago
+            ApprovalIzin.user_id == user_id
         )
+
+        if search:
+            search_date = datetime.strptime(search, '%Y-%m')
+
+            query = query.filter(
+                extract('year', ApprovalIzin.created_date) == search_date.year,
+                extract('month', ApprovalIzin.created_date) == search_date.month
+            )
 
         if filter_status != AppConstants.APPROVAL_STATUS_ALL.value:
             query = query.filter(
