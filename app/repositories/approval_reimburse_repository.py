@@ -5,6 +5,8 @@ from datetime import date
 from sqlalchemy.orm import joinedload
 from app.utils.app_constans import AppConstants
 from dateutil.relativedelta import relativedelta
+from sqlalchemy import extract
+from datetime import date, datetime
 
 
 class ApprovalReimburseRepository:
@@ -23,14 +25,18 @@ class ApprovalReimburseRepository:
         return new_approval
 
     @staticmethod
-    def get_approval_pagination(user_id, filter_status, page=1, size=10):
-        today = date.today()
-        three_months_ago = today - relativedelta(months=3)
-
+    def get_approval_pagination(user_id, filter_month, filter_status, page=1, size=10):
         query = ApprovalReimburse.query.filter(
-            ApprovalReimburse.user_id == user_id,
-            ApprovalReimburse.created_date >= three_months_ago
+            ApprovalReimburse.user_id == user_id
         )
+
+        if filter_month:
+            search_date = datetime.strptime(filter_month, '%Y-%m')
+
+            query = query.filter(
+                extract('year', ApprovalReimburse.created_date) == search_date.year,
+                extract('month', ApprovalReimburse.created_date) == search_date.month
+            )
 
         if filter_status != AppConstants.APPROVAL_STATUS_ALL.value:
             query = query.filter(
@@ -45,7 +51,6 @@ class ApprovalReimburseRepository:
     def get_approval_by_id(approval_id, user_id):
         query = ApprovalReimburse.query.options(
             joinedload(ApprovalReimburse.reimburse)
-            .joinedload(Reimburse.photo)
         ).filter_by(id=approval_id, user_id=user_id)
         return query.first()
 

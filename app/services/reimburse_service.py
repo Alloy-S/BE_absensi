@@ -66,7 +66,23 @@ class ReimburseService:
         if not approval:
             raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND, params={'resource': AppConstants.APPROVAL_REIMBURSE_RESOURCE.value})
 
-        return approval
+        photo = PhotoService.get_photo_as_base64(approval.reimburse.photo_id)
+
+        response = {
+            "id": approval.id,
+            "status": approval.status,
+            "created_date": approval.created_date,
+            'approval_user': approval.approval_user,
+            "reimburse": {
+                "id": approval.reimburse.id,
+                "status": approval.reimburse.status,
+                "date": approval.reimburse.date,
+                "photo": photo,
+                "detail_reimburse": approval.reimburse.detail_reimburse,
+            },
+        }
+
+        return response
 
     @staticmethod
     def get_approval_reimburse_pagination(username, request):
@@ -76,7 +92,7 @@ class ReimburseService:
             raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
                                             params={'resource': AppConstants.APPROVAL_ABSENSI_BORONGAN_RESOURCE.value})
 
-        return ApprovalReimburseRepository.get_approval_pagination(user.id, request['filter_status'], request['page'], request['size'])
+        return ApprovalReimburseRepository.get_approval_pagination(user.id, request['filter_month'], request['filter_status'], request['page'], request['size'])
 
     @staticmethod
     def get_approval_by_pic_id(pic_username, request):
