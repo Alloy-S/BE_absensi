@@ -32,6 +32,8 @@ COPY requirements.txt .
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
+RUN python -c "from deepface import DeepFace; DeepFace.build_model('SFace')"
+
 # Salin seluruh kode aplikasi Anda ke dalam direktori kerja
 COPY . .
 
