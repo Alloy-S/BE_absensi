@@ -24,6 +24,12 @@ docker-compose down
 ### untuk init db
 docker-compose exec web flask db upgrade
 
+### server
+docker compose exec web flask db upgrade
+
+
+### migration db
+
 ## API Endpoint List
 
 ### **1. Authentication & User Management**
