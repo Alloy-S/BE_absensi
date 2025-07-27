@@ -23,7 +23,8 @@ class PengumumanRepository:
 
         query = db.session.query(
             Pengumuman.id,
-            Pengumuman.judul
+            Pengumuman.judul,
+            Pengumuman.date_created,
         ).filter(Pengumuman.is_active.is_(True))
 
         if search:
@@ -40,7 +41,9 @@ class PengumumanRepository:
 
         query = db.session.query(
             Pengumuman.id,
-            Pengumuman.judul
+            Pengumuman.judul,
+            Pengumuman.is_active,
+            Pengumuman.date_created,
         )
 
         if search:

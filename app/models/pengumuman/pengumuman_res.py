@@ -6,6 +6,8 @@ pagination_fields = {
     "items": fields.List(fields.Nested({
         'id': fields.String,
         'judul': fields.String,
+        'is_active': fields.Boolean,
+        'date_created': fields.String
     }))
 }
 
@@ -13,6 +15,7 @@ pengumuman_field = {
     "id": fields.String,
     "judul": fields.String,
     "isi": fields.String,
+    "is_active": fields.Boolean,
     "date_created": fields.String,
     "created_by": fields.String,
     "date_updated": fields.String,
