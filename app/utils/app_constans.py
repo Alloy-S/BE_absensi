@@ -61,4 +61,6 @@ class AppConstants(Enum):
 
     UPLOAD_FOLDER_PHOTO = "uploads/photos"
 
+    GET_LATEST_DATA = 5
+
 

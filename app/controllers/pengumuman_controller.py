@@ -1,7 +1,7 @@
 from flask_jwt_extended import get_jwt_identity
 from app.filter.jwt_filter import role_required
 from app.models.pagination_model import PaginationReq
-from app.models.pengumuman.pengumuman_res import pengumuman_field, pagination_fields
+from app.models.pengumuman.pengumuman_res import pengumuman_field, pagination_fields, latest_pengumuman_fields
 from app.utils.app_constans import AppConstants
 from flask_restful import Resource, Api, marshal
 from flask import Blueprint, request
@@ -96,7 +96,19 @@ class PengumumanAdminByIdController(Resource):
 
         return "", 200
 
+class LatestPengumumanController(Resource):
+    @role_required(AppConstants.USER_GROUP.value)
+    def get(self):
+        result = PengumumanService.get_latest_pengumuman()
+
+        response = {
+            "items": result
+        }
+
+        return marshal(response, latest_pengumuman_fields), 200
+
 pengumuman_api.add_resource(PengumumanNotificationController, '')
 pengumuman_api.add_resource(PengumumanByidController, '/<string:pengumuman_id>')
 pengumuman_api.add_resource(PengumumanAdminController, '/admin')
 pengumuman_api.add_resource(PengumumanAdminByIdController, '/admin/<string:pengumuman_id>')
+pengumuman_api.add_resource(LatestPengumumanController, '/latest')

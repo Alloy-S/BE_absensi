@@ -1,3 +1,4 @@
+from app import AppConstants
 from app.database import db
 from app.entity import Pengumuman
 from datetime import datetime
@@ -74,3 +75,17 @@ class PengumumanRepository:
         db.session.commit()
 
         return pengumuman
+
+    @staticmethod
+    def get_latest_pengumuman():
+        query = db.session.query(
+            Pengumuman.id,
+            Pengumuman.judul,
+            Pengumuman.date_created,
+        ).filter(Pengumuman.is_active.is_(True))
+
+        query = query.order_by(Pengumuman.date_created.asc())
+
+        query = query.limit(AppConstants.GET_LATEST_DATA.value)
+
+        return query.all()

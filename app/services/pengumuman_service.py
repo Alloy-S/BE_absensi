@@ -59,4 +59,8 @@ class PengumumanService:
 
         PengumumanRepository.delete_pengumuman(pengumuman)
 
+    @staticmethod
+    def get_latest_pengumuman():
+        return PengumumanRepository.get_latest_pengumuman()
+
 

@@ -21,3 +21,11 @@ pengumuman_field = {
     "date_updated": fields.String,
     "updated_by": fields.String,
 }
+
+latest_pengumuman_fields = {
+    "items": fields.List(fields.Nested({
+        'id': fields.String,
+        'judul': fields.String,
+        'date_created': fields.String
+    }))
+}
