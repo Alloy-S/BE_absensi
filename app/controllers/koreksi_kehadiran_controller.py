@@ -63,5 +63,23 @@ class KoreksiKehadiranDetailController(Resource):
 
         return response, 200
 
+class ApproveKoreksiKehadiranController(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    def post(self, approval_id):
+        username = get_jwt_identity()
+
+        KoreksiKehadiranService.approve_koreksi(username, approval_id)
+
+class RejectKoreksiKehadiranController(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    def post(self, approval_id):
+        username = get_jwt_identity()
+
+        KoreksiKehadiranService.reject_koreksi(username, approval_id)
+
+
+
 koreksi_kehadiran_api.add_resource(KoreksiKehadiranController, '')
 koreksi_kehadiran_api.add_resource(KoreksiKehadiranDetailController, '/<string:approval_id>')
+koreksi_kehadiran_api.add_resource(ApproveKoreksiKehadiranController, '/<string:approval_id>/approve')
+koreksi_kehadiran_api.add_resource(RejectKoreksiKehadiranController, '/<string:approval_id>/reject')

@@ -24,7 +24,6 @@ class ApprovalKoreksiRepository:
                 extract('month', ApprovalKoreksi.absensi_date) == search_date.month
             )
 
-
         if filter_status and filter_status != AppConstants.APPROVAL_STATUS_ALL.value:
             query = query.filter(
                 ApprovalKoreksi.status == filter_status
@@ -35,13 +34,23 @@ class ApprovalKoreksiRepository:
         return query.paginate(page=page, per_page=size, error_out=False)
 
     @staticmethod
-    def get_detail_by_id(user_id, approval_id):
+    def get_detail_by_id_and_user_id(user_id, approval_id):
         query = ApprovalKoreksi.query.options(
             joinedload(ApprovalKoreksi.detail_approval),
             joinedload(ApprovalKoreksi.approval_user)
         ).filter_by(id=approval_id,
-                                                                                             user_id=user_id)
+                    user_id=user_id)
         return query.first()
+
+    @staticmethod
+    def get_detail_by_id_and_approval_user_id(approval_id, approval_user_id):
+        query = ApprovalKoreksi.query.options(
+            joinedload(ApprovalKoreksi.detail_approval),
+            joinedload(ApprovalKoreksi.approval_user)
+        ).filter_by(id=approval_id, approval_user_id=approval_user_id)
+        return query.first()
+
+
 
     @staticmethod
     def create_approval_koreksi_user(data):

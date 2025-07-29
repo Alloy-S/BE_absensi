@@ -34,6 +34,12 @@ class DetailAbsensiRepository:
             db.session.delete(detail_to_delete)
 
     @staticmethod
+    def delete_detail_absensi_by_absensi_id(absensi_id):
+        DetailAbsensi.query.filter_by(
+            id_absensi=absensi_id
+        ).delete(synchronize_session=False)
+
+    @staticmethod
     def get_detail_by_absensi_id_and_type(absensi_id, type):
         return DetailAbsensi.query.filter_by(
             id_absensi=absensi_id,

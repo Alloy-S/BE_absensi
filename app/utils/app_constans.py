@@ -38,11 +38,12 @@ class AppConstants(Enum):
     ON_TIME = "Hadir"
     LATE = "Datang Terlambat"
     EARLY = "Pulang Cepat"
+    LATE_AND_EARLY = "Datang Terlambat & Pulang Cepat"
 
     APPROVED = "Disetujui"
     WAITING_FOR_APPROVAL = "Menunggu Persetujuan"
     REJECTED = "Ditolak"
-    APPROVAL_STATUS_ALL = "All"
+    APPROVAL_STATUS_ALL = "all"
 
     REGISTERED = "Terdaftar"
     NOT_REGISTERED = "Tidak Terdaftar"

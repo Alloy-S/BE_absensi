@@ -9,7 +9,7 @@ class DetailAbsensi(db.Model):
     date = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp()) 
     type = db.Column(db.String(10), nullable=False)
     status_appv = db.Column(db.String(20), nullable=False)
-    status_absensi = db.Column(db.String(20), nullable=False)
+    status_absensi = db.Column(db.String(40), nullable=False)
     latitude = db.Column(db.Numeric(9, 6), nullable=True)
     longitude = db.Column(db.Numeric(9, 6), nullable=True)
     id_absensi = db.Column(UUID(as_uuid=True), db.ForeignKey('absensi.id'), nullable=False)
