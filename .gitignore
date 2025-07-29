@@ -161,3 +161,5 @@ cython_debug/
 
 be_absensi
 .idea
+
+firebase-credentials.json

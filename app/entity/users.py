@@ -15,6 +15,7 @@ class Users(db.Model):
     is_face_registration_required = db.Column(db.Boolean, nullable=True, default=True)
     is_notif_login_send = db.Column(db.Boolean, nullable=True, default=False)
     is_active = db.Column(db.Boolean, nullable=True, default=True)
+    fcm_token = db.Column(db.String, nullable=True)
     user_role_id = db.Column(UUID(as_uuid=True), db.ForeignKey('user_role.id'), nullable=True)
 
     user_role = db.relationship('UserRole', back_populates='users', lazy="joined")

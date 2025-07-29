@@ -287,3 +287,15 @@ class UserRepository:
         )
 
         return query.all()
+
+    @staticmethod
+    def update_fcm_token(user, fcm_token):
+        user.fcm_token = fcm_token
+
+        db.session.commit()
+
+    @staticmethod
+    def delete_fcm_token(user):
+        user.fcm_token = None
+
+        db.session.commit()

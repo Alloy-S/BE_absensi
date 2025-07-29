@@ -56,3 +56,9 @@ class ResetPasswordSchema(Schema):
     new_pass = fields.String(required=True)
     verify_pass = fields.String(required=True)
 
+class FCMToken(Schema):
+    class Meta:
+        unknown = EXCLUDE
+
+    fcm_token = fields.String(required=True)
+

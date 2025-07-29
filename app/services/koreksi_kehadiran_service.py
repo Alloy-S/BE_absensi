@@ -6,6 +6,7 @@ from app.repositories.user_repository import UserRepository
 from app.repositories.detail_jadwal_kerja_repository import DetailJadwalKerjaRepository
 from app.repositories.detail_approval_koreksi_repository import DetailApprovalKoreksiRepository
 from app.services.attendance_service import AttendanceService
+from app.services.notification_service import NotificationService
 from app.utils.app_constans import AppConstants
 from app.utils.error_code import ErrorCode
 from app.database import db
@@ -202,6 +203,9 @@ class KoreksiKehadiranService:
             approval.status = AppConstants.APPROVED.value
 
             db.session.commit()
+
+            NotificationService.send_single_notification("dPh1seSAGNgttApdCBuSXe:APA91bFJUywdYs4-60S93p1ukhg26ZUQLAmzlT8SAdzRkNehviYa-XfOiV8or38VQ6hQEAY39TpgxPsURCAfNt6NHW6qNdS1E4_CwYxKr50lCXmuhKqKBNg", "Approve Pegajuan Koreksi Kehadiran", "Pengajuan anda Telah Di Approve")
+
         except Exception as e:
             db.session.rollback()
             raise e

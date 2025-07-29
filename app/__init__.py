@@ -12,11 +12,16 @@ from .config import Config
 import os
 from app.utils.app_constans import AppConstants
 from flask_apscheduler import APScheduler
+import firebase_admin
+from firebase_admin import credentials
+
 
 migrate = Migrate()
 jwt = JWTManager()
 scheduler = APScheduler()
 configure_mappers()
+
+
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -36,6 +41,13 @@ def create_app(config_class=Config):
             locale.setlocale(locale.LC_TIME, 'Indonesian_Indonesia.1252')
         except locale.Error:
             print("Peringatan: Locale 'id_ID' tidak dapat diatur. Nama hari/bulan mungkin dalam Bahasa Inggris.")
+
+    try:
+        cred = credentials.Certificate("firebase-credentials.json")
+        firebase_admin.initialize_app(cred)
+        print("Firebase Admin SDK berhasil diinisialisasi.")
+    except Exception as e:
+        print(f"Gagal menginisialisasi Firebase Admin SDK: {e}")
 
     from app.execption.execption_handler import errors_bp
     from app.controllers.auth_controller import auth_bp

@@ -221,3 +221,13 @@ class UserService:
                                             params={'resource': AppConstants.USER_RESOURCE.value})
 
         return UserRepository.get_users_by_pic(user_pic.id)
+
+    @staticmethod
+    def update_fcm_token_user(username, request):
+        user = UserRepository.get_user_by_username(username)
+        if not user:
+            raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
+                                            params={'resource': AppConstants.USER_RESOURCE.value})
+
+        UserRepository.update_fcm_token(user, request.get('fcm_token'))
+
