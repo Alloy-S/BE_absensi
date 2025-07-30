@@ -45,8 +45,8 @@ approval_koreksi_detail_pic_fields = {
 }
 
 approval_koreksi_pagination_fields = {
-    "pages": fields.String,
-    "total": fields.String,
+    "pages": fields.Integer,
+    "total": fields.Integer,
     "items": fields.List(fields.Nested({
         'id': fields.String,
         'absensi_date': fields.String,

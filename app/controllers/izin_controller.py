@@ -1,7 +1,7 @@
 from flask_jwt_extended import get_jwt_identity
 from app.filter.jwt_filter import role_required
 from app.models.izin.izin_req import IzinRequestSchema
-from app.models.izin.izin_res import approval_izin_field, approval_izin_pagination_fields, approval_izin_field_detail, jenis_izin_field
+from app.models.izin.izin_res import approval_izin_field, approval_izin_pagination_fields, approval_izin_field_detail, jenis_izin_field, approval_izin_pagination_pic_fields
 from app.utils.app_constans import AppConstants
 from app.models.pagination_model import PaginationReq, PaginationApprovalReq
 from flask_restful import Resource, Api, marshal
@@ -70,7 +70,53 @@ class JenisIzinController(Resource):
 
         return marshal(result, jenis_izin_field), 200
 
+class ApproveIzinController(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    def post(self, approval_id):
+        username = get_jwt_identity()
+
+        IzinService.approve_izin(username, approval_id)
+
+class RejectKIzinController(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    def post(self, approval_id):
+        username = get_jwt_identity()
+
+        IzinService.reject_izin(username, approval_id)
+
+class IzinByApprovalUserController(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    def get(self):
+        current_user_id = get_jwt_identity()
+        params = request.args
+
+        schema = PaginationApprovalReq()
+
+        validated = schema.load(params)
+
+        result = IzinService.get_list_izin_approval_user(username=current_user_id, request=validated)
+        response = {
+            "pages": result.pages,
+            "total": result.total,
+            "items": result.items
+        }
+        return marshal(response, approval_izin_pagination_pic_fields), 200
+
+class DetailIzinByApprovalUserController(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    def get(self, approval_id):
+        current_user_id = get_jwt_identity()
+
+        response = IzinService.get_detail_izin_by_approval_user(username=current_user_id, approval_id=approval_id)
+
+        return marshal(response, approval_izin_field_detail), 200
+
 
 izin_api.add_resource(IzinController, '')
 izin_api.add_resource(IzinDetailController, '/<string:approval_id>')
 izin_api.add_resource(JenisIzinController, '/jenis')
+
+izin_api.add_resource(ApproveIzinController, '/approval/<string:approval_id>/approve')
+izin_api.add_resource(RejectKIzinController, '/approval/<string:approval_id>/reject')
+izin_api.add_resource(IzinByApprovalUserController, '/approval')
+izin_api.add_resource(DetailIzinByApprovalUserController, '/approval/<string:approval_id>')

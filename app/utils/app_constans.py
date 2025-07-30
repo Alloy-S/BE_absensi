@@ -17,6 +17,8 @@ class AppConstants(Enum):
     APPROVAL_KOREKSI_RESOURCE = "Approval Koreksi"
     APPROVAL_ABSENSI_BORONGAN_RESOURCE = "Approval Absensi borongan"
     APPROVAL_REIMBURSE_RESOURCE = "Approval Reimburse"
+    APPROVAL_IZIN_RESOURCE = "Approval izin"
+    APPROVAL_LEMBUR_RESOURCE = "Approval Lembur"
     PHOTO_RESOURCE = "Photo"
     IZIN_RESOURCE = "Izin"
     LEMBUR_RESOURCE = "Lembur"
@@ -40,8 +42,9 @@ class AppConstants(Enum):
     EARLY = "Pulang Cepat"
     LATE_AND_EARLY = "Datang Terlambat & Pulang Cepat"
 
-    APPROVE_TITLE = "Pengajuan {resource} Telah Disetujui"
-    APPROVE_BODY = "Pengajuan {resource} Telah Disetujui"
+    APPROVE_TITLE = "Pengajuan {resource} Disetujui"
+    APPROVE_BODY = "Pengajuan {resource} Anda oleh {nama_pengaju} telah disetujui."
+
     REJECT_TITLE = "Pengajuan {resource} Telah Ditolak"
     REJECT_BODY = "Pengajuan {resource} Telah Ditolak, informasi lebih lanjut dapat menghubungi PIC terkait"
 

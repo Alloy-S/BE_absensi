@@ -1,3 +1,4 @@
+from app.utils.app_constans import AppConstants
 from app.database import db
 from app.entity import Izin
 
@@ -19,7 +20,8 @@ class IzinRepository:
 
     @staticmethod
     def get_izin_by_date(user_id, izin_date):
-        return Izin.query.filter_by(
-            user_id=user_id,
-            tgl_izin_start=izin_date
+        return Izin.query.filter(
+            Izin.user_id == user_id,
+            Izin.tgl_izin_start == izin_date,
+            Izin.status.in_([AppConstants.WAITING_FOR_APPROVAL.value, AppConstants.APPROVED.value]),
         ).first()

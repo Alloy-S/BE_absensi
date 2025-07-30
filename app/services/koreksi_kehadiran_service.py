@@ -228,11 +228,14 @@ class KoreksiKehadiranService:
 
             db.session.commit()
 
-            NotificationService.send_single_notification(approval.user.fcm_token, format_string(AppConstants.APPROVE_TITLE.value,
-                                                                                       params={
-                                                                                           'resource': AppConstants.KOREKSI_KEHADIRAN.value}),
-                                                         format_string(AppConstants.APPROVE_TITLE.value, params={
-                                                             'resource': AppConstants.KOREKSI_KEHADIRAN.value}))
+            NotificationService.send_single_notification(approval.user.fcm_token,
+                                                         format_string(AppConstants.APPROVE_TITLE.value,
+                                                                       params={
+                                                                           'resource': AppConstants.KOREKSI_KEHADIRAN.value}),
+                                                         format_string(AppConstants.APPROVE_BODY.value, params={
+                                                             'resource': AppConstants.IZIN_RESOURCE.value,
+                                                             'nama_pengaju': approval.approval_user.fullname
+                                                         }))
 
         except Exception as e:
             db.session.rollback()
@@ -259,6 +262,14 @@ class KoreksiKehadiranService:
             approval.status = AppConstants.REJECTED.value
 
             db.session.commit()
+
+            NotificationService.send_single_notification(approval.user.fcm_token,
+                                                         format_string(AppConstants.REJECT_TITLE.value,
+                                                                       params={
+                                                                           'resource': AppConstants.APPROVAL_IZIN_RESOURCE.value}),
+                                                         format_string(AppConstants.REJECT_BODY.value, params={
+                                                             'resource': AppConstants.APPROVAL_IZIN_RESOURCE.value
+                                                         }))
 
         except Exception as e:
             db.session.rollback()
