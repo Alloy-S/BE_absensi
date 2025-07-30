@@ -231,3 +231,15 @@ class UserService:
 
         UserRepository.update_fcm_token(user, request.get('fcm_token'))
 
+    @staticmethod
+    def get_waiting_by_approvals_user(username, request):
+        user = UserRepository.get_user_by_username(username)
+
+        if not user:
+            raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
+                                            params={'resource': AppConstants.USER_RESOURCE.value})
+
+        response = UserRepository.get_all_approval_status_waiting(user.id, request.get('filter_tipe_approval'), request.get('page'), request.get('size'))
+
+        return response
+

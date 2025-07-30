@@ -40,6 +40,11 @@ class AppConstants(Enum):
     EARLY = "Pulang Cepat"
     LATE_AND_EARLY = "Datang Terlambat & Pulang Cepat"
 
+    APPROVE_TITLE = "Pengajuan {resource} Telah Disetujui"
+    APPROVE_BODY = "Pengajuan {resource} Telah Disetujui"
+    REJECT_TITLE = "Pengajuan {resource} Telah Ditolak"
+    REJECT_BODY = "Pengajuan {resource} Telah Ditolak, informasi lebih lanjut dapat menghubungi PIC terkait"
+
     APPROVED = "Disetujui"
     WAITING_FOR_APPROVAL = "Menunggu Persetujuan"
     REJECTED = "Ditolak"

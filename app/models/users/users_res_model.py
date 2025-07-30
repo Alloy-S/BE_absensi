@@ -94,3 +94,22 @@ user_by_pic_field = {
         'jabatan': fields.String
     }))
 }
+
+simple_user_field = {
+    "id": fields.String,
+    "fullname": fields.String,
+    "jabatan": fields.String(attribute="data_karyawan.jabatan.nama"),
+    "lokasi": fields.String(attribute="data_karyawan.lokasi.name"),
+}
+
+all_approval_fields = {
+    "pages": fields.String,
+    "total": fields.String,
+    "items": fields.List(fields.Nested({
+        'approval_id': fields.String,
+        'tanggal_pengajuan': fields.String,
+        'user': fields.String,
+        'tipe_approval': fields.String,
+        'status': fields.String,
+    }))
+}

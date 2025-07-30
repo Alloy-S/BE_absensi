@@ -1,4 +1,6 @@
-from app.entity import Lokasi, Jabatan, UserRole, JatahKuotaCuti
+from app.utils.app_constans import AppConstants
+from app.entity import Lokasi, Jabatan, UserRole, JatahKuotaCuti, ApprovalKoreksi, ApprovalIzin, ApprovalLembur, \
+    ApprovalAbsensiBorongan, ApprovalReimburse
 from app.entity.users import Users
 from app.entity.data_karyawan import DataKaryawan
 from app.entity.data_kontak import DataKontak
@@ -7,6 +9,7 @@ from app.database import db
 from sqlalchemy import text, func
 from werkzeug.security import generate_password_hash
 from sqlalchemy.orm import joinedload
+from sqlalchemy import union_all, literal_column
 
 
 class UserRepository:
@@ -299,3 +302,108 @@ class UserRepository:
         user.fcm_token = None
 
         db.session.commit()
+
+    @staticmethod
+    def get_all_approval_status_waiting(user_id, filter_tipe_approval, page=1, size=10):
+
+        q_koreksi = db.session.query(
+            ApprovalKoreksi.id.label('approval_id'),
+            ApprovalKoreksi.created_date.label('tanggal_pengajuan'),
+            literal_column("'Koreksi Kehadiran'").label('tipe_approval'),
+            ApprovalKoreksi.status.label('status'),
+            Users.fullname.label('user')
+        ).join(
+            Users, ApprovalKoreksi.user_id == Users.id
+        ).filter(
+            ApprovalKoreksi.status == AppConstants.WAITING_FOR_APPROVAL.value,
+            ApprovalKoreksi.approval_user_id == user_id
+        )
+
+        q_izin = db.session.query(
+            ApprovalIzin.id.label('approval_id'),
+            ApprovalIzin.created_date.label('tanggal_pengajuan'),
+            literal_column("'Izin'").label('tipe_approval'),
+            ApprovalIzin.status.label('status'),
+            Users.fullname.label('user')
+        ).join(
+            Users, ApprovalIzin.user_id == Users.id
+        ).filter(
+            ApprovalIzin.status == AppConstants.WAITING_FOR_APPROVAL.value,
+            ApprovalIzin.approval_user_id == user_id
+        )
+
+        q_lembur = db.session.query(
+            ApprovalLembur.id.label('approval_id'),
+            ApprovalLembur.created_date.label('tanggal_pengajuan'),
+            literal_column("'Lembur'").label('tipe_approval'),
+            ApprovalLembur.status.label('status'),
+            Users.fullname.label('user')
+        ).join(
+            Users, ApprovalLembur.user_id == Users.id
+        ).filter(
+            ApprovalLembur.status == AppConstants.WAITING_FOR_APPROVAL.value,
+            ApprovalLembur.approval_user_id == user_id
+        )
+
+        q_borongan = db.session.query(
+            ApprovalAbsensiBorongan.id.label('approval_id'),
+            ApprovalAbsensiBorongan.created_date.label('tanggal_pengajuan'),
+            literal_column("'Absensi Borongan'").label('tipe_approval'),
+            ApprovalAbsensiBorongan.status.label('status'),
+            Users.fullname.label('user')
+        ).join(
+            Users, ApprovalAbsensiBorongan.user_id == Users.id
+        ).filter(
+            ApprovalAbsensiBorongan.status == AppConstants.WAITING_FOR_APPROVAL.value,
+            ApprovalAbsensiBorongan.approval_user_id == user_id
+        )
+
+        q_reimburse = db.session.query(
+            ApprovalReimburse.id.label('approval_id'),
+            ApprovalReimburse.created_date.label('tanggal_pengajuan'),
+            literal_column("'Reimburse'").label('tipe_approval'),
+            ApprovalReimburse.status.label('status'),
+            Users.fullname.label('user')
+        ).join(
+            Users, ApprovalReimburse.user_id == Users.id
+        ).filter(
+            ApprovalReimburse.status == AppConstants.WAITING_FOR_APPROVAL.value,
+            ApprovalReimburse.approval_user_id == user_id
+        )
+
+        all_queries = {
+            "Koreksi Kehadiran": q_koreksi,
+            "Izin": q_izin,
+            "Lembur": q_lembur,
+            "Absensi Borongan": q_borongan,
+            "Reimburse": q_reimburse
+        }
+
+        queries_to_union = []
+        if filter_tipe_approval and filter_tipe_approval.lower() != AppConstants.APPROVAL_STATUS_ALL.value:
+            if filter_tipe_approval in all_queries:
+                queries_to_union.append(all_queries[filter_tipe_approval])
+        else:
+            queries_to_union = list(all_queries.values())
+
+        if not queries_to_union:
+            return {
+                "items": [], "total": 0, "page": page
+            }
+
+        query = union_all(*queries_to_union).subquery("approvals")
+
+        total_query = db.session.query(func.count()).select_from(query)
+        total = total_query.scalar()
+
+        final_query = db.session.query(query).order_by(
+            query.c.tanggal_pengajuan.desc()
+        ).limit(size).offset((page - 1) * size)
+
+        items = final_query.all()
+
+        return {
+            "items": items,
+            "total": total,
+            "pages": (total + size - 1) // size
+        }

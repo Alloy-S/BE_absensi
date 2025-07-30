@@ -34,6 +34,29 @@ class ApprovalKoreksiRepository:
         return query.paginate(page=page, per_page=size, error_out=False)
 
     @staticmethod
+    def get_list_pagination_approval_user(user_id, page=1, size=10, filter_month=None, filter_status=None):
+        query = ApprovalKoreksi.query.filter(
+            ApprovalKoreksi.approval_user_id == user_id
+        )
+
+        if filter_month:
+            search_date = datetime.strptime(filter_month, '%Y-%m')
+
+            query = query.filter(
+                extract('year', ApprovalKoreksi.absensi_date) == search_date.year,
+                extract('month', ApprovalKoreksi.absensi_date) == search_date.month
+            )
+
+        if filter_status and filter_status != AppConstants.APPROVAL_STATUS_ALL.value:
+            query = query.filter(
+                ApprovalKoreksi.status == filter_status
+            )
+
+        query = query.order_by(ApprovalKoreksi.created_date.desc())
+
+        return query.paginate(page=page, per_page=size, error_out=False)
+
+    @staticmethod
     def get_detail_by_id_and_user_id(user_id, approval_id):
         query = ApprovalKoreksi.query.options(
             joinedload(ApprovalKoreksi.detail_approval),

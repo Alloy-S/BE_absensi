@@ -1,12 +1,12 @@
 from flask_restful import Resource, marshal_with, Api, marshal
 from flask_jwt_extended import get_jwt_identity
 from app.filter.jwt_filter import role_required
-from app.models.pagination_model import PaginationReq
+from app.models.pagination_model import PaginationReq, PaginationAllApproval
 from app.services.user_service import UserService
 from flask import Blueprint, request
 from app.models.users.users_req_model import UserSchema, ResendLoginSchema, ResetPasswordSchema, DataPribadiSchema, \
     DataKontakSchema, FCMToken
-from app.models.users.users_res_model import users_pagination_fields, posibe_user_pic, user_field, data_pribadi_fields, data_kontak_fields, data_karyawan_fields, users_cuti_kuota_pagination_fields, user_by_pic_field
+from app.models.users.users_res_model import users_pagination_fields, posibe_user_pic, user_field, data_pribadi_fields, data_kontak_fields, data_karyawan_fields, users_cuti_kuota_pagination_fields, user_by_pic_field, all_approval_fields
 from marshmallow import ValidationError
 from app.utils.app_constans import AppConstants
 
@@ -235,6 +235,21 @@ class UpdateFCMTokenController(Resource):
 
         return response, 200
 
+class AllApprovalByApprovalUserController(Resource):
+
+    @role_required(AppConstants.USER_GROUP.value)
+    def get(self):
+        username = get_jwt_identity()
+        params = request.args
+
+        schema = PaginationAllApproval()
+
+        validated = schema.load(params)
+
+        response = UserService.get_waiting_by_approvals_user(username, validated)
+
+        return marshal(response, all_approval_fields), 200
+
 
 
 user_api.add_resource(UserListController, '')
@@ -250,3 +265,4 @@ user_api.add_resource(DataKaryawanUserController, '/data-karyawan')
 user_api.add_resource(UserListKuotaCutiController, '/kuota-cuti')
 user_api.add_resource(GetUserByPic, '/users-by-pic')
 user_api.add_resource(UpdateFCMTokenController, '/update-fcm-token')
+user_api.add_resource(AllApprovalByApprovalUserController, '/all-approval-by-approval-user')

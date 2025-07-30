@@ -31,7 +31,7 @@ jadwal_kerja_detail_fields = {
     'is_active': fields.Boolean
 }
 
-# Jadwal Kerja
+
 jadwal_kerja_field = {
     'id': fields.String,
     'kode': fields.String,

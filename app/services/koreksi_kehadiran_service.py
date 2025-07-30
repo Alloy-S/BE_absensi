@@ -11,6 +11,7 @@ from app.utils.app_constans import AppConstants
 from app.utils.error_code import ErrorCode
 from app.database import db
 from datetime import datetime
+from app.utils.global_utils import format_string
 
 
 class KoreksiKehadiranService:
@@ -26,6 +27,18 @@ class KoreksiKehadiranService:
                                                              request.get("filter_month"), request.get("filter_status"))
 
     @staticmethod
+    def get_list_koreksi_approval_user(username, request):
+        user = UserRepository.get_user_by_username(username)
+
+        if not user:
+            raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
+                                            params={'resource': AppConstants.USER_RESOURCE.value})
+        return ApprovalKoreksiRepository.get_list_pagination_approval_user(user.id, request.get("page"),
+                                                                           request.get("size"),
+                                                                           request.get("filter_month"),
+                                                                           request.get("filter_status"))
+
+    @staticmethod
     def get_detail_koreksi(username, approval_id):
         user = UserRepository.get_user_by_username(username)
 
@@ -33,6 +46,19 @@ class KoreksiKehadiranService:
             raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
                                             params={'resource': AppConstants.USER_RESOURCE.value})
         result = ApprovalKoreksiRepository.get_detail_by_id_and_user_id(user.id, approval_id)
+        if not result:
+            raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
+                                            params={'resource': AppConstants.ABSENSI_RESOURCE.value})
+        return result
+
+    @staticmethod
+    def get_detail_koreksi_by_approval_user(username, approval_id):
+        user = UserRepository.get_user_by_username(username)
+
+        if not user:
+            raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
+                                            params={'resource': AppConstants.USER_RESOURCE.value})
+        result = ApprovalKoreksiRepository.get_detail_by_id_and_approval_user_id(approval_id, user.id)
         if not result:
             raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
                                             params={'resource': AppConstants.ABSENSI_RESOURCE.value})
@@ -145,8 +171,6 @@ class KoreksiKehadiranService:
                 print("Koreksi Absensi History")
                 absensi = approval.absensi
 
-
-
                 DetailAbsensiRepository.delete_detail_absensi_by_absensi_id(absensi.id)
 
             else:
@@ -204,7 +228,11 @@ class KoreksiKehadiranService:
 
             db.session.commit()
 
-            NotificationService.send_single_notification("dPh1seSAGNgttApdCBuSXe:APA91bFJUywdYs4-60S93p1ukhg26ZUQLAmzlT8SAdzRkNehviYa-XfOiV8or38VQ6hQEAY39TpgxPsURCAfNt6NHW6qNdS1E4_CwYxKr50lCXmuhKqKBNg", "Approve Pegajuan Koreksi Kehadiran", "Pengajuan anda Telah Di Approve")
+            NotificationService.send_single_notification(approval.user.fcm_token, format_string(AppConstants.APPROVE_TITLE.value,
+                                                                                       params={
+                                                                                           'resource': AppConstants.KOREKSI_KEHADIRAN.value}),
+                                                         format_string(AppConstants.APPROVE_TITLE.value, params={
+                                                             'resource': AppConstants.KOREKSI_KEHADIRAN.value}))
 
         except Exception as e:
             db.session.rollback()
