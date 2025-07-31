@@ -8,7 +8,7 @@ from flask_restful import Resource, Api, marshal
 from flask import Blueprint, request
 from app.services.absensi_borongan_service import AbsensiBoronganService
 
-borongan_bp = Blueprint('borongan_bp', __name__, url_prefix='/api/approval/absensi-borongan')
+borongan_bp = Blueprint('borongan_bp', __name__, url_prefix='/api/absensi-borongan')
 borongan_api = Api(borongan_bp)
 
 
@@ -49,7 +49,55 @@ class AbsensiBoronganDetailController(Resource):
         current_user_id = get_jwt_identity()
         AbsensiBoronganService.cancel_absensi_borongan(current_user_id, approval_id)
         return None, 200
+    
+class ApprovalAbsensiBoronganAdminController(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    def get(self):
+        current_user_id = get_jwt_identity()
+        params = request.args
+
+        schema = PaginationApprovalReq()
+
+        validated = schema.load(params)
+
+        result = AbsensiBoronganService.get_approval_by_pic_id(current_user_id, validated)
+
+        response = {
+            "pages": result.pages,
+            "total": result.total,
+            "items": result.items
+        }
+
+        return marshal(response, pagination_fields), 200
+
+class DetailAbsensiBoronganByApprovalUserController(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    def get(self, approval_id):
+        current_user_id = get_jwt_identity()
+
+        response = AbsensiBoronganService.get_detail_by_approval_user(username=current_user_id, approval_id=approval_id)
+
+        return marshal(response, absensi_borongan_detail_fields), 200
+
+class ApproveAbsensiBoronganController(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    def post(self, approval_id):
+        username = get_jwt_identity()
+
+        AbsensiBoronganService.approve_absensi_borongan(username, approval_id)
+
+class RejectAbsensiBoronganController(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    def post(self, approval_id):
+        username = get_jwt_identity()
+
+        AbsensiBoronganService.reject_absensi_borongan(username, approval_id)
 
 
 borongan_api.add_resource(AbsensiBoronganListController, '')
 borongan_api.add_resource(AbsensiBoronganDetailController, '/<string:approval_id>')
+
+borongan_api.add_resource(ApprovalAbsensiBoronganAdminController, '/approval')
+borongan_api.add_resource(DetailAbsensiBoronganByApprovalUserController, '/approval/<string:approval_id>')
+borongan_api.add_resource(ApproveAbsensiBoronganController, '/approval/<string:approval_id>/approve')
+borongan_api.add_resource(RejectAbsensiBoronganController, '/approval/<string:approval_id>/reject')

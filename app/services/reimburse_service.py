@@ -182,7 +182,7 @@ class ReimburseService:
 
             if not approval:
                 raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
-                                                params={'resource': AppConstants.APPROVAL_LEMBUR_RESOURCE.value})
+                                                params={'resource': AppConstants.APPROVAL_REIMBURSE_RESOURCE.value})
 
             if approval.status != AppConstants.WAITING_FOR_APPROVAL.value:
                 raise GeneralException(ErrorCode.APPROVER_NOT_ALLOWED)
@@ -195,9 +195,9 @@ class ReimburseService:
             NotificationService.send_single_notification(approval.user.fcm_token,
                                                          format_string(AppConstants.APPROVE_TITLE.value,
                                                                        params={
-                                                                           'resource': AppConstants.APPROVAL_LEMBUR_RESOURCE.value}),
+                                                                           'resource': AppConstants.APPROVAL_REIMBURSE_RESOURCE.value}),
                                                          format_string(AppConstants.APPROVE_BODY.value, params={
-                                                             'resource': AppConstants.APPROVAL_LEMBUR_RESOURCE.value,
+                                                             'resource': AppConstants.APPROVAL_REIMBURSE_RESOURCE.value,
                                                              'nama_pengaju': approval.approval_user.fullname
                                                          }))
 
@@ -218,7 +218,7 @@ class ReimburseService:
 
             if not approval:
                 raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
-                                                params={'resource': AppConstants.APPROVAL_LEMBUR_RESOURCE.value})
+                                                params={'resource': AppConstants.APPROVAL_REIMBURSE_RESOURCE.value})
 
             if approval.status != AppConstants.WAITING_FOR_APPROVAL.value:
                 raise GeneralException(ErrorCode.APPROVER_NOT_ALLOWED)
@@ -231,9 +231,9 @@ class ReimburseService:
             NotificationService.send_single_notification(approval.user.fcm_token,
                                                          format_string(AppConstants.REJECT_TITLE.value,
                                                                        params={
-                                                                           'resource': AppConstants.APPROVAL_LEMBUR_RESOURCE.value}),
+                                                                           'resource': AppConstants.APPROVAL_REIMBURSE_RESOURCE.value}),
                                                          format_string(AppConstants.REJECT_BODY.value, params={
-                                                             'resource': AppConstants.APPROVAL_LEMBUR_RESOURCE.value,
+                                                             'resource': AppConstants.APPROVAL_REIMBURSE_RESOURCE.value,
                                                              'nama_pengaju': approval.approval_user.fullname
                                                          }))
 

@@ -1,22 +1,20 @@
 from flask_restful import fields
 
-from app.models.harga_harian_borongan.harga_res import harga_field
+harga_field = {
+    'id': fields.String,
+    'harga_normal': fields.Float,
+    'harga_lembur': fields.Float,
+    'nama': fields.String,
+}
 
 detail_fields = {
     'id': fields.String,
+    'user_name': fields.String(attribute='user.fullname'),
     'ton_normal': fields.Float,
     'ton_lembur': fields.Float,
     'tipe': fields.String,
     'total': fields.Float,
     'harga': fields.Nested(harga_field),
-    'user_name': fields.String(attribute='user.fullname'),
-}
-
-harga_field = {
-    'id': fields.String,
-    'ton_normal': fields.Float,
-    'ton_lembur': fields.Float,
-    'nama': fields.String,
 }
 
 approval_fields = {
@@ -30,13 +28,25 @@ user_simple_field = {
     "fullname": fields.String
 }
 
+user_field = {
+    "id": fields.String,
+    "fullname": fields.String,
+    "jabatan": fields.String(attribute="data_karyawan.jabatan.nama"),
+    "lokasi": fields.String(attribute="data_karyawan.lokasi.name"),
+}
+
+absensi_borongan_field = {
+    'date': fields.String,
+    'total': fields.Float,
+    'detail_absensi_borongan': fields.List(fields.Nested(detail_fields)),
+}
+
 absensi_borongan_detail_fields = {
     'id': fields.String,
     'approval_user': fields.Nested(user_simple_field),
+    'user': fields.Nested(user_field),
     'status': fields.String,
-    'date': fields.String,
-    'total': fields.Float,
-    'details': fields.List(fields.Nested(detail_fields)),
+    'absensi_borongan': fields.Nested(absensi_borongan_field),
 }
 
 approval_absensi_borongan_detail_fields = {
@@ -50,6 +60,8 @@ pagination_fields = {
     "items": fields.List(fields.Nested({
         'id': fields.String,
         'created_date': fields.String,
-        'status': fields.String
+        'status': fields.String,
+        'user': fields.Nested(user_simple_field),
+        'total': fields.Float(attribute="absensi_borongan.total"),
     }))
 }

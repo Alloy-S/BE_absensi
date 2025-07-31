@@ -1,6 +1,7 @@
 from app.database import db
 from app.entity import ApprovalAbsensiBorongan, AbsensiBorongan
 from sqlalchemy import extract
+from sqlalchemy.orm import joinedload
 from datetime import date, datetime
 from app.utils.app_constans import AppConstants
 
@@ -51,3 +52,34 @@ class ApprovalAbsensiBoronganRepository:
     @staticmethod
     def delete(approval):
         db.session.delete(approval)
+
+    @staticmethod
+    def get_detail_by_id_and_approval_user_id(approval_id, approval_user_id):
+        query = ApprovalAbsensiBorongan.query.options(
+            joinedload(ApprovalAbsensiBorongan.absensi_borongan),
+            joinedload(ApprovalAbsensiBorongan.approval_user)
+        ).filter_by(id=approval_id, approval_user_id=approval_user_id)
+        return query.first()
+
+    @staticmethod
+    def get_list_pagination_approval_user(pic_id, page=1, size=10, filter_month=None, filter_status=None):
+        query = ApprovalAbsensiBorongan.query.filter(
+            ApprovalAbsensiBorongan.approval_user_id == pic_id
+        )
+
+        if filter_month:
+            search_date = datetime.strptime(filter_month, '%Y-%m')
+
+            query = query.filter(
+                extract('year', ApprovalAbsensiBorongan.created_date) == search_date.year,
+                extract('month', ApprovalAbsensiBorongan.created_date) == search_date.month
+            )
+
+        if filter_status and filter_status != AppConstants.APPROVAL_STATUS_ALL.value:
+            query = query.filter(
+                ApprovalAbsensiBorongan.status == filter_status
+            )
+
+        query = query.order_by(ApprovalAbsensiBorongan.created_date.desc())
+
+        return query.paginate(page=page, per_page=size, error_out=False)
