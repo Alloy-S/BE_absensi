@@ -68,11 +68,44 @@ class ApprovalReimburseAdminController(Resource):
 
         validated = schema.load(params)
 
-        response = ReimburseService.get_approval_by_pic_id(current_user_id, validated)
+        result = ReimburseService.get_approval_by_pic_id(current_user_id, validated)
+
+        response = {
+            "pages": result.pages,
+            "total": result.total,
+            "items": result.items
+        }
 
         return marshal(response, pagination_fields), 200
 
-reimburse_api.add_resource(ApprovalReimburseController, '/approval')
-reimburse_api.add_resource(ApprovalReimburseByIdController, '/approval/<string:approval_id>')
+class DetailReimburseByApprovalUserController(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    def get(self, approval_id):
+        current_user_id = get_jwt_identity()
 
-reimburse_api.add_resource(ApprovalReimburseAdminController, '/admin/approval')
+        response = ReimburseService.get_detail_reimburse_by_approval_user(username=current_user_id, approval_id=approval_id)
+
+        return marshal(response, approval_full_reimburse_field), 200
+
+class ApproveReimburseController(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    def post(self, approval_id):
+        username = get_jwt_identity()
+
+        ReimburseService.approve_reimburse(username, approval_id)
+
+class RejectReimburseController(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    def post(self, approval_id):
+        username = get_jwt_identity()
+
+        ReimburseService.reject_reimburse(username, approval_id)
+
+reimburse_api.add_resource(ApprovalReimburseController, '')
+reimburse_api.add_resource(ApprovalReimburseByIdController, '/<string:approval_id>')
+
+reimburse_api.add_resource(ApprovalReimburseAdminController, '/approval')
+reimburse_api.add_resource(DetailReimburseByApprovalUserController, '/approval/<string:approval_id>')
+reimburse_api.add_resource(ApproveReimburseController, '/approval/<string:approval_id>/approve')
+reimburse_api.add_resource(RejectReimburseController, '/approval/<string:approval_id>/reject')
+

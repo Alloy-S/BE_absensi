@@ -15,7 +15,7 @@ class PhotoService:
     def save_photo(base64_string: str):
 
         if not base64_string or not isinstance(base64_string, str):
-            raise ValueError("Input harus berupa string Base64 yang tidak kosong.")
+            return None
 
         try:
             if "," in base64_string:
@@ -27,17 +27,16 @@ class PhotoService:
 
             image_data = base64.b64decode(base64_data)
         except (ValueError, TypeError):
-            return {'message': 'Format string Base64 tidak valid.'}, 400
+            raise GeneralException(ErrorCode.INVALID_BASE64)
 
         file_type = mimetype.split('/')[1]
         unique_filename = f"{uuid.uuid4()}.{file_type}"
         file_path = os.path.join(AppConstants.UPLOAD_FOLDER_PHOTO.value, unique_filename)
 
-        try:
-            with open(file_path, 'wb') as f:
-                f.write(image_data)
-        except IOError:
-            return {'message': 'Gagal menyimpan file di server.'}, 500
+
+        with open(file_path, 'wb') as f:
+            f.write(image_data)
+
 
         photo = PhotoRepository.create({
             'type': AppConstants.REIMBURSE_RESOURCE.value,

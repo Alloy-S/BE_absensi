@@ -55,23 +55,39 @@ class ApprovalReimburseRepository:
         return query.first()
 
     @staticmethod
-    def get_approval_pagination_by_pic(pic_id, filter_status, page=1, size=10):
+    def delete_approval_reimburse(approval_id):
+        approval = ApprovalReimburse.query.filter_by(id=approval_id).first()
+        db.session.delete(approval)
+
+    @staticmethod
+    def get_detail_by_id_and_approval_user_id(approval_id, approval_user_id):
+        query = ApprovalReimburse.query.options(
+            joinedload(ApprovalReimburse.reimburse),
+            joinedload(ApprovalReimburse.approval_user)
+        ).filter_by(id=approval_id, approval_user_id=approval_user_id)
+        return query.first()
+
+    @staticmethod
+    def get_list_pagination_approval_user(pic_id, page=1, size=10, filter_month=None, filter_status=None):
         query = ApprovalReimburse.query.filter(
-            ApprovalReimburse.approval_user_id == pic_id,
+            ApprovalReimburse.approval_user_id == pic_id
         )
 
-        if filter_status != AppConstants.APPROVAL_STATUS_ALL.value:
+        if filter_month:
+            search_date = datetime.strptime(filter_month, '%Y-%m')
+
             query = query.filter(
-                ApprovalReimburse.status == filter_status,
+                extract('year', ApprovalReimburse.created_date) == search_date.year,
+                extract('month', ApprovalReimburse.created_date) == search_date.month
+            )
+
+        if filter_status and filter_status != AppConstants.APPROVAL_STATUS_ALL.value:
+            query = query.filter(
+                ApprovalReimburse.status == filter_status
             )
 
         query = query.order_by(ApprovalReimburse.created_date.desc())
 
         return query.paginate(page=page, per_page=size, error_out=False)
-
-    @staticmethod
-    def delete_approval_reimburse(approval_id):
-        approval = ApprovalReimburse.query.filter_by(id=approval_id).first()
-        db.session.delete(approval)
 
 

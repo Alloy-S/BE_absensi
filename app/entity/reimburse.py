@@ -10,6 +10,7 @@ class Reimburse(db.Model):
     status = db.Column(db.String(30), nullable=False)
     photo_id = db.Column(UUID(as_uuid=True), db.ForeignKey('photo.id'), nullable=False)
     created_by = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False)
+    total = db.Column(db.Numeric(15,2), nullable=True, default=0)
     
     photo = db.relationship("Photo", back_populates="reimburse", uselist=False)
     user = db.relationship("Users", back_populates="reimburse")

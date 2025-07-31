@@ -8,7 +8,7 @@ class DetailReimburse(db.Model):
 
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     nama = db.Column(db.String(255), nullable=False)
-    harga = db.Column(db.Numeric(9, 2), nullable=False)
+    harga = db.Column(db.Numeric(15, 2), nullable=False)
     jumlah = db.Column(db.Integer, nullable=False)
     reimburse_id = db.Column(UUID(as_uuid=True), db.ForeignKey('reimburse.id'))
 
