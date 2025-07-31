@@ -9,13 +9,23 @@ approval_lembur_field = {
     'user_id': fields.String
 }
 
+user_field = {
+    "id": fields.String,
+    "fullname": fields.String,
+    "jabatan": fields.String(attribute="data_karyawan.jabatan.nama"),
+    "lokasi": fields.String(attribute="data_karyawan.lokasi.name"),
+}
+
 approval_lembur_pagination_fields = {
-    "pages": fields.String,
-    "total": fields.String,
+    "pages": fields.Integer,
+    "total": fields.Integer,
     "items": fields.List(fields.Nested({
         'id': fields.String,
         'created_date': fields.String,
         'status': fields.String,
+        'date_start': fields.String(attribute="lembur.date_start"),
+        'date_end': fields.String(attribute="lembur.date_end"),
+        'user': fields.Nested(user_field),
     }))
 }
 
@@ -38,6 +48,6 @@ approval_lembur_field_detail = {
     'created_date': fields.String,
     'status': fields.String,
     'approval_user': fields.Nested(user_simple_field),
-    'user_id': fields.String,
+    'user': fields.Nested(user_field),
     'lembur': fields.Nested(lembur_field)
 }

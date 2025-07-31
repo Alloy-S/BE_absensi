@@ -45,6 +45,29 @@ class ApprovalLemburRepository:
         return query.paginate(page=page, per_page=size, error_out=False)
 
     @staticmethod
+    def get_list_pagination_approval_user(user_id, page=1, size=10, filter_month=None, filter_status=None):
+        query = ApprovalLembur.query.filter(
+            ApprovalLembur.approval_user_id == user_id
+        )
+
+        if filter_month:
+            search_date = datetime.strptime(filter_month, '%Y-%m')
+
+            query = query.filter(
+                extract('year', ApprovalLembur.created_date) == search_date.year,
+                extract('month', ApprovalLembur.created_date) == search_date.month
+            )
+
+        if filter_status and filter_status != AppConstants.APPROVAL_STATUS_ALL.value:
+            query = query.filter(
+                ApprovalLembur.status == filter_status
+            )
+
+        query = query.order_by(ApprovalLembur.created_date.desc())
+
+        return query.paginate(page=page, per_page=size, error_out=False)
+
+    @staticmethod
     def get_detail_by_id(user_id, approval_id):
         query = ApprovalLembur.query.options(joinedload(ApprovalLembur.lembur)).filter_by(id=approval_id, user_id=user_id)
         return query.first()
@@ -56,3 +79,11 @@ class ApprovalLemburRepository:
         db.session.delete(lembur)
 
         db.session.delete(approval)
+
+    @staticmethod
+    def get_detail_by_id_and_approval_user_id(approval_id, approval_user_id):
+        query = ApprovalLembur.query.options(
+            joinedload(ApprovalLembur.lembur),
+            joinedload(ApprovalLembur.approval_user)
+        ).filter_by(id=approval_id, approval_user_id=approval_user_id)
+        return query.first()

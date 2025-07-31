@@ -63,5 +63,51 @@ class IzinDetailController(Resource):
 
         return result, 200
 
+class LemburByApprovalUserController(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    def get(self):
+        current_user_id = get_jwt_identity()
+        params = request.args
+
+        schema = PaginationApprovalReq()
+
+        validated = schema.load(params)
+
+        result = LemburService.get_list_lembur_approval_user(username=current_user_id, request=validated)
+        response = {
+            "pages": result.pages,
+            "total": result.total,
+            "items": result.items
+        }
+        return marshal(response, approval_lembur_pagination_fields), 200
+
+class DetailLemburByApprovalUserController(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    def get(self, approval_id):
+        current_user_id = get_jwt_identity()
+
+        response = LemburService.get_detail_lembur_by_approval_user(username=current_user_id, approval_id=approval_id)
+
+        return marshal(response, approval_lembur_field_detail), 200
+
+class ApproveLemburController(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    def post(self, approval_id):
+        username = get_jwt_identity()
+
+        LemburService.approve_lembur(username, approval_id)
+
+class RejectLemburController(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    def post(self, approval_id):
+        username = get_jwt_identity()
+
+        LemburService.reject_lembur(username, approval_id)
+
 lembur_api.add_resource(IzinController, '')
 lembur_api.add_resource(IzinDetailController, '/<string:approval_id>')
+
+lembur_api.add_resource(LemburByApprovalUserController, '/approval')
+lembur_api.add_resource(DetailLemburByApprovalUserController, '/approval/<string:approval_id>')
+lembur_api.add_resource(ApproveLemburController, '/approval/<string:approval_id>/approve')
+lembur_api.add_resource(RejectLemburController, '/approval/<string:approval_id>/reject')
