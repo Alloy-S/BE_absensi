@@ -1,5 +1,5 @@
 from flask_jwt_extended import get_jwt_identity
-from app.filter.jwt_filter import role_required
+from app.filter.jwt_filter import role_required, permission_required
 from app.models.pagination_model import PaginationApprovalReq
 from app.models.reimburse.approval_reimburse_req import ReimburseSchema
 from app.models.reimburse.approval_reimburse_res import approval_reimburse_field, approval_full_reimburse_field, pagination_fields
@@ -60,6 +60,7 @@ class ApprovalReimburseByIdController(Resource):
 
 class ApprovalReimburseAdminController(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("approval_reimburse")
     def get(self):
         current_user_id = get_jwt_identity()
         params = request.args
@@ -80,6 +81,7 @@ class ApprovalReimburseAdminController(Resource):
 
 class DetailReimburseByApprovalUserController(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("approval_reimburse")
     def get(self, approval_id):
         current_user_id = get_jwt_identity()
 
@@ -89,6 +91,7 @@ class DetailReimburseByApprovalUserController(Resource):
 
 class ApproveReimburseController(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("approval_reimbursee")
     def post(self, approval_id):
         username = get_jwt_identity()
 
@@ -96,6 +99,7 @@ class ApproveReimburseController(Resource):
 
 class RejectReimburseController(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("approval_reimburse")
     def post(self, approval_id):
         username = get_jwt_identity()
 

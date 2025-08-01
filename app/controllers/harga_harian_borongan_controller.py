@@ -1,5 +1,5 @@
 from flask_jwt_extended import get_jwt_identity
-from app.filter.jwt_filter import role_required
+from app.filter.jwt_filter import role_required, permission_required
 from app.models.harga_harian_borongan.harga_req import HargaReq
 from app.models.harga_harian_borongan.harga_res import harga_field, pagination_fields, all_harga_field
 from app.utils.app_constans import AppConstants
@@ -14,6 +14,7 @@ harga_api = Api(harga_bp)
 class HargaHarianBoronganController(Resource):
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_harga")
     def get(self):
         params = request.args
 
@@ -33,6 +34,7 @@ class HargaHarianBoronganController(Resource):
         return marshal(response, pagination_fields), 200
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_harga")
     def post(self):
         json_data = request.json
 
@@ -47,6 +49,7 @@ class HargaHarianBoronganController(Resource):
 class HargaDetailHarianBoronganController(Resource):
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_harga")
     def get(self, harga_id):
 
         response = HargaHarianBoronganService.get_harga_by_id(harga_id)
@@ -54,12 +57,14 @@ class HargaDetailHarianBoronganController(Resource):
         return marshal(response, harga_field), 200
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_harga")
     def delete(self, harga_id):
         response = HargaHarianBoronganService.non_active_harga(harga_id)
 
         return None, 200
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_harga")
     def put(self, harga_id):
         json_data = request.json
 

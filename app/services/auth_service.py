@@ -16,11 +16,22 @@ class AuthService:
 
             UserRepository.update_fcm_token(user, fcm_token=request.get('fcm_token'))
 
+            role = [r.role.name for r in user.user_role]
+
+            role_names = ','.join(role)
+
+            all_permissions = set()
+            for user_roles in user.user_role:
+                for role_permission in user_roles.role.role_permission:
+                    all_permissions.add(role_permission.permission.name)
+
+
             access_token = create_access_token(
                 identity=user.username,
                 additional_claims={
                     'name': user.fullname,
-                    'role': user.user_role.name
+                    'role': role_names,
+                    'permissions': list(all_permissions)
                 },
                 expires_delta=False
             )
@@ -29,7 +40,7 @@ class AuthService:
                 'token': access_token,
                 'username': user.username,
                 'fullname': user.fullname,
-                'role': user.user_role.name
+                'role': role_names,
             }
             return response
         raise GeneralException(ErrorCode.INCORRECT_PASSWORD_OR_USERNAME)

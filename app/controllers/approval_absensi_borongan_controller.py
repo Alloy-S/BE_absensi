@@ -1,5 +1,5 @@
 from flask_jwt_extended import get_jwt_identity
-from app.filter.jwt_filter import role_required
+from app.filter.jwt_filter import role_required, permission_required
 from app.models.absensi_borongan.approval.approval_absensi_borongan_req import AbsensiBoronganRequestSchema
 from app.models.absensi_borongan.approval.approval_absensi_borongan_res import absensi_borongan_detail_fields, detail_fields, pagination_fields, approval_fields, approval_absensi_borongan_detail_fields
 from app.models.pagination_model import PaginationApprovalReq
@@ -52,6 +52,7 @@ class AbsensiBoronganDetailController(Resource):
     
 class ApprovalAbsensiBoronganAdminController(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("approval_absn_brngan")
     def get(self):
         current_user_id = get_jwt_identity()
         params = request.args
@@ -72,6 +73,7 @@ class ApprovalAbsensiBoronganAdminController(Resource):
 
 class DetailAbsensiBoronganByApprovalUserController(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("approval_absn_brngan")
     def get(self, approval_id):
         current_user_id = get_jwt_identity()
 
@@ -81,6 +83,7 @@ class DetailAbsensiBoronganByApprovalUserController(Resource):
 
 class ApproveAbsensiBoronganController(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("approval_absn_brngan")
     def post(self, approval_id):
         username = get_jwt_identity()
 
@@ -88,6 +91,7 @@ class ApproveAbsensiBoronganController(Resource):
 
 class RejectAbsensiBoronganController(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("approval_absn_brngan")
     def post(self, approval_id):
         username = get_jwt_identity()
 

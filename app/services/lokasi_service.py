@@ -1,4 +1,8 @@
+from app.utils.app_constans import AppConstants
+from app.execption.custom_execption import GeneralExceptionWithParam
 from app.repositories.lokasi_repository import LokasiRepository
+from app.utils.error_code import ErrorCode
+
 
 class LokasiService:
     @staticmethod
@@ -19,20 +23,22 @@ class LokasiService:
         lokasi = LokasiRepository.get_lokasi_by_name(name=name)
         
         if lokasi:
-            return None
-        return LokasiRepository.create_lokasi(name , latitude, longitude, toleransi);
+            raise GeneralExceptionWithParam(ErrorCode.DUPLICATE_RESOURCE,
+                                            params={'resource': AppConstants.LOKASI_RESOURCE.value})
+        return LokasiRepository.create_lokasi(name , latitude, longitude, toleransi)
     
     @staticmethod
     def update_lokasi(id, name, latitude, longitude, toleransi):
         lokasi = LokasiRepository.get_lokasi_by_id(id)
         if not lokasi:
-            return None
-        return LokasiRepository.update_lokasi(lokasi, name, latitude, longitude, toleransi);
+            raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
+                                            params={'resource': AppConstants.LOKASI_RESOURCE.value})
+        return LokasiRepository.update_lokasi(lokasi, name, latitude, longitude, toleransi)
     
     @staticmethod
     def delete_lokasi(id):
         lokasi = LokasiRepository.get_lokasi_by_id(id)
         if not lokasi:
-            return None
+            raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
+                                            params={'resource': AppConstants.LOKASI_RESOURCE.value})
         LokasiRepository.delete_lokasi(lokasi)
-        return True

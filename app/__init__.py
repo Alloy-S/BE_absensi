@@ -32,7 +32,12 @@ def create_app(config_class=Config):
     migrate.init_app(app, db)
     jwt.init_app(app)
     Api(app)
-    CORS(app, resources={r"/api/*": {"origins": "http://localhost:5173"}})
+
+    allowed_origins = [
+        "http://localhost:5173",
+        "https://pwa-absensi-gamma.vercel.app"
+    ]
+    CORS(app, resources={r"/api/*": {"origins": allowed_origins}})
 
     try:
         locale.setlocale(locale.LC_TIME, 'id_ID.UTF-8')
@@ -71,6 +76,7 @@ def create_app(config_class=Config):
     from app.controllers.jenis_izin_controller import jenis_izin_bp
     from app.controllers.kuota_cuti_controller import jatah_cuti_bp
     from app.controllers.dashboard_user_controller import dashboard_user_bp
+    from app.controllers.role_management_controller import role_management_bp
 
     app.register_blueprint(errors_bp)
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
@@ -79,6 +85,7 @@ def create_app(config_class=Config):
     app.register_blueprint(lokasi_bp, url_prefix='/api/lokasi')
     app.register_blueprint(jadwal_bp, url_prefix='/api/jadwal')
     app.register_blueprint(face_recognition_bp, url_prefix='/api/face-recognition')
+
     app.register_blueprint(libur_bp)
     app.register_blueprint(attendance_bp)
     app.register_blueprint(absensi_bp)
@@ -88,12 +95,14 @@ def create_app(config_class=Config):
     app.register_blueprint(harga_bp)
     app.register_blueprint(borongan_bp)
     app.register_blueprint(pengumuman_bp)
+
     app.register_blueprint(perusahaan_bp)
     app.register_blueprint(reimburse_bp)
     app.register_blueprint(photo_bp)
     app.register_blueprint(jenis_izin_bp)
     app.register_blueprint(jatah_cuti_bp)
     app.register_blueprint(dashboard_user_bp)
+    app.register_blueprint(role_management_bp)
 
     os.makedirs(AppConstants.UPLOAD_FOLDER_PHOTO.value, exist_ok=True)
     os.makedirs(AppConstants.UPLOAD_FOLDER.value, exist_ok=True)

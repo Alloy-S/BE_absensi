@@ -9,7 +9,7 @@ from app.database import db
 from sqlalchemy import text, func
 from werkzeug.security import generate_password_hash
 from sqlalchemy.orm import joinedload
-from sqlalchemy import union_all, literal_column
+from sqlalchemy import union_all, literal_column, or_
 
 
 class UserRepository:
@@ -407,3 +407,20 @@ class UserRepository:
             "total": total,
             "pages": (total + size - 1) // size
         }
+
+    @staticmethod
+    def find_user_by_username_or_name(search):
+
+        search_keyword = f"%{search}%"
+
+        query = db.session.query(
+            Users
+        ).filter(
+            or_(
+                Users.username.ilike(search_keyword),
+                Users.fullname.ilike(search_keyword),
+            ),
+            Users.is_active.is_(True),
+        )
+
+        return query.all()

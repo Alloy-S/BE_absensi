@@ -1,8 +1,7 @@
 from flask_restful import Resource, abort, Api, marshal
 
-from app.filter.jwt_filter import role_required
+from app.filter.jwt_filter import role_required, permission_required
 from app.models.pagination_model import PaginationReq
-from app.models.users.users_req_model import UserSchema
 from app.services.jatah_cuti_service import JatahCutiService
 from flask import Blueprint, request
 from app.utils.app_constans import AppConstants
@@ -16,6 +15,7 @@ jatah_cuti_api = Api(jatah_cuti_bp)
 class JatahCutiListController(Resource):
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_kuota_cuti")
     def get(self, user_id):
         page = request.args.get('page', 1, type=int)
         size = request.args.get('size', 10, type=int)
@@ -25,6 +25,7 @@ class JatahCutiListController(Resource):
         return marshal(response, pagination_fields), 200
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_kuota_cuti")
     def post(self, user_id):
         json = request.get_json()
 
@@ -39,6 +40,7 @@ class JatahCutiListController(Resource):
 class JatahCutiDetailController(Resource):
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_kuota_cuti")
     def get(self, jatah_cuti_id):
 
         jatah_cuti = JatahCutiService.get_detail(jatah_cuti_id)
@@ -46,6 +48,7 @@ class JatahCutiDetailController(Resource):
 
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_kuota_cuti")
     def put(self, jatah_cuti_id):
         json_data = request.get_json()
         schema = JatahCutiUpdateRequestSchema()
@@ -57,6 +60,7 @@ class JatahCutiDetailController(Resource):
         return marshal(updated_jatah_cuti, jatah_cuti_fields), 200
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_kuota_cuti")
     def delete(self, jatah_cuti_id):
         JatahCutiService.delete_jatah_cuti(jatah_cuti_id)
         return None, 200
@@ -64,6 +68,7 @@ class JatahCutiDetailController(Resource):
 
 class JatahCutiGenerateController(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_kuota_cuti")
     def post(self):
 
         target_year = datetime.now().year

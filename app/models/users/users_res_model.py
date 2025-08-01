@@ -9,6 +9,8 @@ user_fields = {
     'jabatan': fields.String
 }
 
+
+
 posibe_user_pic = {
     'id': fields.String,
     'fullname': fields.String,

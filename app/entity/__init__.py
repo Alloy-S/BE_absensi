@@ -1,4 +1,7 @@
 from .users import Users
+from .permission import Permission
+from .roles import Roles
+from .role_permissions import RolePermissions
 from .user_role import UserRole
 from .data_kontak import DataKontak
 from .data_pribadi import DataPribadi
@@ -29,7 +32,7 @@ from .grup_gaji import GrupGaji
 from .grup_gaji_kom import GrupGajiKom
 from .grup_gaji_user import GrupGajiUser
 from .jatah_kuota_cuti import JatahKuotaCuti
-from .routes import Route
+
 from .detail_approval_koreksi import DetailApprovalKoreksi
 from .approval_absensi_borongan import ApprovalAbsensiBorongan
 from .absensi_borongan import AbsensiBorongan

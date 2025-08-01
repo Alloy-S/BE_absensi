@@ -27,6 +27,7 @@ class AppConstants(Enum):
     REIMBURSE_RESOURCE = "Reimburse"
     JABATAN_RESOURCE = "Jabatan"
     JADWAL_KERJA_RESOURCE = "Jadwal Kerja"
+    LOKASI_RESOURCE = "Lokasi Kerja"
     JENIS_IZIN_RESOURCE = "Jenis Izin"
     KUOTA_CUTI_RESOURCE = "Kuota Cuti"
 

@@ -243,3 +243,8 @@ class UserService:
 
         return response
 
+
+    @staticmethod
+    def find_user_by_username_or_name(search):
+        return UserRepository.find_user_by_username_or_name(search)
+

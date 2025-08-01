@@ -32,6 +32,8 @@ class ErrorCode(Enum):
     EXISTING_KUOTA_CUTI = ("Karyawan ini sudah memiliki jatah cuti tersebut untuk periode ini.", 400)
     INSUFFICIENT_KUOTA_CUTI = ("Sisa kuota cuti karyawan tidak mencukupi.", 400)
 
+    USER_ROLE_EMPTY = ("Pilih Setidaknya 1 Role.", 400)
+
     @property
     def message(self):
         return self.value[0]

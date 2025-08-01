@@ -16,9 +16,9 @@ class Users(db.Model):
     is_notif_login_send = db.Column(db.Boolean, nullable=True, default=False)
     is_active = db.Column(db.Boolean, nullable=True, default=True)
     fcm_token = db.Column(db.String, nullable=True)
-    user_role_id = db.Column(UUID(as_uuid=True), db.ForeignKey('user_role.id'), nullable=True)
 
-    user_role = db.relationship('UserRole', back_populates='users', lazy="joined")
+
+    user_role = db.relationship('UserRole', back_populates='users')
     user_pic = db.relationship('DataKaryawan', foreign_keys='[DataKaryawan.user_pic_id]', back_populates='pic')
 
     data_kontak = db.relationship('DataKontak', back_populates='user', uselist=False, cascade="all, delete-orphan")
@@ -58,7 +58,7 @@ class Users(db.Model):
     lembur = db.relationship('Lembur', back_populates="user")
     grup_gaji_user = db.relationship("GrupGajiUser", back_populates="user")
     jatah_kuota_cuti = db.relationship("JatahKuotaCuti", back_populates="user")
-    detail_absensi_borongan = db.relationship("DetailAbsensiBorongan", back_populates="user", lazy="joined")
+    detail_absensi_borongan = db.relationship("DetailAbsensiBorongan", back_populates="user")
 
     def set_password(self, password):
         self.password = generate_password_hash(password)

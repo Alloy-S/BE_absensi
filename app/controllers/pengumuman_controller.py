@@ -1,5 +1,5 @@
 from flask_jwt_extended import get_jwt_identity
-from app.filter.jwt_filter import role_required
+from app.filter.jwt_filter import role_required, permission_required
 from app.models.pagination_model import PaginationReq
 from app.models.pengumuman.pengumuman_res import pengumuman_field, pagination_fields, latest_pengumuman_fields
 from app.utils.app_constans import AppConstants
@@ -45,6 +45,7 @@ class PengumumanByidController(Resource):
 class PengumumanAdminController(Resource):
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_pengumuman")
     def get(self):
         params = request.args
 
@@ -64,6 +65,7 @@ class PengumumanAdminController(Resource):
         return marshal(response, pagination_fields), 200
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_pengumuman")
     def post(self):
         json_data = request.get_json()
 
@@ -78,6 +80,7 @@ class PengumumanAdminController(Resource):
 
 class PengumumanAdminByIdController(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_pengumuman")
     def put(self, pengumuman_id):
         username = get_jwt_identity()
         json_data = request.get_json()
@@ -91,6 +94,7 @@ class PengumumanAdminByIdController(Resource):
         return marshal(response, pengumuman_field), 200
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_pengumuman")
     def delete(self, pengumuman_id):
         PengumumanService.delete_pengumuman_by_id(pengumuman_id)
 

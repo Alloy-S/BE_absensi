@@ -1,5 +1,5 @@
 from flask_jwt_extended import get_jwt_identity
-from app.filter.jwt_filter import role_required
+from app.filter.jwt_filter import role_required, permission_required
 from app.models.izin.izin_req import IzinRequestSchema
 from app.models.izin.izin_res import approval_izin_field, approval_izin_pagination_fields, approval_izin_field_detail, jenis_izin_field, approval_izin_pagination_pic_fields
 from app.utils.app_constans import AppConstants
@@ -72,6 +72,7 @@ class JenisIzinController(Resource):
 
 class ApproveIzinController(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("approval_izin")
     def post(self, approval_id):
         username = get_jwt_identity()
 
@@ -79,6 +80,7 @@ class ApproveIzinController(Resource):
 
 class RejectKIzinController(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("approval_izin")
     def post(self, approval_id):
         username = get_jwt_identity()
 
@@ -86,6 +88,7 @@ class RejectKIzinController(Resource):
 
 class IzinByApprovalUserController(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("approval_izin")
     def get(self):
         current_user_id = get_jwt_identity()
         params = request.args
@@ -104,6 +107,7 @@ class IzinByApprovalUserController(Resource):
 
 class DetailIzinByApprovalUserController(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("approval_izin")
     def get(self, approval_id):
         current_user_id = get_jwt_identity()
 

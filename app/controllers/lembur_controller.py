@@ -1,5 +1,5 @@
 from flask_jwt_extended import get_jwt_identity
-from app.filter.jwt_filter import role_required
+from app.filter.jwt_filter import role_required, permission_required
 from app.models.lembur.lembur_req import LemburRequestSchema
 from app.models.lembur.lembur_res import approval_lembur_pagination_fields, approval_lembur_field, \
     approval_lembur_field_detail
@@ -65,6 +65,7 @@ class IzinDetailController(Resource):
 
 class LemburByApprovalUserController(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("approval_lembur")
     def get(self):
         current_user_id = get_jwt_identity()
         params = request.args
@@ -83,6 +84,7 @@ class LemburByApprovalUserController(Resource):
 
 class DetailLemburByApprovalUserController(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("approval_lembur")
     def get(self, approval_id):
         current_user_id = get_jwt_identity()
 
@@ -92,6 +94,7 @@ class DetailLemburByApprovalUserController(Resource):
 
 class ApproveLemburController(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("approval_lembur")
     def post(self, approval_id):
         username = get_jwt_identity()
 
@@ -99,6 +102,7 @@ class ApproveLemburController(Resource):
 
 class RejectLemburController(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("approval_lembur")
     def post(self, approval_id):
         username = get_jwt_identity()
 

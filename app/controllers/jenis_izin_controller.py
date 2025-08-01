@@ -1,6 +1,6 @@
 from flask_restful import Resource, abort, Api, marshal
 
-from app.filter.jwt_filter import role_required
+from app.filter.jwt_filter import role_required, permission_required
 from app.models.pagination_model import PaginationReq
 from app.services.jenis_izin_service import JenisIzinService
 from flask import Blueprint, request
@@ -15,6 +15,7 @@ jenis_izin_api = Api(jenis_izin_bp)
 class JenisIzinListController(Resource):
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_jenis_izin")
     def get(self):
         page = request.args.get('page', 1, type=int)
         size = request.args.get('size', 10, type=int)
@@ -31,6 +32,7 @@ class JenisIzinListController(Resource):
         return marshal(response, pagination_fields)
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_jenis_izin")
     def post(self):
         json_data = request.get_json()
         schema = JenisIzinRequestSchema()
@@ -43,11 +45,13 @@ class JenisIzinListController(Resource):
 
 class JenisIzinDetailController(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_jenis_izin")
     def get(self, jenis_izin_id):
         response = JenisIzinService.get_jenis_izin_by_id(jenis_izin_id)
         return marshal(response, jenis_izin_fields)
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_jenis_izin")
     def put(self, jenis_izin_id):
         json_data = request.get_json()
         schema = JenisIzinRequestSchema()
@@ -58,6 +62,7 @@ class JenisIzinDetailController(Resource):
         return marshal(response, jenis_izin_fields)
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_jenis_izin")
     def delete(self, jenis_izin_id):
         JenisIzinService.delete_jenis_izin(jenis_izin_id)
         return None, 200

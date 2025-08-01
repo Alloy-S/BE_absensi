@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from flask_restful import Api, Resource, marshal_with, marshal
-from app.filter.jwt_filter import role_required
+from app.filter.jwt_filter import role_required, permission_required
 from app.models.pagination_model import PaginationReq
 from app.services.jabatan_service import JabatanService
 from marshmallow import ValidationError
@@ -14,6 +14,7 @@ jabatan_api = Api(jabatan_bp)
 class JabatanListResource(Resource):
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_jabatan")
     def get(self):
         
         queryparams = request.args
@@ -33,6 +34,7 @@ class JabatanListResource(Resource):
 
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_jabatan")
     def post(self):
 
         json_data = request.get_json()
@@ -50,6 +52,7 @@ class JabatanListResource(Resource):
 class JabatanAllResource(Resource):
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_jabatan")
     def get(self):
         print("Fetching all jabatan without pagination")
 
@@ -64,6 +67,7 @@ class JabatanAllResource(Resource):
 class JabatanResource(Resource):
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_jabatan")
     def get(self, id):
         
         jabatan = JabatanService.get_by_id(id)
@@ -71,6 +75,7 @@ class JabatanResource(Resource):
         return marshal(jabatan, jabatan_field), 200
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_jabatan")
     def put(self, id):
 
         json_data = request.get_json()
@@ -84,6 +89,7 @@ class JabatanResource(Resource):
         return marshal(jabatan, jabatan_field), 200
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_jabatan")
     def delete(self, id):
         jabatan = JabatanService.delete(id)
         

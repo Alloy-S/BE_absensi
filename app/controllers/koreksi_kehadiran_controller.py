@@ -1,5 +1,5 @@
 from flask_jwt_extended import get_jwt_identity
-from app.filter.jwt_filter import role_required
+from app.filter.jwt_filter import role_required, permission_required
 from app.models.koreksi_kehadiran.koreksi_kehadiran_req import KoreksiKehadiranRequestSchema
 from app.models.koreksi_kehadiran.koreksi_kehadiran_res import approval_koreksi_fields, approval_koreksi_pagination_fields, approval_koreksi_detail_pic_fields
 from app.models.pagination_model import PaginationApprovalReq
@@ -65,6 +65,7 @@ class KoreksiKehadiranDetailController(Resource):
 
 class ApproveKoreksiKehadiranController(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("approval_koreksi")
     def post(self, approval_id):
         username = get_jwt_identity()
 
@@ -72,6 +73,7 @@ class ApproveKoreksiKehadiranController(Resource):
 
 class RejectKoreksiKehadiranController(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("approval_koreksi")
     def post(self, approval_id):
         username = get_jwt_identity()
 
@@ -79,6 +81,7 @@ class RejectKoreksiKehadiranController(Resource):
 
 class KoreksiKehadiranByApprovalUserController(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("approval_koreksi")
     def get(self):
         current_user_id = get_jwt_identity()
         params = request.args
@@ -97,6 +100,7 @@ class KoreksiKehadiranByApprovalUserController(Resource):
 
 class DetailKoreksiKehadiranByApprovalUserController(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("approval_koreksi")
     def get(self, approval_id):
         current_user_id = get_jwt_identity()
 

@@ -1,12 +1,14 @@
 from flask_restful import Resource, marshal_with, Api, marshal
 from flask_jwt_extended import get_jwt_identity
-from app.filter.jwt_filter import role_required
+from app.filter.jwt_filter import role_required, permission_required
 from app.models.pagination_model import PaginationReq, PaginationAllApproval
 from app.services.user_service import UserService
 from flask import Blueprint, request
 from app.models.users.users_req_model import UserSchema, ResendLoginSchema, ResetPasswordSchema, DataPribadiSchema, \
     DataKontakSchema, FCMToken
-from app.models.users.users_res_model import users_pagination_fields, posibe_user_pic, user_field, data_pribadi_fields, data_kontak_fields, data_karyawan_fields, users_cuti_kuota_pagination_fields, user_by_pic_field, all_approval_fields
+from app.models.users.users_res_model import users_pagination_fields, posibe_user_pic, user_field, data_pribadi_fields, \
+    data_kontak_fields, data_karyawan_fields, users_cuti_kuota_pagination_fields, user_by_pic_field, \
+    all_approval_fields, simple_user_field
 from marshmallow import ValidationError
 from app.utils.app_constans import AppConstants
 
@@ -17,6 +19,7 @@ user_api = Api(user_bp)
 class UserListController(Resource):
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_usr")
     def get(self):
         try:
             queryparams = request.args
@@ -40,6 +43,7 @@ class UserListController(Resource):
             return {"message": "Internal server error"}, 500
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_usr")
     def post(self):
 
         data = request.get_json()
@@ -60,6 +64,7 @@ class UserListController(Resource):
 class UserController(Resource):
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_usr")
     def get(self, id):
 
         users = UserService.get_user_by_id(id)
@@ -69,6 +74,7 @@ class UserController(Resource):
 
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_usr")
     def put(self, id):
         data = request.get_json()
 
@@ -81,6 +87,7 @@ class UserController(Resource):
         return response, 200
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_usr")
     def delete(self, id):
         response = UserService.non_active_user(id)
         return response, 200
@@ -89,6 +96,7 @@ class UserController(Resource):
 class UserUtilController(Resource):
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_usr")
     def get(self):
         nip = UserService.get_latest_nip()
 
@@ -97,6 +105,7 @@ class UserUtilController(Resource):
 
 class UserGetPIC(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_usr")
     def get(self, id):
         print("Get Posible PIC From jabatan id: " + id)
         response = UserService.get_posible_pic(id)
@@ -105,6 +114,7 @@ class UserGetPIC(Resource):
 
 class ResendLoginData(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_usr")
     def post(self):
         data = request.get_json()
 
@@ -191,6 +201,7 @@ class CreateUserAdmin(Resource):
 
 class UserListKuotaCutiController(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_usr")
     def get(self):
         queryparams = request.args
         schema = PaginationReq()
@@ -250,6 +261,14 @@ class AllApprovalByApprovalUserController(Resource):
 
         return marshal(response, all_approval_fields), 200
 
+class FindUserController(Resource):
+    @role_required(AppConstants.USER_GROUP.value)
+    def get(self):
+        params = request.args
+
+        response = UserService.find_user_by_username_or_name(params.get('search'))
+
+        return marshal(response, simple_user_field), 200
 
 
 user_api.add_resource(UserListController, '')
@@ -266,3 +285,4 @@ user_api.add_resource(UserListKuotaCutiController, '/kuota-cuti')
 user_api.add_resource(GetUserByPic, '/users-by-pic')
 user_api.add_resource(UpdateFCMTokenController, '/update-fcm-token')
 user_api.add_resource(AllApprovalByApprovalUserController, '/all-approval-by-approval-user')
+user_api.add_resource(FindUserController, '/find-user')

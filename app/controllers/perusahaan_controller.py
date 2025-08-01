@@ -1,5 +1,5 @@
 from flask_jwt_extended import get_jwt_identity
-from app.filter.jwt_filter import role_required
+from app.filter.jwt_filter import role_required, permission_required
 from app.models.perusahaan.perusahaan_req import PerusahaanSchema
 from app.models.perusahaan.perusahaan_res import perusahaan_field
 from app.utils.app_constans import AppConstants
@@ -19,6 +19,7 @@ class PerusahaanController(Resource):
         return marshal(response, perusahaan_field), 200
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_prfl_prshn")
     def put(self):
         username = get_jwt_identity()
         json_data = request.get_json()
