@@ -45,6 +45,7 @@ class AbsensiBoronganService:
                 "total": total_keseluruhan,
                 "date": req_data['date'],
                 "status": AppConstants.WAITING_FOR_APPROVAL.value,
+                "created_by": user.id
             })
 
             for detail_data in req_data['details']:
@@ -228,3 +229,17 @@ class AbsensiBoronganService:
         except Exception as e:
             db.session.rollback()
             raise e
+
+    @staticmethod
+    def get_absensi_borongan_history_admin(data):
+
+        return AbsensiBoronganRepository.get_history_absensi_borongan_admin(
+            data.get('page'),
+            data.get('size'),
+            data.get('filter_month'),
+            data.get('search')
+        )
+
+    @staticmethod
+    def get_absensi_borongan_by_id(borongan_id):
+        return AbsensiBoronganRepository.get_detail_by_id(borongan_id)

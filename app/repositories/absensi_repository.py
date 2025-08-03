@@ -1,7 +1,7 @@
 from app.database import db
-from app.entity import Absensi, DetailAbsensi
+from app.entity import Absensi, DetailAbsensi, Users, DataKaryawan
 from datetime import datetime
-from sqlalchemy import extract
+from sqlalchemy import extract, or_
 from sqlalchemy.orm import joinedload
 
 from app.utils.app_constans import AppConstants
@@ -53,6 +53,38 @@ class AbsensiRepository:
             extract('year', Absensi.date) == search_date.year,
             extract('month', Absensi.date) == search_date.month
         )
+
+        query = query.order_by(Absensi.date.desc())
+
+        pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+
+        return pagination
+
+    @staticmethod
+    def get_history_absensi_admin(page: int = 1, per_page: int = 10, filter_month=None, search=None):
+        query = db.session.query(
+            Absensi
+        )
+
+        if filter_month:
+            search_date = datetime.strptime(filter_month, '%Y-%m')
+
+            query = query.filter(
+                extract('year', Absensi.date) == search_date.year,
+                extract('month', Absensi.date) == search_date.month
+            )
+
+        if search:
+            search_string = f"%{search}%"
+
+            query = query.join(Users, Absensi.user_id == Users.id).join(DataKaryawan, Users.id == DataKaryawan.user_id)
+
+            query = query.filter(
+                or_(
+                    Users.fullname.ilike(search_string),
+                    DataKaryawan.nip.ilike(search_string)
+                )
+            )
 
         query = query.order_by(Absensi.date.desc())
 

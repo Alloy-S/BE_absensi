@@ -241,4 +241,30 @@ class ReimburseService:
             db.session.rollback()
             raise e
 
+    @staticmethod
+    def get_reimburse_history_admin(data):
+
+        return ReimburseRepository.get_history_reimburse_admin(
+            data.get('page'),
+            data.get('size'),
+            data.get('filter_month'),
+            data.get('search')
+        )
+
+    @staticmethod
+    def get_reimburse_by_id(reimburse_id):
+        reimburse = ReimburseRepository.get_reimburse_by_id(reimburse_id)
+
+        photo = PhotoService.get_photo_as_base64(reimburse.photo_id)
+
+        return {
+            "id": reimburse.id,
+            "status": reimburse.status,
+            "date": reimburse.date,
+            "photo": photo,
+            "total": reimburse.total,
+            "user": reimburse.user,
+            "detail_reimburse": reimburse.detail_reimburse,
+        }
+
 

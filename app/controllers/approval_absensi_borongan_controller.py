@@ -1,8 +1,10 @@
 from flask_jwt_extended import get_jwt_identity
 from app.filter.jwt_filter import role_required, permission_required
 from app.models.absensi_borongan.approval.approval_absensi_borongan_req import AbsensiBoronganRequestSchema
-from app.models.absensi_borongan.approval.approval_absensi_borongan_res import absensi_borongan_detail_fields, detail_fields, pagination_fields, approval_fields, approval_absensi_borongan_detail_fields
-from app.models.pagination_model import PaginationApprovalReq
+from app.models.absensi_borongan.approval.approval_absensi_borongan_res import absensi_borongan_detail_fields, \
+    detail_fields, pagination_fields, approval_fields, approval_absensi_borongan_detail_fields, \
+    history_borongan_pagination_fields, history_absensi_borongan_detail_fields
+from app.models.pagination_model import PaginationApprovalReq, PaginationHistoryReq
 from app.utils.app_constans import AppConstants
 from flask_restful import Resource, Api, marshal
 from flask import Blueprint, request
@@ -97,6 +99,34 @@ class RejectAbsensiBoronganController(Resource):
 
         AbsensiBoronganService.reject_absensi_borongan(username, approval_id)
 
+class AbsensiBoronganHistoryAdminController(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    def get(self):
+
+        params = request.args
+
+        schema = PaginationHistoryReq()
+
+        validated = schema.load(params)
+
+        result = AbsensiBoronganService.get_absensi_borongan_history_admin(validated)
+
+        response = {
+            "pages": result.pages,
+            "total": result.total,
+            "items": result.items
+        }
+
+        return marshal(response, history_borongan_pagination_fields), 200
+
+class DetailAbsensiBoronganHistoryAdminController(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    def get(self, borongan_id):
+
+        response = AbsensiBoronganService.get_absensi_borongan_by_id(borongan_id)
+
+        return marshal(response, history_absensi_borongan_detail_fields), 200
+
 
 borongan_api.add_resource(AbsensiBoronganListController, '')
 borongan_api.add_resource(AbsensiBoronganDetailController, '/<string:approval_id>')
@@ -105,3 +135,5 @@ borongan_api.add_resource(ApprovalAbsensiBoronganAdminController, '/approval')
 borongan_api.add_resource(DetailAbsensiBoronganByApprovalUserController, '/approval/<string:approval_id>')
 borongan_api.add_resource(ApproveAbsensiBoronganController, '/approval/<string:approval_id>/approve')
 borongan_api.add_resource(RejectAbsensiBoronganController, '/approval/<string:approval_id>/reject')
+borongan_api.add_resource(AbsensiBoronganHistoryAdminController, '/history')
+borongan_api.add_resource(DetailAbsensiBoronganHistoryAdminController, '/history/<string:borongan_id>')

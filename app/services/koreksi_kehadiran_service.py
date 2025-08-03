@@ -201,6 +201,7 @@ class KoreksiKehadiranService:
                 final_status = AppConstants.ON_TIME.value
 
             absensi.status = final_status
+            absensi.metode = AppConstants.KOREKSI_KEHADIRAN.value
 
             DetailAbsensiRepository.create_detail_absensi({
                 'absensi_id': absensi.id,

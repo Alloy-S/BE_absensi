@@ -224,3 +224,17 @@ class IzinService:
             raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
                                             params={'resource': AppConstants.APPROVAL_IZIN_RESOURCE.value})
         return result
+
+    @staticmethod
+    def get_izin_history_admin(data):
+
+        return IzinRepository.get_history_izin_admin(
+            data.get('page'),
+            data.get('size'),
+            data.get('filter_month'),
+            data.get('search')
+        )
+
+    @staticmethod
+    def get_izin_history_by_id(izin_id):
+        return IzinRepository.get_izin_by_id(izin_id)

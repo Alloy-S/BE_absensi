@@ -189,3 +189,17 @@ class LemburService:
         except Exception as e:
             db.session.rollback()
             raise e
+
+    @staticmethod
+    def get_lembur_history_admin(data):
+
+        return LemburRepository.get_history_lembur_admin(
+            data.get('page'),
+            data.get('size'),
+            data.get('filter_month'),
+            data.get('search')
+        )
+
+    @staticmethod
+    def get_history_lembur_by_id(lembur_id):
+        return LemburRepository.get_lembur_by_id(lembur_id)

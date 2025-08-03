@@ -1,9 +1,9 @@
 from flask_jwt_extended import get_jwt_identity
 from app.filter.jwt_filter import role_required
 from app.models.attendance.attendance_res import absensi_pagination_fields, absensi_detail_fields, \
-    check_attendance_by_date
+    check_attendance_by_date, absensi_pagination_admin_fields
 from app.utils.app_constans import AppConstants
-from app.models.pagination_model import PaginationReq
+from app.models.pagination_model import PaginationReq, PaginationHistoryReq
 from flask_restful import Resource, Api, marshal
 from flask import Blueprint, request
 from app.services.absensi_service import AbsensiService
@@ -52,6 +52,36 @@ class AbsensiDetailByDateController(Resource):
 
         return marshal(result, check_attendance_by_date), 200
 
+class AbsensiHistoryAdminController(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    def get(self):
+
+        params = request.args
+
+        schema = PaginationHistoryReq()
+
+        validated = schema.load(params)
+
+        result = AbsensiService.get_absensi_history_admin(validated)
+
+        response = {
+            "pages": result.pages,
+            "total": result.total,
+            "items": result.items
+        }
+
+        return marshal(response, absensi_pagination_admin_fields), 200
+
+class DetailAbsensiHistoryController(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    def get(self, absensi_id):
+
+        response = AbsensiService.get_absensi_history_by_id(absensi_id)
+
+        return marshal(response, absensi_detail_fields), 200
+
 absensi_api.add_resource(AbsensiHistoryController, '')
 absensi_api.add_resource(AbsensiDetailController, '/<string:absensi_id>')
 absensi_api.add_resource(AbsensiDetailByDateController, '/by-date')
+absensi_api.add_resource(AbsensiHistoryAdminController, '/history')
+absensi_api.add_resource(DetailAbsensiHistoryController, '/history/<string:absensi_id>')

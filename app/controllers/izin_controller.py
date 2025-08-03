@@ -1,9 +1,11 @@
 from flask_jwt_extended import get_jwt_identity
 from app.filter.jwt_filter import role_required, permission_required
 from app.models.izin.izin_req import IzinRequestSchema
-from app.models.izin.izin_res import approval_izin_field, approval_izin_pagination_fields, approval_izin_field_detail, jenis_izin_field, approval_izin_pagination_pic_fields
+from app.models.izin.izin_res import approval_izin_field, approval_izin_pagination_fields, approval_izin_field_detail, \
+    jenis_izin_field, approval_izin_pagination_pic_fields, history_izin_pagination_fields, izin_field, \
+    history_izin_field
 from app.utils.app_constans import AppConstants
-from app.models.pagination_model import PaginationReq, PaginationApprovalReq
+from app.models.pagination_model import PaginationReq, PaginationApprovalReq, PaginationHistoryReq
 from flask_restful import Resource, Api, marshal
 from flask import Blueprint, request
 from app.services.izin_service import IzinService
@@ -115,6 +117,34 @@ class DetailIzinByApprovalUserController(Resource):
 
         return marshal(response, approval_izin_field_detail), 200
 
+class IzinHistoryAdminController(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    def get(self):
+
+        params = request.args
+
+        schema = PaginationHistoryReq()
+
+        validated = schema.load(params)
+
+        result = IzinService.get_izin_history_admin(validated)
+
+        response = {
+            "pages": result.pages,
+            "total": result.total,
+            "items": result.items
+        }
+
+        return marshal(response, history_izin_pagination_fields), 200
+
+
+class DetailIzinHistoryAdminController(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    def get(self, izin_id):
+
+        response = IzinService.get_izin_history_by_id(izin_id)
+        return marshal(response, history_izin_field), 200
+
 
 izin_api.add_resource(IzinController, '')
 izin_api.add_resource(IzinDetailController, '/<string:approval_id>')
@@ -124,3 +154,5 @@ izin_api.add_resource(ApproveIzinController, '/approval/<string:approval_id>/app
 izin_api.add_resource(RejectKIzinController, '/approval/<string:approval_id>/reject')
 izin_api.add_resource(IzinByApprovalUserController, '/approval')
 izin_api.add_resource(DetailIzinByApprovalUserController, '/approval/<string:approval_id>')
+izin_api.add_resource(IzinHistoryAdminController, '/history')
+izin_api.add_resource(DetailIzinHistoryAdminController, '/history/<string:izin_id>')

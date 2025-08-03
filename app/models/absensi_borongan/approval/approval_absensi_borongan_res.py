@@ -65,3 +65,24 @@ pagination_fields = {
         'total': fields.Float(attribute="absensi_borongan.total"),
     }))
 }
+
+history_borongan_pagination_fields = {
+    "pages": fields.Integer,
+    "total": fields.Integer,
+    "items": fields.List(fields.Nested({
+        'id': fields.String,
+        'date': fields.String,
+        'status': fields.String,
+        'user': fields.Nested(user_simple_field, attribute="approval_absensi_borongan.user"),
+        'total': fields.Float,
+    }))
+}
+
+history_absensi_borongan_detail_fields = {
+    'id': fields.String,
+    'user': fields.Nested(user_field, attribute="approval_absensi_borongan.user"),
+    'status': fields.String,
+    'date': fields.String,
+    'total': fields.Float,
+    'detail_absensi_borongan': fields.List(fields.Nested(detail_fields)),
+}

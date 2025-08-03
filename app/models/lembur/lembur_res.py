@@ -29,6 +29,18 @@ approval_lembur_pagination_fields = {
     }))
 }
 
+history_lembur_pagination_fields = {
+    "pages": fields.Integer,
+    "total": fields.Integer,
+    "items": fields.List(fields.Nested({
+        'id': fields.String,
+        'status': fields.String,
+        'date_start': fields.String,
+        'date_end': fields.String,
+        'user': fields.Nested(user_field),
+    }))
+}
+
 lembur_field = {
     'id': fields.String,
     'date_start': fields.String,
@@ -36,6 +48,15 @@ lembur_field = {
     'keterangan': fields.String,
     'status': fields.String,
     'user_id': fields.String
+}
+
+history_lembur_field = {
+    'id': fields.String,
+    'date_start': fields.String,
+    'date_end': fields.String,
+    'keterangan': fields.String,
+    'status': fields.String,
+    'user': fields.Nested(user_field),
 }
 
 user_simple_field = {

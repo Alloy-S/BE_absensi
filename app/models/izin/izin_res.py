@@ -80,4 +80,27 @@ approval_izin_pagination_pic_fields = {
     }))
 }
 
+history_izin_pagination_fields = {
+    "pages": fields.Integer,
+    "total": fields.Integer,
+    "items": fields.List(fields.Nested({
+        'id': fields.String,
+        'tgl_izin_start': fields.String,
+        'tgl_izin_end': fields.String,
+        'status': fields.String,
+        'user': fields.Nested(user_field),
+    }))
+}
+
+history_izin_field = {
+    'id': fields.String,
+    'date': fields.String,
+    'tgl_izin_start': fields.String,
+    'tgl_izin_end': fields.String,
+    'keterangan': fields.String,
+    'status': fields.String,
+    'jenis_izin': fields.Nested(jenis_izin_field),
+    'user': fields.Nested(user_field),
+}
+
 

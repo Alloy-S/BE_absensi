@@ -10,6 +10,7 @@ class AbsensiBorongan(db.Model):
     created_date = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
     status = db.Column(db.String(30), nullable=False)
     date = db.Column(db.Date, nullable=False, default=db.func.current_timestamp())
+    created_by = db.Column(UUID(as_uuid=True))
 
     approval_absensi_borongan = db.relationship("ApprovalAbsensiBorongan", back_populates="absensi_borongan", lazy="joined", uselist=False, cascade="all, delete-orphan")
     detail_absensi_borongan = db.relationship("DetailAbsensiBorongan", back_populates="absensi_borongan", lazy="joined", cascade="all, delete-orphan")

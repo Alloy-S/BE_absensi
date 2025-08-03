@@ -61,3 +61,27 @@ pagination_fields = {
         'user': fields.Nested(user_field),
     }))
 }
+
+history_reimburse_pagination_fields = {
+    "pages": fields.Integer,
+    "total": fields.Integer,
+    "items": fields.List(fields.Nested({
+        'id': fields.String,
+        'date': fields.String,
+        'status': fields.String,
+        'total': fields.Float,
+        'user': fields.Nested(user_field),
+    }))
+}
+
+history_reimburse_field = {
+    "id": fields.String,
+    "status": fields.String,
+    "date": fields.String,
+    'total': fields.Float,
+    'user': fields.Nested(user_field),
+
+    "detail_reimburse": fields.List(fields.Nested(detail_reimburse_field)),
+    "photo": fields.Nested(photo_field),
+
+}

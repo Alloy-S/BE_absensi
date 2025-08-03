@@ -92,3 +92,17 @@ class AbsensiService:
             "time_out": detail_out.requested_datetime.isoformat() if detail_out else None
         }
 
+    @staticmethod
+    def get_absensi_history_admin(data):
+
+        return AbsensiRepository.get_history_absensi_admin(
+            data.get('page'),
+            data.get('size'),
+            data.get('filter_month'),
+            data.get('search')
+        )
+
+    @staticmethod
+    def get_absensi_history_by_id(absensi_id):
+        return AbsensiRepository.get_absensi_by_id(absensi_id)
+

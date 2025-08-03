@@ -1,8 +1,9 @@
 from flask_jwt_extended import get_jwt_identity
 from app.filter.jwt_filter import role_required, permission_required
-from app.models.pagination_model import PaginationApprovalReq
+from app.models.pagination_model import PaginationApprovalReq, PaginationHistoryReq
 from app.models.reimburse.approval_reimburse_req import ReimburseSchema
-from app.models.reimburse.approval_reimburse_res import approval_reimburse_field, approval_full_reimburse_field, pagination_fields
+from app.models.reimburse.approval_reimburse_res import approval_reimburse_field, approval_full_reimburse_field, \
+    pagination_fields, history_reimburse_pagination_fields, reimburse_field, history_reimburse_field
 from app.utils.app_constans import AppConstants
 from flask_restful import Resource, Api, marshal
 from flask import Blueprint, request
@@ -105,6 +106,34 @@ class RejectReimburseController(Resource):
 
         ReimburseService.reject_reimburse(username, approval_id)
 
+class ReimburseHistoryAdminController(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    def get(self):
+
+        params = request.args
+
+        schema = PaginationHistoryReq()
+
+        validated = schema.load(params)
+
+        result = ReimburseService.get_reimburse_history_admin(validated)
+
+        response = {
+            "pages": result.pages,
+            "total": result.total,
+            "items": result.items
+        }
+
+        return marshal(response, history_reimburse_pagination_fields), 200
+
+class DetailReimburseHistoryAdminController(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    def get(self, reimburse_id):
+
+        response = ReimburseService.get_reimburse_by_id(reimburse_id)
+
+        return marshal(response, history_reimburse_field)
+
 reimburse_api.add_resource(ApprovalReimburseController, '')
 reimburse_api.add_resource(ApprovalReimburseByIdController, '/<string:approval_id>')
 
@@ -112,4 +141,6 @@ reimburse_api.add_resource(ApprovalReimburseAdminController, '/approval')
 reimburse_api.add_resource(DetailReimburseByApprovalUserController, '/approval/<string:approval_id>')
 reimburse_api.add_resource(ApproveReimburseController, '/approval/<string:approval_id>/approve')
 reimburse_api.add_resource(RejectReimburseController, '/approval/<string:approval_id>/reject')
+reimburse_api.add_resource(ReimburseHistoryAdminController, '/history')
+reimburse_api.add_resource(DetailReimburseHistoryAdminController, '/history/<string:reimburse_id>')
 

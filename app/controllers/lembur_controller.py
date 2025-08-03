@@ -2,9 +2,9 @@ from flask_jwt_extended import get_jwt_identity
 from app.filter.jwt_filter import role_required, permission_required
 from app.models.lembur.lembur_req import LemburRequestSchema
 from app.models.lembur.lembur_res import approval_lembur_pagination_fields, approval_lembur_field, \
-    approval_lembur_field_detail
+    approval_lembur_field_detail, history_lembur_pagination_fields, history_lembur_field
 from app.utils.app_constans import AppConstants
-from app.models.pagination_model import  PaginationApprovalReq
+from app.models.pagination_model import PaginationApprovalReq, PaginationHistoryReq
 from flask_restful import Resource, Api, marshal
 from flask import Blueprint, request
 from app.services.lembur_service import LemburService
@@ -12,7 +12,7 @@ from app.services.lembur_service import LemburService
 lembur_bp = Blueprint('lembur_bp', __name__, url_prefix='/api/lembur')
 lembur_api = Api(lembur_bp)
 
-class IzinController(Resource):
+class LemburController(Resource):
     @role_required(AppConstants.USER_GROUP.value)
     def get(self):
         current_user_id = get_jwt_identity()
@@ -46,7 +46,7 @@ class IzinController(Resource):
         response = LemburService.create_lembur(current_user_id, validated)
         return marshal(response, approval_lembur_field), 200
 
-class IzinDetailController(Resource):
+class LemburDetailController(Resource):
     @role_required(AppConstants.USER_GROUP.value)
     def get(self, approval_id):
         current_user_id = get_jwt_identity()
@@ -108,10 +108,39 @@ class RejectLemburController(Resource):
 
         LemburService.reject_lembur(username, approval_id)
 
-lembur_api.add_resource(IzinController, '')
-lembur_api.add_resource(IzinDetailController, '/<string:approval_id>')
+class LemburHistoryAdminController(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    def get(self):
+
+        params = request.args
+
+        schema = PaginationHistoryReq()
+
+        validated = schema.load(params)
+
+        result = LemburService.get_lembur_history_admin(validated)
+
+        response = {
+            "pages": result.pages,
+            "total": result.total,
+            "items": result.items
+        }
+
+        return marshal(response, history_lembur_pagination_fields), 200
+
+class DetailLemburHistoryAdminController(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    def get(self, lembur_id):
+
+        response = LemburService.get_history_lembur_by_id(lembur_id)
+        return marshal(response, history_lembur_field), 200
+
+lembur_api.add_resource(LemburController, '')
+lembur_api.add_resource(LemburDetailController, '/<string:approval_id>')
 
 lembur_api.add_resource(LemburByApprovalUserController, '/approval')
 lembur_api.add_resource(DetailLemburByApprovalUserController, '/approval/<string:approval_id>')
 lembur_api.add_resource(ApproveLemburController, '/approval/<string:approval_id>/approve')
 lembur_api.add_resource(RejectLemburController, '/approval/<string:approval_id>/reject')
+lembur_api.add_resource(LemburHistoryAdminController, '/history')
+lembur_api.add_resource(DetailLemburHistoryAdminController, '/history/<string:lembur_id>')
