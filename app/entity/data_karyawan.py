@@ -11,7 +11,7 @@ class DataKaryawan(db.Model):
     tipe_karyawan = db.Column(db.String(30), nullable=True)
     
     lokasi_id = db.Column(UUID(as_uuid=True), db.ForeignKey('lokasi.id'), nullable=False)
-    jadwal_kerja_id = db.Column(UUID(as_uuid=True), db.ForeignKey('jadwal_kerja.id'), nullable=False)
+    jadwal_kerja_id = db.Column(UUID(as_uuid=True), db.ForeignKey('jadwal_kerja.id'), nullable=True)
     jabatan_id = db.Column(UUID(as_uuid=True), db.ForeignKey('jabatan.id'), nullable=False)
     user_pic_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=True)
     user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False, unique=True)

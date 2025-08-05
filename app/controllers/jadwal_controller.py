@@ -53,7 +53,7 @@ class JadwalListController(Resource):
 
         validated = schema.load(json)
 
-        jadwal = JadwalKerjaService.create(kode=validated["kode"], shift=validated["shift"], details=validated["detail_jadwal_kerja"])
+        jadwal = JadwalKerjaService.create_jadwal(kode=validated["kode"], shift=validated["shift"], details=validated["detail_jadwal_kerja"])
 
         return None, 201
 
@@ -67,23 +67,31 @@ class JadwalController(Resource):
 
     @role_required(AppConstants.ADMIN_GROUP.value)
     @permission_required("config_jadwal")
-    def put(self, jadwal_id):
+    def delete(self, jadwal_id):
+        success = JadwalKerjaService.non_aktif_jadwal(jadwal_id)
+        return None, 200
+
+class CreateCopyJadwalController(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("config_jadwal")
+    def post(self, jadwal_id):
         json = request.get_json()
 
         schema = JadwalKerjaRequestSchema()
 
-
         validated = schema.load(json)
-        jadwal = JadwalKerjaService.update(jadwal_id, kode=validated["kode"], shift=validated["shift"], details=validated["detail_jadwal_kerja"])
+        jadwal = JadwalKerjaService.create_new_jadwal_copy(jadwal_id, validated)
 
         return marshal(jadwal, jadwal_kerja_field), 200
-
+class ActivateJadwalKerjaController(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
     @permission_required("config_jadwal")
-    def delete(self, jadwal_id):
-        success = JadwalKerjaService.delete(jadwal_id)
+    def post(self, jadwal_id):
+        JadwalKerjaService.aktif_jadwal(jadwal_id)
         return None, 200
     
 jadwal_api.add_resource(JadwalFetchAllController, '/all')
 jadwal_api.add_resource(JadwalListController, '')
 jadwal_api.add_resource(JadwalController, '/<string:jadwal_id>')
+jadwal_api.add_resource(CreateCopyJadwalController, '/create-copy/<string:jadwal_id>')
+jadwal_api.add_resource(ActivateJadwalKerjaController, '/activate/<string:jadwal_id>')

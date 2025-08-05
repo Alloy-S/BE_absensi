@@ -147,12 +147,20 @@ class UserRepository:
             phone=data_kontak['no_telepon'],
             data_pribadi=new_data_pribadi,
             data_kontak=new_data_kontak,
-            data_karyawan=new_data_karyawan,
-            user_role_id='ea3cf287-fcb4-411e-a07a-f5b609f0e2b5'
+            data_karyawan=new_data_karyawan
         )
 
         new_user.set_password(password)
         db.session.add(new_user)
+        db.session.flush()
+
+        new_user_role = UserRole(
+            user_id=new_user.id,
+            role_id=1
+        )
+
+        db.session.add(new_user_role)
+
         db.session.commit()
 
         return new_user

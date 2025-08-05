@@ -126,7 +126,12 @@ class AttendanceService:
                     'lokasi': user.data_karyawan.lokasi.name,
                     'metode': AppConstants.FACE_RECOGNITION.value,
                     'status': status,
-                    'user_id': user.id
+                    'user_id': user.id,
+                    'jadwal_time_in': detail_jadwal.time_in,
+                    'jadwal_time_out': detail_jadwal.time_out,
+                    'jadwal_toler_in': detail_jadwal.toler_in,
+                    'jadwal_toler_out': detail_jadwal.toler_out,
+                    'jadwal_kerja_id': jadwal_kerja.id,
                 })
 
             DetailAbsensiRepository.delete_detail_absensi_by_absensi_id_and_type(absensi.id, attendance_type)

@@ -181,7 +181,12 @@ class KoreksiKehadiranService:
                     'lokasi': user.data_karyawan.lokasi.name,
                     'metode': AppConstants.FACE_RECOGNITION.value,
                     'status': AppConstants.ON_TIME.value,
-                    'user_id': user.id
+                    'user_id': user.id,
+                    'jadwal_time_in': detail_jadwal_kerja.time_in,
+                    'jadwal_time_out': detail_jadwal_kerja.time_out,
+                    'jadwal_toler_in': detail_jadwal_kerja.toler_in,
+                    'jadwal_toler_out': detail_jadwal_kerja.toler_out,
+                    'jadwal_kerja_id': detail_jadwal_kerja.jadwal_kerja_id,
                 })
 
             status_in = AttendanceService.check_attendance_time(AppConstants.ATTENDANCE_IN.value, detail_jadwal_kerja,

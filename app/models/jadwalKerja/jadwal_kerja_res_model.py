@@ -9,7 +9,8 @@ jadwal_pagination_fields = {
     "items": fields.List(fields.Nested({
         'id': fields.String,
         'kode': fields.String,
-        'shift': fields.String
+        'shift': fields.String,
+        'is_active': fields.Boolean,
     }))
 }
 
@@ -36,6 +37,7 @@ jadwal_kerja_field = {
     'id': fields.String,
     'kode': fields.String,
     'shift': fields.String,
+    'is_active': fields.Boolean,
     'detail_jadwal_kerja': fields.List(fields.Nested(jadwal_kerja_detail_fields))
 }
 

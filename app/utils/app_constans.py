@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class AppConstants(Enum):
     ADMIN_ROLE = "Admin"
     HRD_ROLE = "HRD"
@@ -73,4 +74,7 @@ class AppConstants(Enum):
 
     GET_LATEST_DATA = 5
 
-
+    DAY_MAP = {
+        0: 'senin', 1: 'selasa', 2: 'rabu', 3: 'kamis',
+        4: 'jumat', 5: 'sabtu', 6: 'minggu'
+    }

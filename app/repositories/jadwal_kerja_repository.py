@@ -1,4 +1,4 @@
-from app.entity import DetailJadwalKerja
+from app.entity import DetailJadwalKerja, DataKaryawan
 from app.entity.jadwal_kerja import JadwalKerja
 from app.database import db
 from sqlalchemy import or_
@@ -18,13 +18,12 @@ class JadwalKerjaRepository:
 
     @staticmethod
     def get_all_pagination(page: int = 1, size: int = 10, search: str = None):
-        print(f"Fetching all Jabatan with pagination: page={page}, per_page={size}, search={search}")
 
         query = db.session.query(
             JadwalKerja.id,
             JadwalKerja.kode,
-            JadwalKerja.shift
-
+            JadwalKerja.shift,
+            JadwalKerja.is_active,
         )
 
         if search:
@@ -55,7 +54,7 @@ class JadwalKerjaRepository:
         return JadwalKerja.query.filter_by(kode=kode).first()
 
     @staticmethod
-    def create(kode, shift, details: list) -> JadwalKerja:
+    def create_jadwal(kode, shift, details: list) -> JadwalKerja:
         jadwal_kerja = JadwalKerja(kode=kode, shift=shift)
         db.session.add(jadwal_kerja)
         db.session.flush()
@@ -68,7 +67,7 @@ class JadwalKerjaRepository:
                 toler_in=detail['toler_in'],
                 toler_out=detail['toler_out'],
                 jadwal_kerja_id=jadwal_kerja.id,
-                is_active=detail['is_active'],
+                is_active=detail.get('is_active', True),
             )
             db.session.add(detail_jadwal)
 
@@ -76,33 +75,49 @@ class JadwalKerjaRepository:
         return jadwal_kerja
 
     @staticmethod
-    def update(jadwal_kerja: JadwalKerja, kode, shift, details: list) -> JadwalKerja:
-        jadwal_kerja.kode = kode
-        jadwal_kerja.shift = shift
+    def create_new_version(old_jadwal_kerja: JadwalKerja, kode, shift, details: list, migrate_data=True) -> JadwalKerja:
+        JadwalKerjaRepository.non_aktif_jadwal(old_jadwal_kerja)
 
-        DetailJadwalKerja.query.filter_by(jadwal_kerja_id=jadwal_kerja.id).delete()
+        new_jadwal_kerja = JadwalKerja(
+            kode=kode,
+            shift=shift,
+            parent_schedule_id=old_jadwal_kerja.id
+        )
+
+        db.session.add(new_jadwal_kerja)
+        db.session.flush()
+
+        if migrate_data:
+            karyawan_to_migrate = DataKaryawan.query.filter_by(
+                jadwal_kerja_id=old_jadwal_kerja.id
+            ).with_for_update().all()
+
+            for karyawan in karyawan_to_migrate:
+                karyawan.jadwal_kerja_id = new_jadwal_kerja.id
 
         for detail in details:
-            new_detail = DetailJadwalKerja(
+            detail_jadwal = DetailJadwalKerja(
                 hari=detail['hari'],
                 time_in=detail['time_in'],
                 time_out=detail['time_out'],
                 toler_in=detail['toler_in'],
                 toler_out=detail['toler_out'],
-                jadwal_kerja_id=jadwal_kerja.id,
-                is_active=detail['is_active']
-
+                jadwal_kerja_id=new_jadwal_kerja.id,
+                is_active=detail.get('is_active', True),
             )
-            db.session.add(new_detail)
+            db.session.add(detail_jadwal)
 
         db.session.commit()
-        return jadwal_kerja
+        return new_jadwal_kerja
 
     @staticmethod
-    def delete(jadwal_kerja: JadwalKerja):
+    def non_aktif_jadwal(jadwal_kerja: JadwalKerja):
 
-        DetailJadwalKerja.query.filter_by(jadwal_kerja_id=jadwal_kerja.id).delete()
+        jadwal_kerja.is_active = False
+        db.session.commit()
 
-        JadwalKerja.query.filter_by(id=jadwal_kerja.id).delete()
+    @staticmethod
+    def aktif_jadwal(jadwal_kerja: JadwalKerja):
 
+        jadwal_kerja.is_active = True
         db.session.commit()

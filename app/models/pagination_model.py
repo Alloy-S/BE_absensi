@@ -24,3 +24,10 @@ class PaginationHistoryReq(Schema):
     filter_status = fields.String(required=False, load_default="All", data_key="filter-status")
     filter_month = fields.String(required=False, data_key="filter-month")
     search = fields.String(required=False, allow_none=True)
+
+class PaginationRekapReq(Schema):
+    page = fields.Integer(required=False, load_default=1)
+    size = fields.Integer(required=False, load_default=10)
+    start_date = fields.String(required=True, data_key="start-date")
+    end_date = fields.String(required=True, data_key="end-date")
+    search = fields.String(required=False, load_default="")

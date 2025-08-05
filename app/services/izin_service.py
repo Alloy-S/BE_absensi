@@ -148,11 +148,12 @@ class IzinService:
             izin = approval.izin
             jenis_izin = izin.jenis_izin
 
-            if jenis_izin.kuota_default > 0:
-                start_date = izin.tgl_izin_start
-                end_date = izin.tgl_izin_end
+            start_date = izin.tgl_izin_start
+            end_date = izin.tgl_izin_end
 
-                durasi = (end_date - start_date).days + 1
+            durasi = JatahCutiRepository.calculate_effective_duration(approval.user, start_date, end_date)
+
+            if jenis_izin.kuota_default > 0:
 
                 kuota_user = JatahCutiRepository.find_by_user_and_type(approval.user.id, jenis_izin.id, start_date.year)
 
@@ -161,6 +162,8 @@ class IzinService:
                     kuota_user.sisa_kuota -= durasi
                 else:
                     raise GeneralException(ErrorCode.INSUFFICIENT_KUOTA_CUTI)
+
+            izin.durasi_hari_kerja = durasi
 
             db.session.commit()
 

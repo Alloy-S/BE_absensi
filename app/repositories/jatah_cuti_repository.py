@@ -1,6 +1,9 @@
+from app.utils.app_constans import AppConstants
 from app.database import db
-from app.entity import JatahKuotaCuti
+from app.entity import JatahKuotaCuti, Libur
 from sqlalchemy.orm import joinedload
+from datetime import timedelta
+from app.repositories.user_repository import UserRepository
 
 
 class JatahCutiRepository:
@@ -54,3 +57,31 @@ class JatahCutiRepository:
             jenis_izin_id=jenis_izin_id,
             periode=periode
         ).first()
+
+    @staticmethod
+    def calculate_effective_duration(user, start_date, end_date):
+
+        if not user.data_karyawan.jadwal_kerja:
+            return (end_date - start_date).days + 1
+
+        detail_jadwal_kerja = user.data_karyawan.jadwal_kerja.detail_jadwal_kerja
+        libur = Libur.query.filter(Libur.date.between(start_date, end_date)).all()
+
+        hari_libur = {h.date for h in libur}
+
+        efektif_hari_kerja = {detail.hari.value for detail in detail_jadwal_kerja if detail.is_active}
+
+        effective_days = 0
+        current_date = start_date
+
+        while current_date <= end_date:
+            if current_date not in hari_libur:
+                day_of_haliday = current_date.weekday()
+                day_name = AppConstants.DAY_MAP.value.get(day_of_haliday)
+
+                if day_name in efektif_hari_kerja:
+                    effective_days += 1
+
+            current_date += timedelta(days=1)
+
+        return effective_days

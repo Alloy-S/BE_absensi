@@ -77,6 +77,7 @@ def create_app(config_class=Config):
     from app.controllers.kuota_cuti_controller import jatah_cuti_bp
     from app.controllers.dashboard_user_controller import dashboard_user_bp
     from app.controllers.role_management_controller import role_management_bp
+    from app.controllers.rekap_periode_controller import rekap_periode_bp
 
     app.register_blueprint(errors_bp)
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
@@ -103,6 +104,8 @@ def create_app(config_class=Config):
     app.register_blueprint(jatah_cuti_bp)
     app.register_blueprint(dashboard_user_bp)
     app.register_blueprint(role_management_bp)
+
+    app.register_blueprint(rekap_periode_bp)
 
     os.makedirs(AppConstants.UPLOAD_FOLDER_PHOTO.value, exist_ok=True)
     os.makedirs(AppConstants.UPLOAD_FOLDER.value, exist_ok=True)

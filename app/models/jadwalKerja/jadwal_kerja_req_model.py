@@ -19,6 +19,7 @@ class JadwalKerjaRequestSchema(Schema):
     id = fields.String(required=False)
     kode = fields.String(required=True, validate=validate.Length(min=1), error_messages={"required": "Kode wajib diisi"})
     shift = fields.String(required=True, validate=validate.Length(min=1), error_messages={"required": "Shift wajib diisi"})
+    migrate_data = fields.Boolean(required=False, allow_none=True)
     detail_jadwal_kerja = fields.List(fields.Nested(DetailJadwalRequestSchema), required=True, error_messages={"required": "Detail jadwal wajib diisi"})
 
 
