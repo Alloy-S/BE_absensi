@@ -1,8 +1,10 @@
 from app.database import db
-from sqlalchemy import text, func
+from sqlalchemy import text, func, or_
+
+from app.entity import Users, JatahKuotaCuti, DataKaryawan
 
 
-class RekapPeriodeRepository:
+class LaporanRepository:
 
     @staticmethod
     def generate_laporan_periode(start_date, end_date, search, page=1, size=10):
@@ -146,3 +148,106 @@ class RekapPeriodeRepository:
             'pages': (total + size - 1) // size if total > 0 else 0,
             'items': items
         }
+
+    @staticmethod
+    def generate_laporan_terlambat(start_date, end_date, search, page=1, size=10):
+        query = text("""
+                     SELECT dk.nip,
+                            u.fullname  AS nama,
+                            j.nama      AS jabatan,
+                            jk.shift    AS jadwal_kerja,
+                            l.name      AS lokasi,
+                            a.date      as date_absensi,
+                            da.date     as waktu_absen,
+                            a.jadwal_time_in,
+                            COALESCE(ROUND(EXTRACT(epoch FROM da.date - (a.date + a.jadwal_time_in)) / 60, 2),
+                                     0) AS menit_terlambat
+                     FROM absensi a
+                              JOIN detail_absensi da ON a.id = da.absensi_id and da.type = 'IN'
+                              JOIN users u ON a.user_id = u.id
+                              JOIN data_karyawan dk ON u.id = dk.user_id
+                              JOIN jabatan j ON dk.jabatan_id = j.id
+                              JOIN jadwal_kerja jk ON a.jadwal_kerja_id = jk.id
+                              JOIN lokasi l ON dk.lokasi_id = l.id
+                     WHERE a.status IN ('Datang Terlambat', 'Datang Terlambat & Pulang Cepat')
+                       AND a.date BETWEEN :start_date AND :end_date
+                       AND (u.fullname ILIKE :search OR dk.nip ILIKE :search)
+                     ORDER BY a.date DESC
+                     LIMIT :size OFFSET :offset
+                     """)
+
+        count_query = text("""
+                           SELECT COUNT(u.id)
+                           FROM absensi a
+                                    JOIN users u ON a.user_id = u.id AND u.is_active = true
+                                    JOIN data_karyawan dk ON u.id = dk.user_id
+                           WHERE (u.fullname ILIKE :search OR dk.nip ILIKE :search)
+                             AND a.status IN ('Datang Terlambat', 'Datang Terlambat & Pulang Cepat')
+                             AND a.date BETWEEN :start_date AND :end_date
+                           """)
+
+        offset = (page - 1) * size
+        search_pattern = f"%{search}%"
+
+        params = {
+            'start_date': start_date,
+            'end_date': end_date,
+            'search': search_pattern,
+            'size': size,
+            'offset': offset
+        }
+
+        result = db.session.execute(query, params)
+
+        result_count = db.session.execute(count_query, {'start_date': start_date,
+                                                        'end_date': end_date,
+                                                        'search': search_pattern})
+
+        items = result.mappings().all()
+        total = result_count.scalar() or 0
+
+        return {
+            'total': total,
+            'pages': (total + size - 1) // size if total > 0 else 0,
+            'items': items
+        }
+
+    @staticmethod
+    def generate_laporan_kuota_cuti(page= 1, size= 10, search = None, year=None):
+        query = db.session.query(
+            DataKaryawan.nip,
+            Users.fullname.label('nama'),
+            JatahKuotaCuti.periode,
+            func.sum(JatahKuotaCuti.sisa_kuota).label("sisa_cuti_tahunan"),
+            func.sum(JatahKuotaCuti.kuota_awal).label("total_cuti_tahunan"),
+            func.sum(JatahKuotaCuti.kuota_terpakai).label("cuti_tahunan_terpakai")
+        ).select_from(JatahKuotaCuti).join(
+            Users, JatahKuotaCuti.user_id == Users.id
+        ).join(
+            DataKaryawan, Users.id == DataKaryawan.user_id
+        )
+
+        query = query.filter(Users.is_active.is_(True))
+
+        if year:
+            query = query.filter(JatahKuotaCuti.periode == year)
+
+        if search:
+            search_pattern = f"%{search}%"
+            query = query.filter(
+                or_(
+                    Users.fullname.ilike(search_pattern),
+                    DataKaryawan.nip.ilike(search_pattern)
+                )
+            )
+
+        query = query.group_by(
+            Users.id,
+            Users.fullname,
+            DataKaryawan.nip,
+            JatahKuotaCuti.periode,
+        )
+
+        query = query.order_by(DataKaryawan.nip.asc())
+
+        return query.paginate(page=page, per_page=size, error_out=False)

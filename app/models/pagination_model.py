@@ -31,3 +31,9 @@ class PaginationRekapReq(Schema):
     start_date = fields.String(required=True, data_key="start-date")
     end_date = fields.String(required=True, data_key="end-date")
     search = fields.String(required=False, load_default="")
+
+class PaginationKuotaCutiReq(Schema):
+    page = fields.Integer(required=False, load_default=1)
+    size = fields.Integer(required=False, load_default=10)
+    periode = fields.Integer(required=False)
+    search = fields.String(required=False, load_default="")
