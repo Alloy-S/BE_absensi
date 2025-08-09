@@ -38,6 +38,23 @@ kuota_cuti_field = {
     'cuti_tahunan_terpakai': fields.Integer,
 }
 
+upah_item_field = {
+    'date': fields.String,
+    'upah': fields.Float,
+}
+
+upah_borongan_field = {
+    'nip': fields.String,
+    'nama': fields.String,
+    'upah': fields.List(fields.Nested(upah_item_field)),
+    'total_upah': fields.Float,
+}
+
+header_upah_field = {
+    'day': fields.String,
+    'date': fields.String,
+}
+
 rekap_pagination = {
     "pages": fields.Integer,
     "total": fields.Integer,
@@ -54,4 +71,16 @@ kuota_cuti_pagination = {
     "pages": fields.Integer,
     "total": fields.Integer,
     'items': fields.List(fields.Nested(kuota_cuti_field))
+}
+
+upah_borongan_pagination = {
+    "pages": fields.Integer,
+    "total": fields.Integer,
+    "headers": fields.List(fields.Nested(header_upah_field)),
+    'items': fields.List(fields.Nested(upah_borongan_field))
+}
+
+export_excel_field = {
+    'filename': fields.String,
+    'file': fields.String,
 }

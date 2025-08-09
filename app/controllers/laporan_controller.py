@@ -1,7 +1,8 @@
 from flask_jwt_extended import get_jwt_identity
 from app.filter.jwt_filter import role_required, permission_required
 from app.models.pagination_model import PaginationRekapReq, PaginationKuotaCutiReq
-from app.models.laporan.laporan_res import rekap_pagination, datang_terlambat_pagination, kuota_cuti_pagination
+from app.models.laporan.laporan_res import rekap_pagination, datang_terlambat_pagination, kuota_cuti_pagination, \
+    upah_borongan_pagination, export_excel_field
 from app.services.laporan_service import LaporanService
 from app.utils.app_constans import AppConstants
 from flask_restful import Resource, Api, marshal
@@ -46,6 +47,45 @@ class LaporanKuotaCuti(Resource):
 
         return marshal(response, kuota_cuti_pagination), 200
 
+class LaporanUpahAbsensiBorongan(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    def get(self):
+        query_params = request.args
+        schema = PaginationRekapReq()
+
+        validated = schema.load(query_params)
+
+        response = LaporanService.laporan_upah_absensi_borongan(validated)
+
+        return marshal(response, upah_borongan_pagination), 200
+
+class ExportExcelUpahAbsensiBorongan(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    def get(self):
+        query_params = request.args
+        schema = PaginationRekapReq()
+
+        validated = schema.load(query_params)
+
+        response = LaporanService.generate_excel_laporan_upah_borongan(validated)
+
+        return marshal(response, export_excel_field), 200
+
+class ExportExcelRekapFullBorongan(Resource):
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    def get(self):
+        query_params = request.args
+        schema = PaginationRekapReq()
+
+        validated = schema.load(query_params)
+
+        response = LaporanService.export_rekap_full(validated)
+
+        return marshal(response, export_excel_field), 200
+
 laporan_api.add_resource(RekapPeriode, '/rekap-periode')
 laporan_api.add_resource(LaporanDatangTerlambat, '/datang-terlambat')
 laporan_api.add_resource(LaporanKuotaCuti, '/kuota-cuti')
+laporan_api.add_resource(LaporanUpahAbsensiBorongan, '/upah-borongan')
+laporan_api.add_resource(ExportExcelUpahAbsensiBorongan, '/export/upah-borongan')
+laporan_api.add_resource(ExportExcelRekapFullBorongan, '/export/rekap-full')
