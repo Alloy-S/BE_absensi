@@ -60,7 +60,7 @@ class AbsensiService:
         if existing_approval:
             return AbsensiService.map_approval_response(existing_approval)
 
-        raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,params={'resource': AppConstants.ABSENSI_RESOURCE.value})
+        raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,params={'resource': AppConstants.ABSENSI_BY_DATE_RESOURCE.value})
 
     @staticmethod
     def map_absensi_response(absensi):

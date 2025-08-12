@@ -178,10 +178,10 @@ class KoreksiKehadiranService:
 
                 absensi = AbsensiRepository.create_absensi({
                     'date': absensi_date,
-                    'lokasi': user.data_karyawan.lokasi.name,
-                    'metode': AppConstants.FACE_RECOGNITION.value,
+                    'lokasi': approval.user.data_karyawan.lokasi.name,
+                    'metode': AppConstants.KOREKSI_KEHADIRAN.value,
                     'status': AppConstants.ON_TIME.value,
-                    'user_id': user.id,
+                    'user_id': approval.user.id,
                     'jadwal_time_in': detail_jadwal_kerja.time_in,
                     'jadwal_time_out': detail_jadwal_kerja.time_out,
                     'jadwal_toler_in': detail_jadwal_kerja.toler_in,
@@ -206,7 +206,6 @@ class KoreksiKehadiranService:
                 final_status = AppConstants.ON_TIME.value
 
             absensi.status = final_status
-            absensi.metode = AppConstants.KOREKSI_KEHADIRAN.value
 
             DetailAbsensiRepository.create_detail_absensi({
                 'absensi_id': absensi.id,

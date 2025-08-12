@@ -39,7 +39,6 @@ def validation_error_handler(error):
 
 @errors_bp.app_errorhandler(Exception)
 def handle_internal_error(error):
-    # print(error)
     current_app.logger.error(f"Unhandled Exception: {error}", exc_info=True)
 
     try:

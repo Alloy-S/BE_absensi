@@ -25,7 +25,11 @@ class UserService:
 
     @staticmethod
     def get_user_by_id(user_id):
-        return UserRepository.get_user_by_id(user_id)
+        user = UserRepository.get_user_by_id(user_id)
+        if not user:
+            raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND, params={'resorce': AppConstants.USER_RESOURCE.value})
+
+        return user
 
     @staticmethod
     def get_user_by_username(username):

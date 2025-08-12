@@ -8,15 +8,13 @@ class GrupGajiKom(db.Model):
     __tablename__ = 'grup_gaji_kom'
     
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    use_kondisi = db.Column(db.Boolean, unique=True, nullable=False)
-    kode_kondisi = db.Column(db.SmallInteger, nullable=False)
-    id_kondisi = db.Column(db.SmallInteger, nullable=False)
+    use_kondisi = db.Column(db.Boolean, nullable=False)
+    kode_kondisi = db.Column(db.String(50), nullable=False)
     min_kondisi = db.Column(db.SmallInteger, nullable=False)
     max_kondisi = db.Column(db.SmallInteger, nullable=False)
-    use_formula = db.Column(db.Boolean, unique=True, nullable=False)
-    kode_formula = db.Column(db.SmallInteger, nullable=False)
-    id_formula = db.Column(db.SmallInteger, nullable=False)
-    operation_sum = db.Column(db.String(1), unique=True, nullable=False)
+    use_formula = db.Column(db.Boolean, nullable=False)
+    kode_formula = db.Column(db.String(50), nullable=False)
+    operation_sum = db.Column(db.String(1), nullable=False)
     nilai_uang = db.Column(db.Numeric(9,2), nullable=False)
     hitung = db.Column(SQLAEnum(HitungKomGaji, name="hitung"), nullable=False)
     

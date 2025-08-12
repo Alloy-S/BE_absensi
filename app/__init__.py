@@ -78,6 +78,8 @@ def create_app(config_class=Config):
     from app.controllers.dashboard_user_controller import dashboard_user_bp
     from app.controllers.role_management_controller import role_management_bp
     from app.controllers.laporan_controller import laporan_bp
+    from app.controllers.komponen_gaji_controller import kom_gaji_bp
+    from app.controllers.grup_gaji_controller import grup_gaji_bp
 
     app.register_blueprint(errors_bp)
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
@@ -92,20 +94,23 @@ def create_app(config_class=Config):
     app.register_blueprint(absensi_bp)
     app.register_blueprint(koreksi_kehadiran_bp)
     app.register_blueprint(izin_bp)
+
     app.register_blueprint(lembur_bp)
     app.register_blueprint(harga_bp)
     app.register_blueprint(borongan_bp)
     app.register_blueprint(pengumuman_bp)
-
     app.register_blueprint(perusahaan_bp)
+
     app.register_blueprint(reimburse_bp)
     app.register_blueprint(photo_bp)
     app.register_blueprint(jenis_izin_bp)
     app.register_blueprint(jatah_cuti_bp)
     app.register_blueprint(dashboard_user_bp)
-    app.register_blueprint(role_management_bp)
 
+    app.register_blueprint(role_management_bp)
     app.register_blueprint(laporan_bp)
+    app.register_blueprint(kom_gaji_bp)
+    app.register_blueprint(grup_gaji_bp)
 
     os.makedirs(AppConstants.UPLOAD_FOLDER_PHOTO.value, exist_ok=True)
     os.makedirs(AppConstants.UPLOAD_FOLDER.value, exist_ok=True)

@@ -9,7 +9,7 @@ class KomponenGaji(db.Model):
     __tablename__ = 'komponen_gaji'
     
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    kom_kode = db.Column(db.String(5), nullable=False)  
+    kom_kode = db.Column(db.String(10), nullable=False)
     kom_name = db.Column(db.String(100), nullable=False) 
     no_urut = db.Column(db.SmallInteger, nullable=False) 
     tipe = db.Column(SQLAEnum(TipeKomGaji, name="tipe_kom_gaji"), nullable=False)

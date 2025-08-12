@@ -21,26 +21,22 @@ class UserListController(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
     @permission_required("config_usr")
     def get(self):
-        try:
-            queryparams = request.args
-            schema = PaginationReq()
 
-            validated = schema.load(queryparams)
+        queryparams = request.args
+        schema = PaginationReq()
 
-            print(f"Fetching all user page={validated['page']}, per_page={validated['size']}")
+        validated = schema.load(queryparams)
 
-            data = UserService.get_users_pagination(validated['page'], validated['size'], validated['search'])
+        print(f"Fetching all user page={validated['page']}, per_page={validated['size']}")
 
-            response = {
-                "pages": data.pages,
-                "total": data.total,
-                "items": data.items
-            }
-            return marshal(response, users_pagination_fields), 200
-        except ValidationError as e:
-            return {"message": e.messages}, 400
-        except Exception as e:
-            return {"message": "Internal server error"}, 500
+        data = UserService.get_users_pagination(validated['page'], validated['size'], validated['search'])
+
+        response = {
+            "pages": data.pages,
+            "total": data.total,
+            "items": data.items
+        }
+        return marshal(response, users_pagination_fields), 200
 
     @role_required(AppConstants.ADMIN_GROUP.value)
     @permission_required("config_usr")
@@ -68,8 +64,7 @@ class UserController(Resource):
     def get(self, id):
 
         users = UserService.get_user_by_id(id)
-        if not users:
-            return {"message": "User not found"}, 404
+
         return marshal(users, user_field), 200
 
 

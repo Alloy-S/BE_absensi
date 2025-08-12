@@ -4,6 +4,7 @@ from datetime import datetime
 from sqlalchemy import extract, or_
 from sqlalchemy.orm import joinedload
 
+from app.models.jadwalKerja.jadwal_kerja_res_model import jadwal_kerja_field
 from app.utils.app_constans import AppConstants
 
 
@@ -25,6 +26,11 @@ class AbsensiRepository:
             metode=data['metode'],
             status=data['status'],
             user_id=data['user_id'],
+            jadwal_time_in=data['jadwal_time_in'],
+            jadwal_time_out=data['jadwal_time_out'],
+            jadwal_toler_in=data['jadwal_toler_in'],
+            jadwal_toler_out=data['jadwal_toler_out'],
+            jadwal_kerja_id=data['jadwal_kerja_id'],
         )
 
         db.session.add(new_absensi)

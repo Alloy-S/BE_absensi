@@ -1,6 +1,6 @@
 from app.utils.app_constans import AppConstants
 from app.entity import Lokasi, Jabatan, UserRole, JatahKuotaCuti, ApprovalKoreksi, ApprovalIzin, ApprovalLembur, \
-    ApprovalAbsensiBorongan, ApprovalReimburse
+    ApprovalAbsensiBorongan, ApprovalReimburse, Roles
 from app.entity.users import Users
 from app.entity.data_karyawan import DataKaryawan
 from app.entity.data_kontak import DataKontak
@@ -41,10 +41,9 @@ class UserRepository:
             Users.fullname,
             Users.username,
             Users.is_active,
-            UserRole.name.label("role"),
             Lokasi.name.label("lokasi"),
             Jabatan.nama.label("jabatan")
-        ).join(Users.data_karyawan).join(DataKaryawan.lokasi).join(DataKaryawan.jabatan).join(Users.user_role)
+        ).join(Users.data_karyawan).join(DataKaryawan.lokasi).join(DataKaryawan.jabatan)
 
         query = query.filter(Users.is_active.is_(True))
 
@@ -138,7 +137,8 @@ class UserRepository:
             lokasi_id=data_karyawan['lokasi_id'],
             jadwal_kerja_id=data_karyawan['jadwal_kerja_id'],
             jabatan_id=data_karyawan['jabatan_id'],
-            user_pic_id=data_karyawan['user_pic_id']
+            user_pic_id=data_karyawan['user_pic_id'],
+            grup_gaji_id=data_karyawan['grup_gaji_id']
         )
 
         new_user = Users(
@@ -199,6 +199,7 @@ class UserRepository:
                                                                           user.data_karyawan.jadwal_kerja_id)
             user.data_karyawan.jabatan_id = data_karyawan_update.get('jabatan_id', user.data_karyawan.jabatan_id)
             user.data_karyawan.user_pic_id = data_karyawan_update.get('user_pic_id', user.data_karyawan.user_pic_id)
+            user.data_karyawan.grup_gaji_id = data_karyawan_update.get('grup_gaji_id', user.data_karyawan.grup_gaji_id)
         db.session.commit()
         return user
 

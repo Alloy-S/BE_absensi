@@ -2,7 +2,8 @@ from enum import Enum
 
 class ErrorCode(Enum):
 
-    RESOURCE_NOT_FOUND = ("{resource} not found", 404)
+    RESOURCE_NOT_FOUND = ("{resource} tidak ditemukan.", 404)
+    RESOURCE_IN_USE = ("{resource} sedang digunakan, tidak bisa melakukan delete.", 400)
     ALREADY_INACTIVE = ("{resource} sudah tidak aktif", 400)
     INCORRECT_PASSWORD_OR_USERNAME = ("Username atau Password salah", 400)
     SEND_NOTIFICATION_FAILED = ("GAGAL_MENGIRIM_NOTIFIKASI", 400)

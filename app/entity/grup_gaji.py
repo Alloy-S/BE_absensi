@@ -10,7 +10,7 @@ class GrupGaji(db.Model):
     grup_name = db.Column(db.String(100), nullable=False)
     
     grup_gaji_kom = db.relationship('GrupGajiKom', back_populates='grup_gaji')
-    grup_gaji_user = db.relationship('GrupGajiUser', back_populates='grup_gaji')
+    data_karyawan = db.relationship('DataKaryawan', back_populates='grup_gaji')
     
     def __repr__(self):
         return f"<GrupGaji(key='{self.grup_kode}', value='{self.grup_name}')>"

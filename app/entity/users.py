@@ -56,7 +56,6 @@ class Users(db.Model):
     face_embeddings = db.relationship("FaceEmbeddings", back_populates="user")
     absensi = db.relationship("Absensi", back_populates="user")
     lembur = db.relationship('Lembur', back_populates="user")
-    grup_gaji_user = db.relationship("GrupGajiUser", back_populates="user")
     jatah_kuota_cuti = db.relationship("JatahKuotaCuti", back_populates="user")
     detail_absensi_borongan = db.relationship("DetailAbsensiBorongan", back_populates="user")
 

@@ -14,6 +14,7 @@ class AppConstants(Enum):
     DATA_PRIBADI_RESOURCE = "Data Pribadi"
     DATA_KARYAWAN_RESOURCE = "Data Karyawan"
     ABSENSI_RESOURCE = "Absensi"
+    ABSENSI_BY_DATE_RESOURCE = "Tanggal Absensi"
     ABSENSI_BORONGAN_RESOURCE = "Absensi Borongan"
     APPROVAL_KOREKSI_RESOURCE = "Approval Koreksi"
     APPROVAL_ABSENSI_BORONGAN_RESOURCE = "Approval Absensi borongan"
@@ -31,6 +32,8 @@ class AppConstants(Enum):
     LOKASI_RESOURCE = "Lokasi Kerja"
     JENIS_IZIN_RESOURCE = "Jenis Izin"
     KUOTA_CUTI_RESOURCE = "Kuota Cuti"
+    KOMPONEN_GAJI_RESOURCE = "Komponen Gaji"
+    GRUP_GAJI = "Grup Gaji"
 
     PIC_KARYAWAN = "PIC"
 

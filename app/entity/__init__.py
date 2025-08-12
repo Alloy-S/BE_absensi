@@ -30,7 +30,6 @@ from .pengumuman import Pengumuman
 from .komponen_gaji import KomponenGaji
 from .grup_gaji import GrupGaji
 from .grup_gaji_kom import GrupGajiKom
-from .grup_gaji_user import GrupGajiUser
 from .jatah_kuota_cuti import JatahKuotaCuti
 
 from .detail_approval_koreksi import DetailApprovalKoreksi
@@ -39,3 +38,5 @@ from .absensi_borongan import AbsensiBorongan
 from .detail_absensi_borongan import DetailAbsensiBorongan
 from .harga_harian_borongan import HargaHarianBorongan
 from .detail_reimburse import DetailReimburse
+
+from .kode_perhitungan import KodePerhitungan

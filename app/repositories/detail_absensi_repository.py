@@ -8,7 +8,7 @@ class DetailAbsensiRepository:
     @staticmethod
     def create_detail_absensi(data):
         new_detail_jadwal = DetailAbsensi(
-            id_absensi=data['absensi_id'],
+            absensi_id=data['absensi_id'],
             date=data['date'],
             type=data['type'],
             status_appv=data['status_appv'],
