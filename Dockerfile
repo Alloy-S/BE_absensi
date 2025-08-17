@@ -30,8 +30,13 @@ RUN python -c "from deepface import DeepFace; DeepFace.build_model('SFace')"
 
 COPY . .
 
+COPY ./entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
 RUN mkdir -p /app/uploads/photos
 
 EXPOSE 5000
+
+ENTRYPOINT ["/app/entrypoint.sh"]
 
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "run:app"]
