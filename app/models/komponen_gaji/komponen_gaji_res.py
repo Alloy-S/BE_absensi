@@ -6,7 +6,6 @@ kom_gaji_fields = {
     'kom_name': fields.String,
     'no_urut': fields.String,
     'tipe': fields.String(attribute="tipe.value"),
-    'hitung': fields.String(attribute="hitung.value"),
 }
 
 kom_gaji_pagination_fields = {
@@ -16,6 +15,7 @@ kom_gaji_pagination_fields = {
         'id': fields.String,
         'kom_kode': fields.String,
         'kom_name': fields.String,
+        'tipe': fields.String(attribute="tipe.value"),
     }))
 }
 
@@ -23,4 +23,5 @@ simple_kom_gaji_fields = {
     'id': fields.String,
     'kom_kode': fields.String,
     'kom_name': fields.String,
+    'tipe': fields.String(attribute="tipe.value"),
 }

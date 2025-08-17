@@ -2,21 +2,23 @@ from app.database import db
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy import Enum as SQLAEnum
-from app.enums.hitung_kom_gaji import HitungKomGaji
 
 class GrupGajiKom(db.Model):
     __tablename__ = 'grup_gaji_kom'
     
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    use_kondisi = db.Column(db.Boolean, nullable=False)
-    kode_kondisi = db.Column(db.String(50), nullable=False)
-    min_kondisi = db.Column(db.SmallInteger, nullable=False)
-    max_kondisi = db.Column(db.SmallInteger, nullable=False)
-    use_formula = db.Column(db.Boolean, nullable=False)
-    kode_formula = db.Column(db.String(50), nullable=False)
-    operation_sum = db.Column(db.String(1), nullable=False)
-    nilai_uang = db.Column(db.Numeric(9,2), nullable=False)
-    hitung = db.Column(SQLAEnum(HitungKomGaji, name="hitung"), nullable=False)
+    use_kondisi = db.Column(db.Boolean, nullable=False, default=False)
+    kode_kondisi = db.Column(db.String(50), nullable=True)
+    min_kondisi = db.Column(db.Integer, nullable=True)
+    max_kondisi = db.Column(db.Integer, nullable=True)
+
+    use_formula = db.Column(db.Boolean, nullable=False, default=False)
+    kode_formula = db.Column(db.String(50), nullable=True)
+    operation_sum = db.Column(db.String(1), nullable=False, default='*')
+
+    use_nilai_dinamis = db.Column(db.Boolean, nullable=False, default=False)
+    kode_nilai_dinamis = db.Column(db.String(50), nullable=True)
+    nilai_statis = db.Column(db.Numeric(15, 2), nullable=True)
     
     grp_id = db.Column(UUID(as_uuid=True), db.ForeignKey('grup_gaji.id'), nullable=False)
     kom_id = db.Column(UUID(as_uuid=True), db.ForeignKey('komponen_gaji.id'), nullable=False)

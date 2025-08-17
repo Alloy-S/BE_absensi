@@ -1,6 +1,10 @@
 from app.database import db
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Enum as SQLAEnum
+
+from app.enums.face_recog_mode import FaceRecogMode
+
 
 class DataKaryawan(db.Model):
     __tablename__ = 'data_karyawan'
@@ -8,8 +12,10 @@ class DataKaryawan(db.Model):
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     nip = db.Column(db.String(8), nullable=False)
     tgl_gabung = db.Column(db.Date, nullable=False)
+    tgl_resign = db.Column(db.Date, nullable=True)
     tipe_karyawan = db.Column(db.String(30), nullable=True)
     gaji_pokok = db.Column(db.Numeric(15, 2), nullable=True)
+    face_recognition_mode = db.Column(SQLAEnum(FaceRecogMode, name="face_recog_mode"), nullable=True)
     
     lokasi_id = db.Column(UUID(as_uuid=True), db.ForeignKey('lokasi.id'), nullable=False)
     jadwal_kerja_id = db.Column(UUID(as_uuid=True), db.ForeignKey('jadwal_kerja.id'), nullable=True)

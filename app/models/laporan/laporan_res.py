@@ -8,6 +8,8 @@ rekap_periode_field = {
     'lokasi': fields.String,
     'total_kehadiran': fields.String,
     'total_izin': fields.String,
+    'total_izin_berbayar': fields.String,
+    'total_izin_tidak_berbayar': fields.String,
     'total_tidak_hadir': fields.String,
     'total_absen_tidak_lengkap': fields.String,
     'total_terlambat': fields.String,
@@ -15,6 +17,7 @@ rekap_periode_field = {
     'total_menit_kehadiran': fields.String,
     'total_menit_terlambat': fields.String,
     'total_menit_pulang_awal': fields.String,
+    'total_jam_lembur': fields.String,
 }
 
 datang_terlambat_field = {

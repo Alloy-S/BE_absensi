@@ -37,3 +37,11 @@ class PaginationKuotaCutiReq(Schema):
     size = fields.Integer(required=False, load_default=10)
     periode = fields.Integer(required=False)
     search = fields.String(required=False, load_default="")
+
+class PaginationRiwayatPenggajianReq(Schema):
+    page = fields.Integer(required=False, load_default=1)
+    size = fields.Integer(required=False, load_default=10)
+    periode_start = fields.String(required=False, data_key="periode-start")
+    periode_end = fields.String(required=False, data_key="periode-end")
+    grup_gaji = fields.String(required=False, data_key="grup-gaji")
+    status = fields.String(required=False, load_default="all")

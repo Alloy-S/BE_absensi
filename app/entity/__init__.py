@@ -40,3 +40,6 @@ from .harga_harian_borongan import HargaHarianBorongan
 from .detail_reimburse import DetailReimburse
 
 from .kode_perhitungan import KodePerhitungan
+from .riwayat_penggajian_rincian import RiwayatPenggajianRincian
+from .riwayat_penggajian_detail import RiwayatPenggajianDetail
+from .riwayat_penggajian import RiwayatPenggajian

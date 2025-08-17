@@ -12,7 +12,6 @@ from app.repositories.user_repository import UserRepository
 from app.repositories.face_embeddings_repository import FaceEmbeddingsRepository
 
 MODEL_NAME = 'SFace'
-VERIFICATION_THRESHOLD = 0.593
 DETECTOR_BACKEND = 'opencv'
 
 class FaceRecognitionService:
@@ -109,10 +108,17 @@ class FaceRecognitionService:
             os.remove(temp_path)
 
     @staticmethod
-    def verify_face(user_id: str, image_path: str) -> bool:
+    def verify_face(user_id: str, image_path: str, face_recog_mode) -> bool:
         stored_embedding_obj = FaceEmbeddings.query.filter_by(user_id=user_id).first()
         if not stored_embedding_obj:
             raise ValueError("Tidak ada wajah terdaftar untuk pengguna ini.")
+
+        if face_recog_mode == 'NORMAL':
+            VERIFICATION_THRESHOLD = 0.593
+        elif face_recog_mode == 'RENDAH':
+            VERIFICATION_THRESHOLD = 0.68
+        else:
+            VERIFICATION_THRESHOLD = 1.0
 
         stored_embedding = stored_embedding_obj.embedding
 

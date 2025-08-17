@@ -5,7 +5,8 @@ jenis_izin_fields = {
     'nama': fields.String,
     'kuota_default': fields.Integer,
     'periode_reset': fields.String,
-    'berlaku_setelah_bulan': fields.Integer
+    'berlaku_setelah_bulan': fields.Integer,
+    'is_paid': fields.Boolean,
 }
 
 jenis_izin_pagination_fields = {
@@ -29,5 +30,6 @@ jenis_izin_all_fields = {
         'id': fields.String,
         'nama': fields.String,
         'kuota_default': fields.Integer,
+        'is_paid': fields.Boolean,
     }), attribute='items'),
 }

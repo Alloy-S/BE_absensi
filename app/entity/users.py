@@ -59,6 +59,9 @@ class Users(db.Model):
     jatah_kuota_cuti = db.relationship("JatahKuotaCuti", back_populates="user")
     detail_absensi_borongan = db.relationship("DetailAbsensiBorongan", back_populates="user")
 
+    riwayat_penggajian = db.relationship("RiwayatPenggajian", back_populates="user", lazy="select")
+    riwayat_penggajian_detail = db.relationship("RiwayatPenggajianDetail", back_populates="user", lazy="select")
+
     def set_password(self, password):
         self.password = generate_password_hash(password)
 

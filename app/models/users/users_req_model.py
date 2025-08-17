@@ -27,6 +27,8 @@ class DataKaryawanSchema(Schema):
         unknown = EXCLUDE
 
     tgl_gabung = fields.String(required=True)
+    gaji_pokok = fields.Float(required=False, allow_none=True)
+    face_recognition_mode = fields.String(required=True)
     lokasi_id = fields.String(required=True)
     jabatan_id = fields.String(required=True)
     jadwal_kerja_id = fields.String(required=True)

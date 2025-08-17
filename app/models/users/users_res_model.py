@@ -56,6 +56,8 @@ data_karyawan_fields = {
     'user_pic_id': fields.String,
     'user_pic_name': fields.String(attribute='pic.fullname'),
     'grup_gaji_id': fields.String,
+    'gaji_pokok': fields.Float,
+    'face_recognition_mode': fields.String(attribute='face_recognition_mode.value'),
 }
 
 data_pribadi_fields = {

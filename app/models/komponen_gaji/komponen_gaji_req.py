@@ -15,7 +15,3 @@ class KomponenGajiReq(Schema):
         required=True,
         validate=validate.OneOf([e.value for e in TipeKomGaji])
     )
-    hitung = fields.String(
-        required=True,
-        validate=validate.OneOf([e.value for e in HitungKomGaji])
-    )

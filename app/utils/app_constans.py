@@ -34,6 +34,7 @@ class AppConstants(Enum):
     KUOTA_CUTI_RESOURCE = "Kuota Cuti"
     KOMPONEN_GAJI_RESOURCE = "Komponen Gaji"
     GRUP_GAJI = "Grup Gaji"
+    RIWAYAT_PENGGAJIAN_RESOURCE = "Riwayat Penggajian"
 
     PIC_KARYAWAN = "PIC"
 

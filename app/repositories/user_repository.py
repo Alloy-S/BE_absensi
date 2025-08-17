@@ -134,6 +134,8 @@ class UserRepository:
             nip=nip,
             tgl_gabung=data_karyawan['tgl_gabung'],
             tipe_karyawan=data_karyawan['tipe_karyawan'],
+            gaji_pokok=data_karyawan['gaji_pokok'],
+            face_recognition_mode=data_karyawan['face_recognition_mode'],
             lokasi_id=data_karyawan['lokasi_id'],
             jadwal_kerja_id=data_karyawan['jadwal_kerja_id'],
             jabatan_id=data_karyawan['jabatan_id'],
@@ -200,6 +202,8 @@ class UserRepository:
             user.data_karyawan.jabatan_id = data_karyawan_update.get('jabatan_id', user.data_karyawan.jabatan_id)
             user.data_karyawan.user_pic_id = data_karyawan_update.get('user_pic_id', user.data_karyawan.user_pic_id)
             user.data_karyawan.grup_gaji_id = data_karyawan_update.get('grup_gaji_id', user.data_karyawan.grup_gaji_id)
+            user.data_karyawan.gaji_pokok = data_karyawan_update.get('gaji_pokok', user.data_karyawan.gaji_pokok)
+            user.data_karyawan.face_recognition_mode = data_karyawan_update.get('face_recognition_mode', user.data_karyawan.face_recognition_mode)
         db.session.commit()
         return user
 

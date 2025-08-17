@@ -4,7 +4,13 @@ from app.entity import JenisIzin
 class JenisIzinRepository:
     @staticmethod
     def create(data):
-        new_jenis_izin = JenisIzin(**data)
+        new_jenis_izin = JenisIzin(
+            nama=data['nama'],
+            kuota_default=data.get('kuota_default', 0),
+            periode_reset=data.get('periode_reset', 'TIDAK_ADA'),
+            berlaku_setelah_bulan=data.get('berlaku_setelah_bulan', 0),
+            is_paid=data.get('is_paid', False),
+        )
         db.session.add(new_jenis_izin)
         db.session.commit()
         return new_jenis_izin
@@ -38,6 +44,7 @@ class JenisIzinRepository:
         jenis_izin_obj.kuota_default = data['kuota_default']
         jenis_izin_obj.periode_reset = data['periode_reset']
         jenis_izin_obj.berlaku_setelah_bulan = data['berlaku_setelah_bulan']
+        jenis_izin_obj.is_paid = data['is_paid']
         db.session.commit()
         return jenis_izin_obj
 

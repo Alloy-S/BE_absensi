@@ -9,8 +9,9 @@ komponen_grup_gaji_fields = {
     'use_formula': fields.Boolean,
     'kode_formula': fields.String,
     'operation_sum': fields.String,
-    'nilai_uang': fields.Float,
-    'hitung': fields.String(attribute='hitung.value')
+    'nilai_statis': fields.String,
+    'use_nilai_dinamis': fields.Boolean,
+    'kode_nilai_dinamis': fields.String,
 }
 
 grup_gaji_fields = {
@@ -35,14 +36,14 @@ kode_perhitungan_fields = {
     'name': fields.String,
 }
 
-grup_gaji_fields = {
+simple_grup_gaji_fields = {
     'id': fields.String,
     'grup_kode': fields.String,
     'grup_name': fields.String,
 }
 
 grup_gaji_users_fields = {
-    'grup_gaji': fields.Nested(grup_gaji_fields),
+    'grup_gaji': fields.Nested(simple_grup_gaji_fields),
     'list_karyawan': fields.List(fields.Nested({
         'nip': fields.String,
         'fullname': fields.String,

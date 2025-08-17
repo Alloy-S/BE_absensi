@@ -3,6 +3,7 @@ import base64
 import uuid
 from flask import request, Blueprint
 from flask_restful import Resource, Api, marshal
+from sqlalchemy.sql.functions import user
 from werkzeug.utils import secure_filename
 from flask_jwt_extended import get_jwt_identity
 from app.filter.jwt_filter import role_required
@@ -62,7 +63,7 @@ class FaceRegistrationVerifyController(Resource):
             with open(temp_path, 'wb') as f:
                 f.write(image_data)
 
-            is_verified = FaceRecognitionService.verify_face(user_id=user_id, image_path=temp_path)
+            is_verified = FaceRecognitionService.verify_face(user_id=user_id, image_path=temp_path, face_recog_mode='NORMAL')
 
             if is_verified:
                 return {'message': 'Wajah memiliki kecocokan', 'verified': True}, 200

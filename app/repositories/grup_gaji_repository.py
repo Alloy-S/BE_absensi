@@ -1,6 +1,6 @@
 from app.database import db
 from app.entity import GrupGaji, GrupGajiKom, Users, DataKaryawan, Jabatan
-
+from sqlalchemy import text, func, or_
 
 class GrupGajiRepository:
     @staticmethod
@@ -50,8 +50,9 @@ class GrupGajiRepository:
                 use_formula=kom_data.get('use_formula', False),
                 kode_formula=kom_data.get('kode_formula'),
                 operation_sum=kom_data.get('operation_sum'),
-                nilai_uang=kom_data.get('nilai_uang', 0),
-                hitung=kom_data.get('hitung')
+                nilai_statis=kom_data.get('nilai_statis'),
+                use_nilai_dinamis=kom_data.get('use_nilai_dinamis', False),
+                kode_nilai_dinamis=kom_data.get('kode_nilai_dinamis'),
             )
             db.session.add(new_kom)
 
@@ -66,6 +67,7 @@ class GrupGajiRepository:
     @staticmethod
     def get_grup_gaji_users(grup_gaji_id):
         query = ((db.session.query(
+            Users.id,
             Users.fullname,
             DataKaryawan.nip,
             Jabatan.nama.label('jabatan')
@@ -81,3 +83,33 @@ class GrupGajiRepository:
         result = query.order_by(DataKaryawan.nip).all()
 
         return result
+
+    @staticmethod
+    def get_grup_gaji_detail_by_id(grup_gaji_id):
+
+        query = text("""
+                     SELECT gg.grup_kode,
+                            gg.grup_name,
+                            kg.kom_name,
+                            kg.no_urut,
+                            kg.tipe,
+                            ggk.use_kondisi,
+                            ggk.kode_kondisi,
+                            ggk.min_kondisi,
+                            ggk.max_kondisi,
+                            ggk.use_formula,
+                            ggk.kode_formula,
+                            ggk.operation_sum,
+                            ggk.nilai_statis,
+                            ggk.use_nilai_dinamis,
+                            ggk.kode_nilai_dinamis
+                     FROM grup_gaji gg
+                              JOIN grup_gaji_kom ggk ON gg.id = ggk.grp_id
+                              JOIN komponen_gaji kg ON ggk.kom_id = kg.id
+                     WHERE gg.id = :grup_gaji_id
+                     order by kg.no_urut, ggk.min_kondisi;
+                     """)
+
+        result = db.session.execute(query, {'grup_gaji_id': grup_gaji_id})
+
+        return result.mappings().all()

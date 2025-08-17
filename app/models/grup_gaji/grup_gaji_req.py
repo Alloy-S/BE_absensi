@@ -15,11 +15,9 @@ class KomponenGrupGaji(Schema):
     use_formula = fields.Boolean(load_default=False)
     kode_formula = fields.String(allow_none=True)
     operation_sum = fields.String(required=True)
-    nilai_uang = fields.Float(required=True)
-    hitung = fields.String(
-        required=True,
-        validate=validate.OneOf([e.value for e in HitungKomGaji])
-    )
+    nilai_statis = fields.Decimal(required=False, allow_none=True)
+    use_nilai_dinamis = fields.Boolean(load_default=False)
+    kode_nilai_dinamis = fields.String(allow_none=True)
 
 class GrupGajiReq(Schema):
     class Meta:

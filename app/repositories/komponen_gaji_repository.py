@@ -12,7 +12,6 @@ class KomponenGajiRepository:
             kom_name=data['kom_name'],
             no_urut=data['no_urut'],
             tipe=data['tipe'],
-            hitung=data['hitung'],
         )
 
         db.session.add(new_kom_gaji)
@@ -34,7 +33,6 @@ class KomponenGajiRepository:
         kom_gaji.kom_name = data['kom_name']
         kom_gaji.no_urut = data['no_urut']
         kom_gaji.tipe = data['tipe']
-        kom_gaji.hitung = data['hitung']
 
         db.session.commit()
 

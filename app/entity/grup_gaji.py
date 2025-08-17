@@ -11,6 +11,7 @@ class GrupGaji(db.Model):
     
     grup_gaji_kom = db.relationship('GrupGajiKom', back_populates='grup_gaji')
     data_karyawan = db.relationship('DataKaryawan', back_populates='grup_gaji')
+    riwayat_penggajian = db.relationship('RiwayatPenggajian', back_populates='grup_gaji', lazy="select")
     
     def __repr__(self):
         return f"<GrupGaji(key='{self.grup_kode}', value='{self.grup_name}')>"

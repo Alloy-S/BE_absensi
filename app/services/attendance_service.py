@@ -98,7 +98,7 @@ class AttendanceService:
                 raise GeneralException(ErrorCode.USER_LOCATION_NOT_MATCH_REQUIREMENT)
 
             # # cek wajah
-            is_face_valid = FaceRecognitionService.verify_face(user_id=user.id, image_path=temp_path)
+            is_face_valid = FaceRecognitionService.verify_face(user_id=user.id, image_path=temp_path, face_recog_mode=user.data_karyawan.face_recognition_mode.value)
             if not is_face_valid:
                 raise GeneralException(ErrorCode.USER_FACE_NOT_MATCH_REQUIREMENT)
 

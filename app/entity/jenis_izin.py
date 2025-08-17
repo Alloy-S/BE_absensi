@@ -10,6 +10,7 @@ class JenisIzin(db.Model):
     kuota_default = db.Column(db.Integer, nullable=False, default=0)
     periode_reset = db.Column(db.String(50), nullable=False, default='TIDAK_ADA')
     berlaku_setelah_bulan = db.Column(db.Integer, nullable=False, default=0)
+    is_paid = db.Column(db.Boolean, nullable=False, default=False)
     
     izin = db.relationship('Izin', back_populates='jenis_izin')
     jatah_kuota_cuti = db.relationship("JatahKuotaCuti", back_populates="jenis_izin")

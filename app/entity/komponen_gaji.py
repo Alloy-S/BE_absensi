@@ -13,7 +13,6 @@ class KomponenGaji(db.Model):
     kom_name = db.Column(db.String(100), nullable=False) 
     no_urut = db.Column(db.SmallInteger, nullable=False) 
     tipe = db.Column(SQLAEnum(TipeKomGaji, name="tipe_kom_gaji"), nullable=False)
-    hitung = db.Column(SQLAEnum(HitungKomGaji, name="hitung_kom_gaji"), nullable=False)
     
     grup_gaji_kom = db.relationship('GrupGajiKom', back_populates='komponen_gaji')
     
