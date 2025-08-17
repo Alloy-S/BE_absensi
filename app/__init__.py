@@ -35,7 +35,8 @@ def create_app(config_class=Config):
 
     allowed_origins = [
         "http://localhost:5173",
-        "https://pwa-absensi-gamma.vercel.app"
+        "https://pwa-absensi-gamma.vercel.app",
+        "https://mybenz.site"
     ]
     CORS(app, resources={r"/api/*": {"origins": allowed_origins}})
 
