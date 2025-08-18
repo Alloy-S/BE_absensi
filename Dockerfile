@@ -9,6 +9,9 @@ ENV LANG id_ID.UTF-8
 ENV LANGUAGE id_ID:id
 ENV LC_ALL id_ID.UTF-8
 
+ENV TZ=Asia/Jakarta
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpq-dev \
