@@ -21,4 +21,4 @@ class DetailAbsensi(db.Model):
     def __repr__(self):
         return (f"<DetailAbsensi(id={self.id}, date='{self.date}', type='{self.type}', status_appv='{self.status_appv}', "
                 f"status_absensi='{self.status_absensi}', latitude={self.latitude}, longitude={self.longitude}, "
-                f"id_absensi={self.id_absensi})>")
+                f"absensi_id={self.absensi_id})>")

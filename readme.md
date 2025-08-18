@@ -37,7 +37,11 @@ docker compose run --rm --entrypoint "\
 
 ### migration db
 
+pg_dump -U NAMA_USER_LOKAL -d NAMA_DB_LOKAL -F c -b -v -f data_lokal.dump
 
+scp .\data_lokal.dump username@ip:~/
 
+docker cp ../data_lokal.dump benz-absensi-db:/tmp/data_lokal.dump
 
+docker compose exec db pg_restore -U NAMA_USER_SERVER -d NAMA_DB_SERVER --clean --no-acl --no-owner /tmp/data_lokal.dump
 
