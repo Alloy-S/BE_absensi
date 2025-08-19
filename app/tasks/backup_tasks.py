@@ -2,6 +2,7 @@ import os
 import json
 import shutil
 import uuid
+from zipfile import ZipFile, ZIP_DEFLATED
 from datetime import datetime, date, time
 from decimal import Decimal
 from app.database import db
@@ -111,9 +112,9 @@ def run_periodic_backup_and_erase(log_id):
                 full_backup_data[name] = serialized_records
                 print(f"Berhasil memproses {len(records)} record dari {name}.")
 
-            with open(os.path.join(temp_backup_path, 'backup_data.json'), 'w') as f:
+            json_path = os.path.join(temp_backup_path, 'backup_data.json')
+            with open(json_path, 'w') as f:
                 json.dump(full_backup_data, f, indent=4)
-            print("Berhasil menyimpan data ke backup_data.json.")
 
             uploads_folder = 'uploads'
             photos_backup_path = os.path.join(temp_backup_path, 'photos')
@@ -125,12 +126,18 @@ def run_periodic_backup_and_erase(log_id):
                     shutil.copy(source_path, photos_backup_path)
             print(f"Berhasil menyalin {len(all_photos_to_backup)} file foto.")
 
-            # Buat arsip ZIP final
-
             final_archive_folder = os.path.join(uploads_folder, 'backups')
             os.makedirs(final_archive_folder, exist_ok=True)
-            final_archive_base_name = os.path.join(final_archive_folder, backup_dir_name)
-            final_zip_path = shutil.make_archive(final_archive_base_name, 'zip', temp_backup_path)
+            final_zip_path = os.path.join(final_archive_folder, f"{backup_dir_name}.zip")
+
+            with ZipFile(final_zip_path, 'w', ZIP_DEFLATED) as zipf:
+
+                zipf.write(json_path, arcname='backup_data.json')
+
+                for root, dirs, files in os.walk(photos_backup_path):
+                    for file in files:
+                        file_path = os.path.join(root, file)
+                        zipf.write(file_path, arcname=os.path.join('photos', file))
 
             print(f"Backup final berhasil dibuat di: {os.path.basename(final_zip_path)}")
 
