@@ -14,6 +14,7 @@ payroll_api = Api(payroll_bp)
 class PayrollController(Resource):
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("pengolahan_gaji")
     def post(self):
         username = get_jwt_identity()
 

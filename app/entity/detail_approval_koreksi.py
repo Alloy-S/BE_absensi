@@ -7,7 +7,7 @@ class DetailApprovalKoreksi(db.Model):
     __tablename__ = 'detail_approval_koreksi'
 
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    approval_koreksi_id = db.Column(UUID(as_uuid=True), db.ForeignKey('approval_koreksi.id'), nullable=False)
+    approval_koreksi_id = db.Column(UUID(as_uuid=True), db.ForeignKey('approval_koreksi.id', ondelete="CASCADE"), nullable=False)
     requested_datetime = db.Column(db.DateTime, nullable=False)
     type = db.Column(db.String, nullable=False)
 

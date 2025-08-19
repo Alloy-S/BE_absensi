@@ -189,6 +189,8 @@ class KoreksiKehadiranService:
                     'jadwal_kerja_id': detail_jadwal_kerja.jadwal_kerja_id,
                 })
 
+                approval.absensi_id = absensi.id
+
             status_in = AttendanceService.check_attendance_time(AppConstants.ATTENDANCE_IN.value, detail_jadwal_kerja,
                                                                 detail_in.requested_datetime)
             status_out = AttendanceService.check_attendance_time(AppConstants.ATTENDANCE_OUT.value, detail_jadwal_kerja,

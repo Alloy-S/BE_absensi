@@ -18,8 +18,8 @@ class Absensi(db.Model):
     jadwal_kerja_id = db.Column(UUID(as_uuid=True), db.ForeignKey('jadwal_kerja.id'), nullable=True)
     
     user = db.relationship('Users', back_populates="absensi")
-    detail_absensi = db.relationship("DetailAbsensi", back_populates="absensi")
-    approval = db.relationship("ApprovalKoreksi", back_populates="absensi")
+    detail_absensi = db.relationship("DetailAbsensi", back_populates="absensi", cascade="all, delete-orphan")
+    approval = db.relationship("ApprovalKoreksi", back_populates="absensi", cascade="all, delete-orphan")
     jadwal_kerja = db.relationship("JadwalKerja", back_populates="absensi")
     
     def __repr__(self):

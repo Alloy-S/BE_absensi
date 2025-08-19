@@ -18,5 +18,5 @@ class RiwayatPenggajian(db.Model):
     grup_gaji_id = db.Column(UUID(as_uuid=True), db.ForeignKey('grup_gaji.id'), nullable=False)
 
     grup_gaji = db.relationship("GrupGaji", back_populates="riwayat_penggajian", lazy="select")
-    riwayat_penggajian_detail = db.relationship("RiwayatPenggajianDetail", back_populates="riwayat_penggajian")
+    riwayat_penggajian_detail = db.relationship("RiwayatPenggajianDetail", back_populates="riwayat_penggajian", cascade="all, delete-orphan")
     user = db.relationship("Users", back_populates="riwayat_penggajian", lazy="select")

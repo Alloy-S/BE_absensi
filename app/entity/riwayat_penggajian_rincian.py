@@ -13,6 +13,6 @@ class RiwayatPenggajianRincian(db.Model):
     nilai_b = db.Column(db.Numeric(15,2), nullable=False)
     operasi = db.Column(db.String(2), nullable=False)
     jumlah = db.Column(db.Numeric(15,2), nullable=False)
-    riwayat_penggajian_detail_id = db.Column(UUID(as_uuid=True), db.ForeignKey('riwayat_penggajian_detail.id'), nullable=False)
+    riwayat_penggajian_detail_id = db.Column(UUID(as_uuid=True), db.ForeignKey('riwayat_penggajian_detail.id', ondelete="CASCADE"), nullable=False)
 
     riwayat_penggajian_detail = db.relationship("RiwayatPenggajianDetail", back_populates="riwayat_penggajian_rincian")

@@ -14,8 +14,8 @@ class Reimburse(db.Model):
     
     photo = db.relationship("Photo", back_populates="reimburse", uselist=False)
     user = db.relationship("Users", back_populates="reimburse")
-    approval_reimburse = db.relationship("ApprovalReimburse", back_populates="reimburse")
-    detail_reimburse = db.relationship("DetailReimburse", back_populates="reimburse")
+    approval_reimburse = db.relationship("ApprovalReimburse", back_populates="reimburse", cascade="all, delete-orphan")
+    detail_reimburse = db.relationship("DetailReimburse", back_populates="reimburse", cascade="all, delete-orphan")
 
     def __repr__(self):
         return (

@@ -13,7 +13,7 @@ class DetailAbsensi(db.Model):
     latitude = db.Column(db.Numeric(9, 6), nullable=True)
     longitude = db.Column(db.Numeric(9, 6), nullable=True)
     catatan = db.Column(db.Text, nullable=True)
-    absensi_id = db.Column(UUID(as_uuid=True), db.ForeignKey('absensi.id'), nullable=False)
+    absensi_id = db.Column(UUID(as_uuid=True), db.ForeignKey('absensi.id', ondelete="CASCADE"), nullable=False)
 
     
     absensi = db.relationship("Absensi", back_populates="detail_absensi")

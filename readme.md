@@ -45,3 +45,9 @@ docker cp ../data_lokal.dump benz-absensi-db:/tmp/data_lokal.dump
 
 docker compose exec db pg_restore -U NAMA_USER_SERVER -d NAMA_DB_SERVER --clean --no-acl --no-owner /tmp/data_lokal.dump
 
+### server storage clean up
+
+docker image prune
+
+docker system prune
+

@@ -10,7 +10,7 @@ class DetailReimburse(db.Model):
     nama = db.Column(db.String(255), nullable=False)
     harga = db.Column(db.Numeric(15, 2), nullable=False)
     jumlah = db.Column(db.Integer, nullable=False)
-    reimburse_id = db.Column(UUID(as_uuid=True), db.ForeignKey('reimburse.id'))
+    reimburse_id = db.Column(UUID(as_uuid=True), db.ForeignKey('reimburse.id', ondelete="CASCADE"))
 
     reimburse = db.relationship("Reimburse", back_populates="detail_reimburse")
 

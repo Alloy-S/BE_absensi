@@ -9,7 +9,7 @@ class ApprovalLembur(db.Model):
     created_date = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
     status = db.Column(db.String(30), nullable=False)
     approval_user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False)
-    lembur_id = db.Column(UUID(as_uuid=True), db.ForeignKey('lembur.id'), nullable=False)
+    lembur_id = db.Column(UUID(as_uuid=True), db.ForeignKey('lembur.id', ondelete="CASCADE"), nullable=False)
     user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False)
 
     approval_user = db.relationship("Users", back_populates="approval_user_lembur", foreign_keys=[approval_user_id])

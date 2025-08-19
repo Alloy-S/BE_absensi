@@ -40,6 +40,6 @@ RUN mkdir -p /app/uploads/photos
 
 EXPOSE 5000
 
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["/usr/bin/dumb-init", "--", "/app/entrypoint.sh"]
 
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "run:app"]

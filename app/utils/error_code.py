@@ -35,6 +35,7 @@ class ErrorCode(Enum):
 
     USER_ROLE_EMPTY = ("Pilih Setidaknya 1 Role.", 400)
     ALREADY_FINAL_STATUS = ("Riwayat sudah difinalisasi.", 400)
+    CONN_FAILED_REDIS = ("Koneksi ke Redis gagal. Tidak bisa memulai tugas.", 500)
 
     @property
     def message(self):

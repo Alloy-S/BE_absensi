@@ -17,6 +17,7 @@ riwayat_penggajian_api = Api(riwayat_penggajian_bp)
 class FinalisasiRiwayatPenggajianController(Resource):
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("pengolahan_gaji")
     def post(self, riwayat_id):
 
         PayrollService.finalisasi_riwayat_penggajian(riwayat_id)
@@ -25,6 +26,7 @@ class FinalisasiRiwayatPenggajianController(Resource):
 
 class RiwayatPenggajianByIdController(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("pengolahan_gaji")
     def get(self, riwayat_id):
         response = PayrollService.get_riwayat_by_id(riwayat_id)
 
@@ -33,6 +35,7 @@ class RiwayatPenggajianByIdController(Resource):
 
 class RiwayatPenggajianController(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("pengolahan_gaji")
     def get(self):
         params = request.args
 
@@ -51,6 +54,7 @@ class RiwayatPenggajianController(Resource):
 
 class ExportRiwayatPenggajianByIdController(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("pengolahan_gaji")
     def get(self, riwayat_id):
         response = PayrollService.export_riwayat_penggajian_to_excel(riwayat_id)
 
