@@ -8,5 +8,5 @@ conn = Redis.from_url(redis_url)
 
 if __name__ == '__main__':
     worker = Worker(listen, connection=conn)
-    print("Worker RQ dimulai dalam burst mode (kompatibel dengan Windows)...")
-    worker.work(burst=True)
+    print("Worker dimulai")
+    worker.work()

@@ -20,6 +20,7 @@ RUN apt-get update && apt-get install -y \
     libsm6 \
     libxext6 \
     locales \
+    dumb-init \
     && rm -rf /var/lib/apt/lists/* \
     && sed -i -e 's/# id_ID.UTF-8 UTF-8/id_ID.UTF-8 UTF-8/' /etc/locale.gen \
     && dpkg-reconfigure --frontend=noninteractive locales
