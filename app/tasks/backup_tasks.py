@@ -151,8 +151,6 @@ def run_periodic_backup_and_erase(log_id):
             log.file_path = final_zip_path
             db.session.commit()
 
-            print("Proses backup selesai. Penghapusan data dilewati untuk mode testing.")
-
         except Exception as e:
             db.session.rollback()
 

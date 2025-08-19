@@ -1,13 +1,11 @@
-from flask import request, Blueprint, send_from_directory
+from flask import request, Blueprint, Response, stream_with_context
 from flask_restful import Resource, Api, marshal
 from app.filter.jwt_filter import role_required, permission_required
 from app.models.backup_log.backup_log_req import BackupLogReq
-from app.models.backup_log.backup_log_res import simple_backup_log_fields, backup_log_fields, backup_log_pagination
+from app.models.backup_log.backup_log_res import backup_log_fields, backup_log_pagination
 from app.models.pagination_model import PaginationBackupLogReq
 from app.services.backup_service import BackupService
 from app.utils.app_constans import AppConstants
-from flask_jwt_extended import get_jwt_identity
-from datetime import datetime
 import os
 
 
@@ -61,16 +59,31 @@ class DownloadBackupLogByIdController(Resource):
     def get(self, log_id):
         log = BackupService.get_log_by_id(log_id)
 
-        if not log or log.status != 'READY TO DOWNLOAD' or not log.file_path:
-            return {"message": "Backup tidak ditemukan atau belum selesai"}, 400
+        if not log or not log.file_path:
+            return {"message": "File backup tidak ditemukan"}, 404
+
+        if not os.path.exists(log.file_path):
+            return {"message": "File backup fisik tidak ditemukan di server. Mungkin sudah diunduh sebelumnya."}, 404
 
         try:
-            directory = os.path.dirname(log.file_path)
             filename = os.path.basename(log.file_path)
 
-            return send_from_directory(directory, filename, as_attachment=True)
-        except FileNotFoundError:
-            return {"message": "File backup fisik tidak ditemukan di server"}, 400
+            def generate_file_chunks():
+                # Membaca file dalam potongan 4KB
+                with open(log.file_path, 'rb') as f:
+                    while True:
+                        chunk = f.read(4096)
+                        if not chunk:
+                            break
+                        yield chunk
+
+            response = Response(stream_with_context(generate_file_chunks()), mimetype='application/zip')
+            response.headers.set('Content-Disposition', 'attachment', filename=filename)
+
+            return response
+
+        except Exception as e:
+            return {"error": f"Gagal mengirim file: {str(e)}"}, 500
 
 class FinalisasiBackupLogController(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
