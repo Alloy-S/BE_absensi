@@ -27,7 +27,7 @@ class NotificationService:
             f"*Username*: {username}\n"
             f"*Password*: {password}\n\n"
             "Silakan login dan segera ganti password Anda.\n"
-            "Silakan login di http://example.com \n\n"
+            "Silakan login di https://mybenz.site/login \n\n"
             "Terima kasih"
         )
 
