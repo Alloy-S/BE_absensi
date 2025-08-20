@@ -83,6 +83,7 @@ def create_app(config_class=Config):
     from app.controllers.payroll_controller import payroll_bp
     from app.controllers.riwayat_penggajian_controller import riwayat_penggajian_bp
     from app.controllers.backup_controller import backup_bp
+    from app.controllers.dashboard_admin_controller import dashboard_admin_bp
 
     app.register_blueprint(errors_bp)
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
@@ -118,6 +119,7 @@ def create_app(config_class=Config):
 
     app.register_blueprint(riwayat_penggajian_bp)
     app.register_blueprint(backup_bp)
+    app.register_blueprint(dashboard_admin_bp)
 
     os.makedirs(AppConstants.UPLOAD_FOLDER_PHOTO.value, exist_ok=True)
     os.makedirs(AppConstants.UPLOAD_FOLDER.value, exist_ok=True)

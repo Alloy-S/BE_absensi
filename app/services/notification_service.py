@@ -20,7 +20,7 @@ class NotificationService:
         template = (
             f"*Pendaftaran Akun*\n\n"
             f"Kepada, {fullname}\n\n"
-            f"Selamat, Anda telah terdaftar di PT. Benz Cahaya Purnama pada Sistem Absensi. Melalui Benz Absensi, Anda dapat melakukan berbagai hal seperti mengelola absensi, melihat data personal, melihat informasi kepegawaian, mengelola cuti, serta melakukan permohonan reimburse.\n"
+            f"Selamat, Anda telah terdaftar di PT. Benz Cahaya Suprana pada Sistem Absensi. Melalui Benz Absensi, Anda dapat melakukan berbagai hal seperti mengelola absensi, melihat data personal, melihat informasi kepegawaian, mengelola cuti, serta melakukan permohonan reimburse.\n"
             f"Berikut adalah detail akun Anda:\n\n"
             f"*Nama Pengguna*: {fullname}\n"
             f"*Nomor Karyawan*: {nip}\n"
