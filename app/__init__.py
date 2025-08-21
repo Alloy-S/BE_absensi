@@ -25,6 +25,7 @@ configure_mappers()
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
+    app.config['PROPAGATE_EXCEPTIONS'] = True
     scheduler.init_app(app)
     scheduler.start()
     db.init_app(app)
