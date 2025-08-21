@@ -7,7 +7,7 @@ class DataPribadiSchema(Schema):
 
     gender = fields.String(required=True)
     tmpt_lahir = fields.String(required=True)
-    tgl_lahir = fields.Date(required=True)
+    tgl_lahir = fields.String(required=True)
     status_kawin = fields.String(required=False)
     agama = fields.String(required=False)
     gol_darah = fields.String(required=False)

@@ -9,7 +9,7 @@ class FaceEmbeddingsRepository:
 
     @staticmethod
     def save_face_embeddings(user_id, embedding):
-        new_face_embedding = FaceEmbeddings(user_id=user_id, embedding=embedding)
+        new_face_embedding = FaceEmbeddings(user_id=user_id, embedding_data=embedding)
 
         db.session.add(new_face_embedding)
         db.session.flush()
@@ -18,5 +18,5 @@ class FaceEmbeddingsRepository:
 
     @staticmethod
     def update_face_embeddings(face_embedding, embedding):
-        face_embedding.embedding = embedding
+        face_embedding.embedding_data = embedding
 

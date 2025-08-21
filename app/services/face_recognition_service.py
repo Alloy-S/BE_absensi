@@ -1,10 +1,12 @@
 import os
 import base64
 import uuid
+import json
 from deepface import DeepFace
 from scipy.spatial.distance import cosine
 from app.entity import Users, FaceEmbeddings
 from app.database import db
+from app.services.encryption_service import EncryptionServiceAES256
 from app.utils.app_constans import AppConstants
 from app.utils.error_code import ErrorCode
 from app.execption.custom_execption import GeneralException, GeneralExceptionWithParam
@@ -93,12 +95,16 @@ class FaceRecognitionService:
 
         embedding_list = FaceRecognitionService._generate_embedding(temp_path)
 
+        embedding_json_str = json.dumps(embedding_list)
+
+        encrypted_embedding = EncryptionServiceAES256.encrypt(embedding_json_str)
+
         existing_embedding = FaceEmbeddingsRepository.get_face_embeddings(user.id)
 
         if existing_embedding:
-            FaceEmbeddingsRepository.update_face_embeddings(existing_embedding, embedding_list)
+            FaceEmbeddingsRepository.update_face_embeddings(existing_embedding, encrypted_embedding)
         else:
-            FaceEmbeddingsRepository.save_face_embeddings(user.id, embedding_list)
+            FaceEmbeddingsRepository.save_face_embeddings(user.id, encrypted_embedding)
 
             UserRepository.mark_done_register_face(user)
 
@@ -120,7 +126,11 @@ class FaceRecognitionService:
         else:
             VERIFICATION_THRESHOLD = 1.0
 
-        stored_embedding = stored_embedding_obj.embedding
+        encrypted_str = stored_embedding_obj.embedding_data
+
+        decrypted_json_str = EncryptionServiceAES256.decrypt(encrypted_str)
+
+        stored_embedding = json.loads(decrypted_json_str)
 
         new_embedding = FaceRecognitionService._generate_embedding(image_path)
 

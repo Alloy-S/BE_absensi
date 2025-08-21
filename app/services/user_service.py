@@ -3,6 +3,7 @@ from app.repositories.data_kontak_repository import DataKontakRepository
 from app.repositories.data_pribadi_repository import DataPribadiRepository
 from app.repositories.jabatan_repository import JabatanRepository
 from app.repositories.user_repository import UserRepository
+from app.services.encryption_service import EncryptionServiceAES256
 from app.services.notification_service import NotificationService
 from app.utils.app_constans import AppConstants
 from app.utils.error_code import ErrorCode
@@ -27,9 +28,58 @@ class UserService:
     def get_user_by_id(user_id):
         user = UserRepository.get_user_by_id(user_id)
         if not user:
-            raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND, params={'resorce': AppConstants.USER_RESOURCE.value})
+            raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
+                                            params={'resource': AppConstants.USER_RESOURCE.value})
 
-        return user
+        decrypted_user_data = {
+            'id': user.id,
+            'fullname': user.fullname,
+            'username': user.username,
+            'phone': EncryptionServiceAES256.decrypt(user.phone),
+            'user_role': user.user_role,
+            'data_karyawan': None,
+            'data_pribadi': None,
+            'data_kontak': None,
+        }
+
+        if user.data_karyawan:
+            decrypted_user_data['data_karyawan'] = {
+                'id': user.data_karyawan.id,
+                'nip': user.data_karyawan.nip,
+                'tgl_gabung': user.data_karyawan.tgl_gabung,
+                'tipe_karyawan': user.data_karyawan.tipe_karyawan,
+                'jabatan': user.data_karyawan.jabatan,
+                'jadwal_kerja': user.data_karyawan.jadwal_kerja,
+                'lokasi': user.data_karyawan.lokasi,
+                'pic': user.data_karyawan.pic,
+                'user_pic_id': user.data_karyawan.user_pic_id,
+                'grup_gaji_id': user.data_karyawan.grup_gaji_id,
+                'gaji_pokok': user.data_karyawan.gaji_pokok,
+                'face_recognition_mode': user.data_karyawan.face_recognition_mode,
+            }
+
+        if user.data_pribadi:
+            decrypted_user_data['data_pribadi'] = {
+                'id': user.data_pribadi.id,
+                'gender': user.data_pribadi.gender,
+                'tgl_lahir': EncryptionServiceAES256.decrypt(user.data_pribadi.tgl_lahir),
+                'tmpt_lahir': user.data_pribadi.tmpt_lahir,
+                'status_kawin': user.data_pribadi.status_kawin,
+                'agama': user.data_pribadi.agama,
+                'gol_darah': user.data_pribadi.gol_darah,
+            }
+
+        if user.data_kontak:
+            decrypted_user_data['data_kontak'] = {
+                'id': user.data_kontak.id,
+                'alamat': EncryptionServiceAES256.decrypt(user.data_kontak.alamat),
+                'no_telepon': EncryptionServiceAES256.decrypt(user.data_kontak.no_telepon),
+                'nama_darurat': user.data_kontak.nama_darurat,
+                'no_telepon_darurat': EncryptionServiceAES256.decrypt(user.data_kontak.no_telepon_darurat),
+                'relasi_darurat': user.data_kontak.relasi_darurat,
+            }
+
+        return decrypted_user_data
 
     @staticmethod
     def get_user_by_username(username):
@@ -46,7 +96,8 @@ class UserService:
         jabatan = JabatanRepository.get_by_id(data_karyawan.get('jabatan_id'))
 
         if not jabatan:
-            raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND, params={'resource': AppConstants.JABATAN_RESOURCE.value})
+            raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
+                                            params={'resource': AppConstants.JABATAN_RESOURCE.value})
 
         user_pic_id = data_karyawan.get('user_pic_id')
 
@@ -65,7 +116,8 @@ class UserService:
         result = UserRepository.create_user(fullname, username, password, data_pribadi, data_kontak, data_karyawan, nip)
 
         try:
-            NotificationService.send_notification_login_data(phone=result.phone, username=username, password=password, fullname=fullname, nip=nip)
+            NotificationService.send_notification_login_data(phone=data_kontak['no_telepon'], username=username, password=password,
+                                                             fullname=fullname, nip=nip)
         except Exception as e:
             print(f"Sending notification failed: {str(e)}")
 
@@ -87,7 +139,8 @@ class UserService:
     def update_user(user_id, data):
         user = UserRepository.get_user_by_id(user_id)
         if not user:
-            raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND, params={'resource': AppConstants.USER_RESOURCE.value})
+            raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
+                                            params={'resource': AppConstants.USER_RESOURCE.value})
         UserRepository.update_user(user, data)
         return None
 
@@ -95,10 +148,10 @@ class UserService:
     def non_active_user(user_id):
         user = UserRepository.get_user_by_id(user_id)
         if not user:
-            raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND, params={'resource': AppConstants.USER_RESOURCE.value})
+            raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
+                                            params={'resource': AppConstants.USER_RESOURCE.value})
         UserRepository.non_active_user(user)
         return None
-
 
     @staticmethod
     def get_latest_nip():
@@ -124,22 +177,24 @@ class UserService:
 
         UserRepository.change_password(user, validated['new_pass'])
 
-
     @staticmethod
     def resend_login_data(user_id):
         print(f"user_id: {user_id}")
         user = UserRepository.get_user_by_id(user_id)
 
         if not user:
-            raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND, params={'resource': AppConstants.USER_RESOURCE.value})
+            raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
+                                            params={'resource': AppConstants.USER_RESOURCE.value})
 
         password = generate_password()
 
         UserRepository.change_password(user, password)
 
+        decrypted_phone = EncryptionServiceAES256.decrypt(user.phone)
+
         try:
             NotificationService.send_notification_login_data(
-                phone=user.phone,
+                phone=decrypted_phone,
                 username=user.username,
                 password=password,
                 fullname=user.fullname,
@@ -178,7 +233,16 @@ class UserService:
             raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
                                             params={'resource': AppConstants.DATA_KONTAK_RESOURCE.value})
 
-        return kontak
+        response = {
+            'id': kontak.id,
+            'alamat': EncryptionServiceAES256.decrypt(kontak.alamat),
+            'no_telepon': EncryptionServiceAES256.decrypt(kontak.no_telepon),
+            'nama_darurat': kontak.nama_darurat,
+            'no_telepon_darurat': EncryptionServiceAES256.decrypt(kontak.no_telepon_darurat),
+            'relasi_darurat': kontak.relasi_darurat,
+        }
+
+        return response
 
     @staticmethod
     def get_data_pribadi(username):
@@ -194,8 +258,17 @@ class UserService:
             raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
                                             params={'resource': AppConstants.DATA_PRIBADI_RESOURCE.value})
 
-        return data_pribadi
 
+        response = {
+            'id': data_pribadi.id,
+            'gender': data_pribadi.gender,
+            'tgl_lahir': EncryptionServiceAES256.decrypt(data_pribadi.tgl_lahir),
+            'tmpt_lahir': data_pribadi.tmpt_lahir,
+            'status_kawin': data_pribadi.status_kawin,
+            'agama': data_pribadi.agama,
+            'gol_darah': data_pribadi.gol_darah,
+        }
+        return response
 
     @staticmethod
     def edit_data_pribadi(username, validated):
@@ -243,12 +316,11 @@ class UserService:
             raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
                                             params={'resource': AppConstants.USER_RESOURCE.value})
 
-        response = UserRepository.get_all_approval_status_waiting(user.id, request.get('filter_tipe_approval'), request.get('page'), request.get('size'))
+        response = UserRepository.get_all_approval_status_waiting(user.id, request.get('filter_tipe_approval'),
+                                                                  request.get('page'), request.get('size'))
 
         return response
-
 
     @staticmethod
     def find_user_by_username_or_name(search):
         return UserRepository.find_user_by_username_or_name(search)
-

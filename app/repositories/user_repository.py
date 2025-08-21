@@ -1,3 +1,4 @@
+from app.services.encryption_service import EncryptionServiceAES256
 from app.utils.app_constans import AppConstants
 from app.entity import Lokasi, Jabatan, UserRole, JatahKuotaCuti, ApprovalKoreksi, ApprovalIzin, ApprovalLembur, \
     ApprovalAbsensiBorongan, ApprovalReimburse, Roles
@@ -101,7 +102,7 @@ class UserRepository:
         new_user = Users(
             fullname=fullname,
             username=username,
-            phone=phone,
+            phone=EncryptionServiceAES256.encrypt(phone),
             user_role_id='11c155e7-a480-4697-9bc5-513cb2579b03'
         )
 
@@ -113,9 +114,11 @@ class UserRepository:
 
     @staticmethod
     def create_user(fullname, username, password, data_pribadi, data_kontak, data_karyawan, nip):
+        phone_user = EncryptionServiceAES256.encrypt(data_kontak['no_telepon'])
+
         new_data_pribadi = DataPribadi(
             gender=data_pribadi['gender'],
-            tmpt_lahir=data_pribadi['tmpt_lahir'],
+            tmpt_lahir=EncryptionServiceAES256.encrypt(data_pribadi['tmpt_lahir']),
             tgl_lahir=data_pribadi['tgl_lahir'],
             status_kawin=data_pribadi['status_kawin'],
             agama=data_pribadi['agama'],
@@ -123,10 +126,10 @@ class UserRepository:
         )
 
         new_data_kontak = DataKontak(
-            alamat=data_kontak['alamat'],
-            no_telepon=data_kontak['no_telepon'],
+            alamat=EncryptionServiceAES256.encrypt(data_kontak['alamat']),
+            no_telepon=phone_user,
             nama_darurat=data_kontak['nama_darurat'],
-            no_telepon_darurat=data_kontak['no_telepon_darurat'],
+            no_telepon_darurat=EncryptionServiceAES256.encrypt(data_kontak['no_telepon_darurat']),
             relasi_darurat=data_kontak['relasi_darurat'],
         )
 
@@ -146,7 +149,7 @@ class UserRepository:
         new_user = Users(
             fullname=fullname,
             username=username,
-            phone=data_kontak['no_telepon'],
+            phone=phone_user,
             data_pribadi=new_data_pribadi,
             data_kontak=new_data_kontak,
             data_karyawan=new_data_karyawan
@@ -176,18 +179,18 @@ class UserRepository:
             data_pribadi_update = data['data_pribadi']
             user.data_pribadi.gender = data_pribadi_update.get('gender', user.data_pribadi.gender)
             user.data_pribadi.tmpt_lahir = data_pribadi_update.get('tmpt_lahir', user.data_pribadi.tmpt_lahir)
-            user.data_pribadi.tgl_lahir = data_pribadi_update.get('tgl_lahir', user.data_pribadi.tgl_lahir)
+            user.data_pribadi.tgl_lahir = EncryptionServiceAES256.encrypt(data_pribadi_update.get('tgl_lahir', user.data_pribadi.tgl_lahir))
             user.data_pribadi.status_kawin = data_pribadi_update.get('status_kawin', user.data_pribadi.status_kawin)
             user.data_pribadi.agama = data_pribadi_update.get('agama', user.data_pribadi.agama)
             user.data_pribadi.gol_darah = data_pribadi_update.get('gol_darah', user.data_pribadi.gol_darah)
 
         if 'data_kontak' in data and user.data_kontak:
             data_kontak_update = data['data_kontak']
-            user.data_kontak.alamat = data_kontak_update.get('alamat', user.data_kontak.alamat)
-            user.data_kontak.no_telepon = data_kontak_update.get('no_telepon', user.data_kontak.no_telepon)
+            user.data_kontak.alamat = EncryptionServiceAES256.encrypt(data_kontak_update.get('alamat', user.data_kontak.alamat))
+            user.data_kontak.no_telepon = EncryptionServiceAES256.encrypt(data_kontak_update.get('no_telepon', user.data_kontak.no_telepon))
             user.data_kontak.nama_darurat = data_kontak_update.get('nama_darurat', user.data_kontak.nama_darurat)
-            user.data_kontak.no_telepon_darurat = data_kontak_update.get('no_telepon_darurat',
-                                                                         user.data_kontak.no_telepon_darurat)
+            user.data_kontak.no_telepon_darurat = EncryptionServiceAES256.encrypt(data_kontak_update.get('no_telepon_darurat',
+                                                                         user.data_kontak.no_telepon_darurat))
             user.data_kontak.relasi_darurat = data_kontak_update.get('relasi_darurat', user.data_kontak.relasi_darurat)
             user.phone = user.data_kontak.no_telepon
 
@@ -220,11 +223,11 @@ class UserRepository:
 
     @staticmethod
     def edit_data_kontak(user, data):
-        user.data_kontak.alamat = data.get('alamat', user.data_kontak.alamat)
-        user.data_kontak.no_telepon = data.get('no_telepon', user.data_kontak.no_telepon)
+        user.data_kontak.alamat = EncryptionServiceAES256.encrypt(data.get('alamat', user.data_kontak.alamat))
+        user.data_kontak.no_telepon = EncryptionServiceAES256.encrypt(data.get('no_telepon', user.data_kontak.no_telepon))
         user.data_kontak.nama_darurat = data.get('nama_darurat', user.data_kontak.nama_darurat)
-        user.data_kontak.no_telepon_darurat = data.get('no_telepon_darurat',
-                                                                     user.data_kontak.no_telepon_darurat)
+        user.data_kontak.no_telepon_darurat = EncryptionServiceAES256.encrypt(data.get('no_telepon_darurat',
+                                                                     user.data_kontak.no_telepon_darurat))
         user.data_kontak.relasi_darurat = data.get('relasi_darurat', user.data_kontak.relasi_darurat)
         user.phone = user.data_kontak.no_telepon
 

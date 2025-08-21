@@ -10,7 +10,7 @@ class Users(db.Model):
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     fullname = db.Column(db.String(80), nullable=False)
     username = db.Column(db.String(80), unique=True, nullable=False)
-    phone = db.Column(db.String(16), nullable=False)
+    phone = db.Column(db.Text, nullable=False)
     password = db.Column(db.String(256), nullable=False)
     is_face_registration_required = db.Column(db.Boolean, nullable=True, default=True)
     is_notif_login_send = db.Column(db.Boolean, nullable=True, default=False)
