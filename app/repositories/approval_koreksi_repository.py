@@ -92,6 +92,24 @@ class ApprovalKoreksiRepository:
         return new_koreksi
 
     @staticmethod
+    def create_approval_koreksi_user_sync(data):
+        new_koreksi = ApprovalKoreksi(
+            id=data['id'],
+            absensi_date=data['absensi_date'],
+            status=data['status'],
+            approval_user_id=data['approval_user_id'],
+            absensi_id=data['absensi_id'],
+            user_id=data['user_id'],
+            catatan_pengajuan=data['catatan_pengajuan'],
+            created_date = data['created_date']
+        )
+
+        db.session.add(new_koreksi)
+        db.session.flush()
+
+        return new_koreksi
+
+    @staticmethod
     def delete_koreksi(approval):
         parent_absensi = approval.absensi
 

@@ -73,11 +73,14 @@ class KoreksiKehadiranService:
                 raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
                                                 params={'resource': AppConstants.USER_RESOURCE.value})
 
+            if not user.data_karyawan.pic:
+                raise GeneralException(ErrorCode.APPROVER_NOT_FOUND)
+
             attendance_date = data['date']
             absensi_id = data.get('absensi_id')
 
             existing_approval = ApprovalKoreksiRepository.find_by_user_and_date(user.id, attendance_date)
-            if existing_approval:
+            if existing_approval and existing_approval.status == AppConstants.WAITING_FOR_APPROVAL.value:
                 ApprovalKoreksiRepository.delete_koreksi(existing_approval)
 
             approval = ApprovalKoreksiRepository.create_approval_koreksi_user({
@@ -281,3 +284,69 @@ class KoreksiKehadiranService:
         except Exception as e:
             db.session.rollback()
             raise e
+
+    @staticmethod
+    def sync_pengajuan_koreksi(username, data):
+
+        user = UserRepository.get_user_by_username(username)
+
+        if not user:
+            raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
+                                            params={'resource': AppConstants.USER_RESOURCE.value})
+
+        if not user.data_karyawan.pic:
+            raise GeneralException(ErrorCode.APPROVER_NOT_FOUND)
+
+        try:
+
+            for pengajuan in data['pengajuan']:
+                print(pengajuan)
+
+                attendance_date = pengajuan['date']
+
+                existing_absensi = AbsensiRepository.get_absensi_by_user_id_and_date(user.id, attendance_date)
+
+                if existing_absensi:
+                    absensi_id = existing_absensi.id
+                else:
+                    absensi_id = None
+
+                existing_by_id = ApprovalKoreksiRepository.get_detail_by_id_and_user_id(user.id, pengajuan['pengajuan_id'])
+
+                if existing_by_id:
+                    continue
+
+                existing_approval = ApprovalKoreksiRepository.find_by_user_and_date(user.id, attendance_date)
+                if existing_approval and existing_approval.status == AppConstants.WAITING_FOR_APPROVAL.value:
+                    ApprovalKoreksiRepository.delete_koreksi(existing_approval)
+
+                approval = ApprovalKoreksiRepository.create_approval_koreksi_user_sync({
+                    'id': pengajuan['pengajuan_id'],
+                    'absensi_date': pengajuan['date'],
+                    'status': AppConstants.WAITING_FOR_APPROVAL.value,
+                    'approval_user_id': user.data_karyawan.pic.id,
+                    'user_id': user.id,
+                    'absensi_id': absensi_id,
+                    'catatan_pengajuan': pengajuan.get('catatan_pengajuan', ''),
+                    'created_date': datetime.fromtimestamp(pengajuan['timestamp'] / 1000),
+                })
+
+                approval.id = pengajuan['pengajuan_id']
+
+                DetailApprovalKoreksiRepository.create_detaill_approval_koreksi_user({
+                    'approval_koreksi_id': approval.id,
+                    'requested_datetime': pengajuan['time_in'],
+                    'type': AppConstants.ATTENDANCE_IN.value,
+                })
+
+                DetailApprovalKoreksiRepository.create_detaill_approval_koreksi_user({
+                    'approval_koreksi_id': approval.id,
+                    'requested_datetime': pengajuan['time_out'],
+                    'type': AppConstants.ATTENDANCE_OUT.value,
+                })
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(f"gagal sync : {str(e)}")
+            raise GeneralException(ErrorCode.FAILED_SYNC_DATA)
+

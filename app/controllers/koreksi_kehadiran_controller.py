@@ -1,6 +1,7 @@
 from flask_jwt_extended import get_jwt_identity
 from app.filter.jwt_filter import role_required, permission_required
-from app.models.koreksi_kehadiran.koreksi_kehadiran_req import KoreksiKehadiranRequestSchema
+from app.models.koreksi_kehadiran.koreksi_kehadiran_req import KoreksiKehadiranRequestSchema, SyncKoreksiRequestSchema, \
+    SyncKoreksiItemSchema
 from app.models.koreksi_kehadiran.koreksi_kehadiran_res import approval_koreksi_fields, approval_koreksi_pagination_fields, approval_koreksi_detail_pic_fields
 from app.models.pagination_model import PaginationApprovalReq
 from app.utils.app_constans import AppConstants
@@ -108,6 +109,20 @@ class DetailKoreksiKehadiranByApprovalUserController(Resource):
 
         return marshal(response, approval_koreksi_detail_pic_fields), 200
 
+class SnycKoreksiController(Resource):
+
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    def post(self):
+        username = get_jwt_identity()
+
+        json_data = request.get_json()
+
+        schema = SyncKoreksiRequestSchema()
+
+        validated = schema.load(json_data)
+
+        KoreksiKehadiranService.sync_pengajuan_koreksi(username, validated)
+
 
 
 koreksi_kehadiran_api.add_resource(KoreksiKehadiranController, '')
@@ -118,3 +133,4 @@ koreksi_kehadiran_api.add_resource(ApproveKoreksiKehadiranController, '/approval
 koreksi_kehadiran_api.add_resource(RejectKoreksiKehadiranController, '/approval/<string:approval_id>/reject')
 koreksi_kehadiran_api.add_resource(KoreksiKehadiranByApprovalUserController, '/approval')
 koreksi_kehadiran_api.add_resource(DetailKoreksiKehadiranByApprovalUserController, '/approval/<string:approval_id>')
+koreksi_kehadiran_api.add_resource(SnycKoreksiController, '/sync')

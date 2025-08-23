@@ -37,6 +37,8 @@ class ErrorCode(Enum):
     ALREADY_FINAL_STATUS = ("Riwayat sudah difinalisasi.", 400)
     CONN_FAILED_REDIS = ("Koneksi ke Redis gagal. Tidak bisa memulai tugas.", 500)
 
+    FAILED_SYNC_DATA = ("Gagal melakukan sinkronisasi data.", 500)
+
     @property
     def message(self):
         return self.value[0]

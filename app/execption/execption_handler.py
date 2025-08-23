@@ -12,6 +12,7 @@ def handle_general_exception_with_param(error):
     response_data = {
         "message": error.message
     }
+    db.session.rollback()
     response = jsonify(response_data)
     response.status_code = error.status_code
     return response
@@ -22,6 +23,7 @@ def handle_general_exception(error):
     response_data = {
         "message": error.message
     }
+    db.session.rollback()
     response = jsonify(response_data)
     response.status_code = error.status_code
     return response
@@ -32,6 +34,7 @@ def validation_error_handler(error):
     response_data = {
         "message": error.messages
     }
+    db.session.rollback()
     response = jsonify(response_data)
     response.status_code = 400
     return response
@@ -59,6 +62,7 @@ def handle_not_found_error(error):
     response_data = {
         "message": "Resource yang Anda tuju tidak dapat ditemukan di server."
     }
+    db.session.rollback()
     response = jsonify(response_data)
     response.status_code = 404
     return response

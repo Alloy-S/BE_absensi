@@ -34,6 +34,7 @@ def create_app(config_class=Config):
     Api(app)
 
     allowed_origins = [
+        "http://localhost:4173",
         "http://localhost:5173",
         "https://pwa-absensi-gamma.vercel.app",
         "https://mybenz.site"
