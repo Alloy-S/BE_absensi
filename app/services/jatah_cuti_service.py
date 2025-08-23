@@ -58,7 +58,7 @@ class JatahCutiService:
         return JatahCutiRepository.delete(jatah_cuti)
 
     @staticmethod
-    def generate_kuota_tahunan(target_year: int):
+    def generate_kuota_tahunan(target_year):
         try:
             active_users = UserRepository.get_all_active_users()
             annual_leave_types = JenisIzinRepository.find_by_reset_period('TAHUNAN')

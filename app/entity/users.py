@@ -62,6 +62,8 @@ class Users(db.Model):
     riwayat_penggajian = db.relationship("RiwayatPenggajian", back_populates="user", lazy="select")
     riwayat_penggajian_detail = db.relationship("RiwayatPenggajianDetail", back_populates="user", lazy="select")
 
+    reminder_log = db.relationship("ReminderLog", back_populates="user", lazy="select")
+
     def set_password(self, password):
         self.password = generate_password_hash(password)
 

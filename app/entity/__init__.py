@@ -44,3 +44,5 @@ from .riwayat_penggajian_rincian import RiwayatPenggajianRincian
 from .riwayat_penggajian_detail import RiwayatPenggajianDetail
 from .riwayat_penggajian import RiwayatPenggajian
 from .backup_log import BackupLog
+
+from .reminder_log import ReminderLog

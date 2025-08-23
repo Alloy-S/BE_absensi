@@ -10,14 +10,12 @@ from .database import db
 from .config import Config
 import os
 from app.utils.app_constans import AppConstants
-from flask_apscheduler import APScheduler
 import firebase_admin
 from firebase_admin import credentials
 
 
 migrate = Migrate()
 jwt = JWTManager()
-scheduler = APScheduler()
 configure_mappers()
 
 
@@ -26,8 +24,6 @@ def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
     app.config['PROPAGATE_EXCEPTIONS'] = True
-    scheduler.init_app(app)
-    scheduler.start()
     db.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
