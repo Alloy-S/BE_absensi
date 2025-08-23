@@ -33,7 +33,7 @@ scheduler.cron(
 # setiap 1 januari
 scheduler.cron(
     cron_string="0 1 1 1 *",
-    func=generate_kuota_cuti_tahunan_otomatis(),
+    func=generate_kuota_cuti_tahunan_otomatis,
     id="job_generate_kuota_cuti",
     repeat=None,
     queue_name="default"
