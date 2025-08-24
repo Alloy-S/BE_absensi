@@ -1,12 +1,14 @@
 from datetime import datetime, timedelta
 from sqlalchemy import text
-from app.entity import Libur, ReminderLog
+from app.entity import Libur
+from app.repositories.reminder_log_repository import ReminderLogRepository
 from app.services.notification_service import NotificationService
 from app.utils.app_constans import AppConstants
 from app import create_app
 from rq import Queue
 from redis import Redis
 from app.database import db
+
 
 def check_for_clock_in_reminders():
     app = create_app()
@@ -66,6 +68,7 @@ def check_for_clock_in_reminders():
                       user_data['fullname'],
                       user_data['fcm_token'],
                       user_data['time_in'])
+
 
 def check_for_clock_out_reminders():
     app = create_app()
@@ -133,6 +136,7 @@ def check_for_clock_out_reminders():
                       user_data['fcm_token'],
                       user_data['time_out'])
 
+
 def send_single_clock_in_reminder(user_id, fullname, fcm_token, time_in):
     app = create_app()
     with app.app_context():
@@ -142,13 +146,12 @@ def send_single_clock_in_reminder(user_id, fullname, fcm_token, time_in):
         sent = NotificationService.send_single_notification(fcm_token, judul, isi_pesan)
 
         if sent:
-            log = ReminderLog(
-                user_id=user_id,
-                reminder_type='CLOCK_IN',
-                date=datetime.now().date()
-            )
-            db.session.add(log)
-            db.session.commit()
+            ReminderLogRepository.create_reminder_log({
+                'user_id': user_id,
+                'reminder_type': 'CLOCK_IN',
+                'date': datetime.now().date()
+            })
+
             print(f"notif absen masuk berhasil dikirim ke {fullname}")
         else:
             print(
@@ -164,13 +167,12 @@ def send_single_clock_out_reminder(user_id, fullname, fcm_token, time_out):
         sent = NotificationService.send_single_notification(fcm_token, judul, isi_pesan)
 
         if sent:
-            log = ReminderLog(
-                user_id=user_id,
-                reminder_type='CLOCK_OUT',
-                date=datetime.now().date()
-            )
-            db.session.add(log)
-            db.session.commit()
+            ReminderLogRepository.create_reminder_log({
+                'user_id': user_id,
+                'reminder_type': 'CLOCK_OUT',
+                'date': datetime.now().date()
+            })
+
             print(f"notif absen pulang berhasil dikirim ke {fullname}")
         else:
             print(

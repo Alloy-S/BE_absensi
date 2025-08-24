@@ -17,7 +17,7 @@ class LoginController(Resource):
     def post(self):
         schema = LoginReq()
         req = schema.load(request.get_json())
-        response = AuthService.authenticate_user(req)
+        response = AuthService.login_user(req)
 
         return marshal(response, login_res), 200
 

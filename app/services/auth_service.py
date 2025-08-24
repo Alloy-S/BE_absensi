@@ -1,4 +1,5 @@
 from app.execption.custom_execption import GeneralException
+from app.repositories.user_login_log_repository import UserLoginLogRepository
 from app.repositories.user_repository import UserRepository
 from flask_jwt_extended import create_access_token
 
@@ -8,13 +9,20 @@ from app.utils.error_code import ErrorCode
 
 class AuthService:
     @staticmethod
-    def authenticate_user(request):
+    def login_user(request):
         user = UserRepository.get_user_by_username(request.get('username'))
         if user and user.check_password(request.get('password')):
 
             NotificationService.send_notification_logout(user.fcm_token)
 
+            UserLoginLogRepository.update_login_to_logout_log(user.id)
+
             UserRepository.update_fcm_token(user, fcm_token=request.get('fcm_token'))
+
+            UserLoginLogRepository.create_login_log({
+                'user_id': user.id,
+                'status': 'LOGIN',
+            })
 
             role = [r.role.name for r in user.user_role]
 
@@ -51,3 +59,8 @@ class AuthService:
 
         NotificationService.send_notification_logout(user.fcm_token)
         UserRepository.update_fcm_token(user, fcm_token=None)
+
+        UserLoginLogRepository.create_login_log({
+            'user_id': user.id,
+            'status': 'LOGOUT',
+        })
