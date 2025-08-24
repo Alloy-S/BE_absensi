@@ -11,7 +11,7 @@ class DataPribadi(db.Model):
     tmpt_lahir = db.Column(db.String(150), nullable=True)
     status_kawin = db.Column(db.String(20), nullable=True) 
     agama = db.Column(db.String(30), nullable=True)  
-    gol_darah = db.Column(db.String(3), nullable=True)
+    gol_darah = db.Column(db.String(10), nullable=True)
     user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False, unique=True)
     
     user = db.relationship('Users', back_populates='data_pribadi')

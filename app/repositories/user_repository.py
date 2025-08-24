@@ -213,7 +213,7 @@ class UserRepository:
     @staticmethod
     def edit_data_pribadi(user, data):
         user.data_pribadi.gender = data.get('gender', user.data_pribadi.gender)
-        user.data_pribadi.tmpt_lahir = data.get('tmpt_lahir', user.data_pribadi.tmpt_lahir)
+        user.data_pribadi.tmpt_lahir = EncryptionServiceAES256.encrypt(data.get('tmpt_lahir', user.data_pribadi.tmpt_lahir))
         user.data_pribadi.tgl_lahir = data.get('tgl_lahir', user.data_pribadi.tgl_lahir)
         user.data_pribadi.status_kawin = data.get('status_kawin', user.data_pribadi.status_kawin)
         user.data_pribadi.agama = data.get('agama', user.data_pribadi.agama)

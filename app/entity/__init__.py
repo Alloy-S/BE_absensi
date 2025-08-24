@@ -23,7 +23,6 @@ from .absensi import Absensi
 from .detail_absensi import DetailAbsensi
 from .approval_koreksi import ApprovalKoreksi
 from .face_embeddings import FaceEmbeddings
-from .config_props import ConfigProps
 from .lembur import Lembur
 from .approval_lembur import ApprovalLembur
 from .pengumuman import Pengumuman
