@@ -53,5 +53,8 @@ class HargaHarianBoronganService:
             raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
                                             params={'resource': AppConstants.HARGA_RESOURCE.value})
 
+        if harga.detail_absensi_borongan:
+            raise GeneralException(ErrorCode.DELETION_NOT_ALLOWED)
+
         HargaHarianBoronganRepository.non_active_harga(harga)
         db.session.commit()

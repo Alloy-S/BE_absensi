@@ -47,6 +47,8 @@ class BackupService:
             new_log.id
         )
 
+        db.session.commit()
+
         return new_log, job
 
     @staticmethod

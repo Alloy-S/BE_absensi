@@ -12,7 +12,7 @@ class BackupLogRepository:
         )
 
         db.session.add(new_backup_log)
-        db.session.commit()
+        db.session.flush()
         return new_backup_log
 
     @staticmethod

@@ -1,5 +1,5 @@
 from app.utils.app_constans import AppConstants
-from app.execption.custom_execption import GeneralExceptionWithParam
+from app.execption.custom_execption import GeneralExceptionWithParam, GeneralException
 from app.repositories.lokasi_repository import LokasiRepository
 from app.utils.error_code import ErrorCode
 
@@ -41,4 +41,8 @@ class LokasiService:
         if not lokasi:
             raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
                                             params={'resource': AppConstants.LOKASI_RESOURCE.value})
+
+        if lokasi.data_karyawan:
+            raise GeneralException(ErrorCode.DELETION_NOT_ALLOWED)
+
         LokasiRepository.delete_lokasi(lokasi)

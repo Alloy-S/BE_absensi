@@ -124,7 +124,7 @@ class LaporanRepository:
                               LEFT JOIN izin_agg ia ON u.id = ia.user_id
                               LEFT JOIN alpha_agg alpha ON u.id = alpha.user_id
                               LEFT JOIN lembur_agg la ON u.id = la.user_id
-                     WHERE (u.fullname ILIKE :search OR dk.nip ILIKE :search)
+                     WHERE (u.fullname ILIKE :search OR dk.nip ILIKE :search) AND dk.tipe_karyawan = 'bulanan'
                      ORDER BY u.fullname
                      LIMIT :size OFFSET :offset;
                      """)

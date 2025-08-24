@@ -63,6 +63,9 @@ class GrupGajiService:
         if not grup_gaji:
             raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND, params={'resource': AppConstants.GRUP_GAJI.value})
 
+        if grup_gaji.data_karyawan:
+            raise GeneralException(ErrorCode.DELETION_NOT_ALLOWED)
+
         try:
             GrupGajiRepository.delete_grup_gaji(grup_gaji)
             db.session.commit()

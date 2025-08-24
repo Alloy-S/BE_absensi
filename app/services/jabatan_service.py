@@ -1,5 +1,5 @@
 from app import AppConstants
-from app.execption.custom_execption import GeneralExceptionWithParam
+from app.execption.custom_execption import GeneralExceptionWithParam, GeneralException
 from app.repositories.jabatan_repository import JabatanRepository
 from app.utils.error_code import ErrorCode
 
@@ -54,4 +54,8 @@ class JabatanService:
         if not jabatan:
             raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
                                             params={"resource": AppConstants.JABATAN_RESOURCE.value})
+
+        if jabatan.data_karyawan:
+            raise GeneralException(ErrorCode.DELETION_NOT_ALLOWED)
+
         return JabatanRepository.delete_jabatan(jabatan)
