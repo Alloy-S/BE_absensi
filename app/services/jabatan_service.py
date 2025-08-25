@@ -55,6 +55,9 @@ class JabatanService:
             raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
                                             params={"resource": AppConstants.JABATAN_RESOURCE.value})
 
+        if jabatan.children:
+            raise GeneralException(ErrorCode.DELETION_NOT_ALLOWED)
+
         if jabatan.data_karyawan:
             raise GeneralException(ErrorCode.DELETION_NOT_ALLOWED)
 

@@ -11,6 +11,7 @@ class JenisIzinRequestSchema(Schema):
         validate=validate.OneOf(['TAHUNAN', 'SEKALI_SEUMUR_HIDUP', 'TIDAK_ADA'])
     )
     berlaku_setelah_bulan = fields.Integer(required=True)
+    is_paid = fields.Boolean(required=True)
 
 class PaginationReqSchema(Schema):
     page = fields.Integer(required=False, load_default=1)

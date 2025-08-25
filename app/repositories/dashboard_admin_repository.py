@@ -42,8 +42,9 @@ class DashboardAdminRepository:
     def get_total_active_user():
 
         query =  text("""
-                      SELECT COUNT(id)
-                      FROM users
+                      SELECT COUNT(u.id)
+                      FROM users u
+                          JOIN data_karyawan dk ON u.id = dk.user_id
                       WHERE is_active is true
                       """)
 

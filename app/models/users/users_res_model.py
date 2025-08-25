@@ -28,6 +28,7 @@ users_pagination_fields = {
         'lokasi': fields.String,
         'jabatan': fields.String,
         'is_active': fields.Boolean,
+        'tipe_karyawan': fields.String,
     }))
 }
 

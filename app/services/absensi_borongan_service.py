@@ -33,9 +33,8 @@ class AbsensiBoronganService:
                                                     params={'resource': AppConstants.HARGA_RESOURCE.value})
 
                 harga_normal = float(harga.harga_normal)
-                harga_lembur = float(harga.harga_lembur)
 
-                total = (detail_data['ton_normal'] * harga_normal) + (detail_data['ton_lembur'] * harga_lembur)
+                total = (detail_data['ton_normal'] * harga_normal)
 
                 detail_data['total'] = total
 

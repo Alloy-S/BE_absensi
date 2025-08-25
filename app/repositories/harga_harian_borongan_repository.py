@@ -9,12 +9,10 @@ class HargaHarianBoronganRepository:
             HargaHarianBorongan
         )
 
-        query = query.filter(HargaHarianBorongan.is_deleted.is_(False))
-
         if search:
             query = query.filter(HargaHarianBorongan.nama.ilike(f"%{search}%"))
 
-        query = query.order_by(HargaHarianBorongan.nama.asc())
+        query = query.order_by(HargaHarianBorongan.is_deleted.asc(), HargaHarianBorongan.nama.asc())
 
         pagination = query.paginate(page=page, per_page=size, error_out=False)
 
@@ -25,18 +23,10 @@ class HargaHarianBoronganRepository:
         return HargaHarianBorongan.query.filter_by(id=harga_id).first()
 
     @staticmethod
-    def get_harga_by_harga_grup(harga_grup):
-        return HargaHarianBorongan.query.filter_by(harga_grup=harga_grup).order_by(HargaHarianBorongan.date.desc()).all()
-
-    @staticmethod
     def create_harga(data):
         new_harga = HargaHarianBorongan(
             nama=data['nama'],
             harga_normal=data['harga_normal'],
-            harga_lembur=data['harga_lembur'],
-            jam_start_normal=data['jam_start_normal'],
-            jam_end_normal=data['jam_end_normal'],
-            toleransi_waktu=data['toleransi_waktu'],
             type=data['type'],
         )
 
@@ -44,22 +34,17 @@ class HargaHarianBoronganRepository:
         db.session.flush()
         return new_harga
 
-    @staticmethod
-    def update_harga(data):
-        new_harga = HargaHarianBorongan(
-            nama=data['nama'],
-            harga_normal=data['harga_normal'],
-            harga_lembur=data['harga_lembur'],
-            jam_start_normal=data['jam_start_normal'],
-            jam_end_normal=data['jam_end_normal'],
-            toleransi_waktu=data['toleransi_waktu'],
-            grup_id=data['grup_id'],
-            type=data['type'],
-        )
-
-        db.session.add(new_harga)
-        db.session.flush()
-        return new_harga
+    # @staticmethod
+    # def update_harga(data):
+    #     new_harga = HargaHarianBorongan(
+    #         nama=data['nama'],
+    #         harga_normal=data['harga_normal'],
+    #         type=data['type'],
+    #     )
+    #
+    #     db.session.add(new_harga)
+    #     db.session.flush()
+    #     return new_harga
 
 
     @staticmethod
@@ -76,8 +61,6 @@ class HargaHarianBoronganRepository:
         query = query.filter(
             HargaHarianBorongan.is_deleted.is_(False)
         )
-
-        query = query.order_by(HargaHarianBorongan.grup_id)
 
         return query.all()
 

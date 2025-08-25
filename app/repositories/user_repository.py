@@ -43,7 +43,8 @@ class UserRepository:
             Users.username,
             Users.is_active,
             Lokasi.name.label("lokasi"),
-            Jabatan.nama.label("jabatan")
+            Jabatan.nama.label("jabatan"),
+            DataKaryawan.tipe_karyawan
         ).join(Users.data_karyawan).join(DataKaryawan.lokasi).join(DataKaryawan.jabatan)
 
         query = query.filter(Users.is_active.is_(True))
@@ -118,8 +119,8 @@ class UserRepository:
 
         new_data_pribadi = DataPribadi(
             gender=data_pribadi['gender'],
-            tmpt_lahir=EncryptionServiceAES256.encrypt(data_pribadi['tmpt_lahir']),
-            tgl_lahir=data_pribadi['tgl_lahir'],
+            tmpt_lahir=data_pribadi['tmpt_lahir'],
+            tgl_lahir=EncryptionServiceAES256.encrypt(data_pribadi['tgl_lahir']),
             status_kawin=data_pribadi['status_kawin'],
             agama=data_pribadi['agama'],
             gol_darah=data_pribadi['gol_darah']

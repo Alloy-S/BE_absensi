@@ -16,7 +16,7 @@ class DataKontakSchema(Schema):
     class Meta:
         unknown = EXCLUDE
 
-    no_telepon = fields.String(required=True)
+    no_telepon = fields.String(required=False, allow_none=True)
     alamat = fields.String(required=True)
     nama_darurat = fields.String(required=True)
     no_telepon_darurat = fields.String(required=True)
@@ -31,7 +31,7 @@ class DataKaryawanSchema(Schema):
     face_recognition_mode = fields.String(required=True)
     lokasi_id = fields.String(required=True)
     jabatan_id = fields.String(required=True)
-    jadwal_kerja_id = fields.String(required=True)
+    jadwal_kerja_id = fields.String(required=False, allow_none=True)
     tipe_karyawan = fields.String(required=True)
     user_pic_id = fields.String(required=False, allow_none=True)
     grup_gaji_id = fields.String(required=False, allow_none=True)

@@ -10,11 +10,8 @@ class Jabatan(db.Model):
     parent_id = db.Column(UUID(as_uuid=True), db.ForeignKey('jabatan.id'), nullable=True)
     
     data_karyawan = db.relationship("DataKaryawan", back_populates="jabatan")
-    # Self-referential relationship
-    children = db.relationship(
-        "Jabatan",
-        backref=db.backref('parent', remote_side=[id])
-    )
+
+    children = db.relationship("Jabatan", backref=db.backref('parent', remote_side=[id]))
     
     def __repr__(self):
         return f"Jabatan('{self.nama}')"

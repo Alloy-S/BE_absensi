@@ -19,10 +19,6 @@ class HargaHarianBoronganService:
         return HargaHarianBoronganRepository.get_harga_by_id(harga_id)
 
     @staticmethod
-    def get_harga_by_grup(grup_id):
-        return HargaHarianBoronganRepository.get_harga_by_harga_grup(grup_id)
-
-    @staticmethod
     def create_new_harga(data):
         new_harga = HargaHarianBoronganRepository.create_harga(data)
         db.session.commit()
@@ -36,8 +32,7 @@ class HargaHarianBoronganService:
             raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
                                             params={'resource': AppConstants.HARGA_RESOURCE.value})
 
-        data['grup_id'] = harga.grup_id
-        new_harga = HargaHarianBoronganRepository.update_harga(data)
+        new_harga = HargaHarianBoronganRepository.create_harga(data)
 
         HargaHarianBoronganRepository.non_active_harga(harga)
 

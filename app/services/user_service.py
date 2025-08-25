@@ -115,6 +115,9 @@ class UserService:
 
         result = UserRepository.create_user(fullname, username, password, data_pribadi, data_kontak, data_karyawan, nip)
 
+        if not data_karyawan['tipe_karyawan']:
+            return
+
         try:
             NotificationService.send_notification_login_data(phone=data_kontak['no_telepon'], username=username, password=password,
                                                              fullname=fullname, nip=nip)
