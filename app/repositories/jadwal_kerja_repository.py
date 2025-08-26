@@ -11,7 +11,7 @@ class JadwalKerjaRepository:
             JadwalKerja.id,
             JadwalKerja.kode,
             JadwalKerja.shift,
-        ).order_by(JadwalKerja.shift.asc())
+        ).filter(JadwalKerja.is_active == True).order_by(JadwalKerja.shift.asc())
 
         result = query.all()
         return result

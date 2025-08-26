@@ -112,7 +112,6 @@ class AttendanceService:
             if not detail_jadwal:
                 raise GeneralException(ErrorCode.TODAY_IS_HOLIDAY)
 
-            print(detail_jadwal.time_in)
 
             # cek waktu kehadiran
             status = AttendanceService.check_attendance_time(attendance_type, detail_jadwal, today)
@@ -145,6 +144,21 @@ class AttendanceService:
                 'longitude': data['longitude'],
                 'catatan': data.get('catatan', ""),
             })
+
+            if attendance_type == AppConstants.ATTENDANCE_OUT.value:
+                status_in = absensi.status
+                status_out = status
+
+                if status_in == AppConstants.LATE.value and status_out == AppConstants.EARLY.value:
+                    final_status = AppConstants.LATE_AND_EARLY.value
+                elif status_out == AppConstants.EARLY.value:
+                    final_status = AppConstants.EARLY.value
+                elif status_in == AppConstants.LATE.value:
+                    final_status = AppConstants.LATE.value
+                else:
+                    final_status = AppConstants.ON_TIME.value
+
+                absensi.status = final_status
 
             db.session.commit()
 

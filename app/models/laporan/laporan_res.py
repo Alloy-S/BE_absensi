@@ -49,6 +49,7 @@ upah_item_field = {
 upah_borongan_field = {
     'nip': fields.String,
     'nama': fields.String,
+    'jabatan': fields.String,
     'upah': fields.List(fields.Nested(upah_item_field)),
     'total_upah': fields.Float,
 }

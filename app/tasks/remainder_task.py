@@ -8,6 +8,7 @@ from app import create_app
 from rq import Queue
 from redis import Redis
 from app.database import db
+import os
 
 
 def check_for_clock_in_reminders():
@@ -22,7 +23,7 @@ def check_for_clock_in_reminders():
         ).first() is not None
 
         if is_holiday:
-            print(f"[{now}] Hari ini adalah hari libur. Tidak ada pengingat absen masuk yang akan dikirim.")
+            print(f"[{now}] Hari ini libur. tidak ada notif.")
             return
 
         check_from = now - timedelta(minutes=15)
@@ -57,11 +58,13 @@ def check_for_clock_in_reminders():
         result = db.session.execute(sql_query, params).mappings().all()
 
         if not result:
-            print(f"[{now}] Tidak ada karyawan yang perlu diingatkan untuk absen masuk.")
+            print(f"[{now}] Tidak ada karyawan yang perlu dinotif untuk absen masuk.")
             return
 
-        print(f"[{now}] Menemukan {len(result)} karyawan untuk diingatkan absen masuk.")
-        q = Queue(connection=Redis())
+        print(f"[{now}] Menemukan {len(result)} karyawan untuk dinotif absen masuk.")
+        redis_url = os.getenv('REDIS_URL', 'redis://redis:6379')
+        redis_conn = Redis.from_url(redis_url)
+        q = Queue(connection=redis_conn)
         for user_data in result:
             q.enqueue(send_single_clock_in_reminder,
                       user_data['id'],
@@ -82,7 +85,7 @@ def check_for_clock_out_reminders():
         ).first() is not None
 
         if is_holiday:
-            print(f"[{now}] Hari ini adalah hari libur. Tidak ada pengingat absen pulang yang akan dikirim.")
+            print(f"[{now}] Hari ini libur. tidak perlu dinotif.")
             return
 
         check_until = now + timedelta(minutes=15)
@@ -124,10 +127,13 @@ def check_for_clock_out_reminders():
         result = db.session.execute(sql_query, params).mappings().all()
 
         if not result:
-            print(f"[{now}] Tidak ada karyawan yang perlu diingatkan untuk absen pulang.")
+            print(f"[{now}] Tidak ada karyawan yang perlu dinotif untuk absen pulang.")
             return
 
-        print(f"[{now}] Menemukan {len(result)} karyawan untuk diingatkan absen pulang.")
+        print(f"[{now}] Menemukan {len(result)} karyawan untuk dinotif absen pulang.")
+        redis_url = os.getenv('REDIS_URL', 'redis://redis:6379')
+        redis_conn = Redis.from_url(redis_url)
+        q = Queue(connection=redis_conn)
         q = Queue(connection=Redis())
         for user_data in result:
             q.enqueue(send_single_clock_out_reminder,
@@ -155,7 +161,7 @@ def send_single_clock_in_reminder(user_id, fullname, fcm_token, time_in):
             print(f"notif absen masuk berhasil dikirim ke {fullname}")
         else:
             print(
-                f"Gagal mengirim notif absen masuk ke {fullname} karena FCM token tidak valid atau error.")
+                f"Gagal kirim notif absen masuk ke {fullname}.")
 
 
 def send_single_clock_out_reminder(user_id, fullname, fcm_token, time_out):
@@ -176,4 +182,4 @@ def send_single_clock_out_reminder(user_id, fullname, fcm_token, time_out):
             print(f"notif absen pulang berhasil dikirim ke {fullname}")
         else:
             print(
-                f"Gagal mengirim notif absen pulang ke {fullname} karena FCM token tidak valid atau error.")
+                f"Gagal kirim notif absen pulang ke {fullname}.")

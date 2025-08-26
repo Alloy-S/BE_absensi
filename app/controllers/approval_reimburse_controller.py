@@ -92,7 +92,7 @@ class DetailReimburseByApprovalUserController(Resource):
 
 class ApproveReimburseController(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
-    @permission_required("approval_reimbursee")
+    @permission_required("approval_reimburse")
     def post(self, approval_id):
         username = get_jwt_identity()
 

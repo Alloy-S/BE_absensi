@@ -19,6 +19,7 @@ class ErrorCode(Enum):
     MANDATORY_PIC = ("Karyawan dengan jabatan ini wajib memiliki PIC/Atasan.", 400)
     HIGHEST_POSITION = ("Jabatan tertinggi tidak boleh memiliki PIC/Atasan.", 400)
     INVALID_BASE64 = ("Format string Base64 tidak valid.", 400)
+    INVALID_PHONE_NUMBER_FORMAT = ("Format Nomor Telepon tidak valid. Tidak boleh mengandung huruf", 400)
 
     FACE_DETECTION_FAILED = ("Gagal Mendeteksi wajah", 400)
     FACE_NOT_FOUND = ("Gagal Mendeteksi wajah, wajah tidak ditemukan.", 400)

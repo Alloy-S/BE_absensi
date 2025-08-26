@@ -438,9 +438,10 @@ class LaporanRepository:
                               AS (SELECT generate_series((:start_date)::date, (:end_date)::date,
                                                          '1 day'::interval)::date AS calendar_date),
                           paginated_users
-                              AS (SELECT u.id, u.fullname AS nama, dk.nip
+                              AS (SELECT u.id, u.fullname AS nama, dk.nip, j.nama AS jabatan
                                   FROM users u
                                            JOIN data_karyawan dk ON u.id = dk.user_id
+                                           JOIN jabatan j ON j.id = dk.jabatan_id
                                   WHERE dk.tipe_karyawan = 'harian/borongan'
                                     AND (u.fullname ILIKE :search OR
                                          dk.nip ILIKE :search)
@@ -456,7 +457,7 @@ class LaporanRepository:
                                   WHERE ab.status = 'Disetujui'
                                     AND ab.date::date BETWEEN :start_date AND :end_date
                                   GROUP BY dab.user_id, ab.date::date)
-                     select pu.nip, pu.nama, c.calendar_date, COALESCE(fb.upah, 0) AS upah
+                     select pu.nip, pu.nama, pu.jabatan, c.calendar_date, COALESCE(fb.upah, 0) AS upah
                      FROM paginated_users pu
                               CROSS JOIN calendar c
                               LEFT JOIN filtered_borongan fb ON fb.user_id = pu.id AND fb.date = c.calendar_date
@@ -502,9 +503,10 @@ class LaporanRepository:
                               AS (SELECT generate_series((:start_date)::date, (:end_date)::date,
                                                          '1 day'::interval)::date AS calendar_date),
                           paginated_users
-                              AS (SELECT u.id, u.fullname AS nama, dk.nip
+                              AS (SELECT u.id, u.fullname AS nama, dk.nip, j.nama AS jabatan
                                   FROM users u
                                            JOIN data_karyawan dk ON u.id = dk.user_id
+                                           JOIN jabatan j ON j.id = dk.jabatan_id
                                   WHERE dk.tipe_karyawan = 'harian/borongan'
                                     AND (u.fullname ILIKE :search OR
                                          dk.nip ILIKE :search)
@@ -519,7 +521,7 @@ class LaporanRepository:
                                   WHERE ab.status = 'Disetujui'
                                     AND ab.date::date BETWEEN :start_date AND :end_date
                                   GROUP BY dab.user_id, ab.date::date)
-                     select pu.nip, pu.nama, c.calendar_date, COALESCE(fb.upah, 0) AS upah
+                     select pu.nip, pu.nama, pu.jabatan, c.calendar_date, COALESCE(fb.upah, 0) AS upah
                      FROM paginated_users pu
                               CROSS JOIN calendar c
                               LEFT JOIN filtered_borongan fb ON fb.user_id = pu.id AND fb.date = c.calendar_date
@@ -646,6 +648,7 @@ class LaporanRepository:
                                     LEFT JOIN attendance_agg aa ON u.id = aa.user_id
                                     LEFT JOIN izin_agg ia ON u.id = ia.user_id
                                     LEFT JOIN alpha_agg alpha ON u.id = alpha.user_id
+                           WHERE dk.tipe_karyawan = 'bulanan'
                            ORDER BY u.fullname
                            """)
 

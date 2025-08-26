@@ -88,6 +88,9 @@ class UserService:
     @staticmethod
     def create_user(fullname, data_pribadi, data_kontak, data_karyawan):
 
+        if any(char.isalpha() for char in data_kontak['no_telepon']):
+            raise GeneralException(ErrorCode.INVALID_PHONE_NUMBER_FORMAT)
+
         username = generate_username()
         password = generate_password()
 
@@ -100,8 +103,6 @@ class UserService:
                                             params={'resource': AppConstants.JABATAN_RESOURCE.value})
 
         user_pic_id = data_karyawan.get('user_pic_id')
-
-        print("pic: " + user_pic_id)
 
         if jabatan.parent_id is not None:
             if not user_pic_id:
@@ -140,6 +141,9 @@ class UserService:
 
     @staticmethod
     def update_user(user_id, data):
+        if any(char.isalpha() for char in data['data_kontak']['no_telepon']):
+            raise GeneralException(ErrorCode.INVALID_PHONE_NUMBER_FORMAT)
+
         user = UserRepository.get_user_by_id(user_id)
         if not user:
             raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND,
@@ -285,6 +289,9 @@ class UserService:
 
     @staticmethod
     def edit_data_kontak(username, validated):
+        if any(char.isalpha() for char in validated['no_telepon']):
+            raise GeneralException(ErrorCode.INVALID_PHONE_NUMBER_FORMAT)
+
         user = UserRepository.get_user_by_username(username)
 
         if not user:

@@ -54,6 +54,7 @@ class LaporanService:
                 pivoted_data[row['nip']] = {
                     "nip": row['nip'],
                     "nama": row['nama'],
+                    "jabatan": row['jabatan'],
                     "upah": [],
                     "total_upah": 0
                 }
@@ -80,12 +81,12 @@ class LaporanService:
                                                                   request.get('search'))
 
         df = pd.DataFrame(result)
-        pivot_df = df.pivot_table(index=['nip', 'nama'], columns='calendar_date', values='upah').fillna(0)
+        pivot_df = df.pivot_table(index=['nip', 'nama', 'jabatan'], columns='calendar_date', values='upah').fillna(0)
 
         pivot_df['Total'] = pivot_df.sum(axis=1)
 
         pivot_df.reset_index(inplace=True)
-        pivot_df.rename(columns={'nip': 'NIP', 'nama': 'Nama'}, inplace=True)
+        pivot_df.rename(columns={'nip': 'NIP', 'nama': 'Nama', 'jabatan': 'Jabatan'}, inplace=True)
 
         output = io.BytesIO()
         with pd.ExcelWriter(output, engine='openpyxl') as writer:

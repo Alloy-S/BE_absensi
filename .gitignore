@@ -163,3 +163,7 @@ be_absensi
 .idea
 
 firebase-credentials.json
+
+/uploads/photos/
+/uploads/backups/
+
