@@ -59,6 +59,7 @@ data_karyawan_fields = {
     'grup_gaji_id': fields.String,
     'gaji_pokok': fields.Float,
     'face_recognition_mode': fields.String(attribute='face_recognition_mode.value'),
+    'tgl_resign': fields.String,
 }
 
 data_pribadi_fields = {

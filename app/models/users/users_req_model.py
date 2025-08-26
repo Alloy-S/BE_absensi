@@ -35,6 +35,7 @@ class DataKaryawanSchema(Schema):
     tipe_karyawan = fields.String(required=True)
     user_pic_id = fields.String(required=False, allow_none=True)
     grup_gaji_id = fields.String(required=False, allow_none=True)
+    tgl_resign = fields.String(required=False, allow_none=True)
 
 class UserSchema(Schema):
     class Meta:

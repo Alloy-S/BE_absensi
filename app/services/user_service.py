@@ -56,6 +56,7 @@ class UserService:
                 'grup_gaji_id': user.data_karyawan.grup_gaji_id,
                 'gaji_pokok': user.data_karyawan.gaji_pokok,
                 'face_recognition_mode': user.data_karyawan.face_recognition_mode,
+                'tgl_resign': user.data_karyawan.tgl_resign,
             }
 
         if user.data_pribadi:

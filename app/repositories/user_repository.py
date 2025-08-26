@@ -198,6 +198,7 @@ class UserRepository:
         if 'data_karyawan' in data and user.data_karyawan:
             data_karyawan_update = data['data_karyawan']
             user.data_karyawan.tgl_gabung = data_karyawan_update.get('tgl_gabung', user.data_karyawan.tgl_gabung)
+            user.data_karyawan.tgl_resign = data_karyawan_update.get('tgl_resign', user.data_karyawan.tgl_resign)
             user.data_karyawan.tipe_karyawan = data_karyawan_update.get('tipe_karyawan',
                                                                         user.data_karyawan.tipe_karyawan)
             user.data_karyawan.lokasi_id = data_karyawan_update.get('lokasi_id', user.data_karyawan.lokasi_id)
