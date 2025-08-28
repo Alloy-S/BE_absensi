@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
@@ -125,5 +125,17 @@ def create_app(config_class=Config):
     @app.route('/test-health')
     def test_health():
         return "Server is healthy!"
+
+    @app.after_request
+    def log_request_info(response):
+        if request.path.startswith('/api/'):
+            app.logger.info(
+                'API Hit: %s %s | Status: %s | IP: %s',
+                request.method,
+                request.path,
+                response.status,
+                request.remote_addr
+            )
+        return response
 
     return app
