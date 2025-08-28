@@ -5,7 +5,7 @@ from flask_migrate import Migrate
 from flask_cors import CORS
 from sqlalchemy.orm import configure_mappers
 import locale
-
+import logging
 from .database import db
 from .config import Config
 import os
@@ -37,6 +37,11 @@ def create_app(config_class=Config):
     ]
     CORS(app, resources={r"/api/*": {"origins": allowed_origins}})
 
+    if __name__ != '__main__':
+        gunicorn_logger = logging.getLogger('gunicorn.error')
+        app.logger.handlers = gunicorn_logger.handlers
+        app.logger.setLevel(gunicorn_logger.level)
+
     try:
         locale.setlocale(locale.LC_TIME, 'id_ID.UTF-8')
     except locale.Error:
@@ -48,7 +53,7 @@ def create_app(config_class=Config):
     try:
         cred = credentials.Certificate("firebase-credentials.json")
         firebase_admin.initialize_app(cred)
-        print("Firebase Admin SDK berhasil diinisialisasi.")
+        print("Firebase Admin SDK OK.")
     except Exception as e:
         print(f"Gagal menginisialisasi Firebase Admin SDK: {e}")
 
