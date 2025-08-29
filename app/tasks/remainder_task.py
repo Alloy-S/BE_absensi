@@ -134,7 +134,6 @@ def check_for_clock_out_reminders():
         redis_url = os.getenv('REDIS_URL', 'redis://redis:6379')
         redis_conn = Redis.from_url(redis_url)
         q = Queue(connection=redis_conn)
-        q = Queue(connection=Redis())
         for user_data in result:
             q.enqueue(send_single_clock_out_reminder,
                       user_data['user_id'],
