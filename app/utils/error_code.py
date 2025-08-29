@@ -22,6 +22,7 @@ class ErrorCode(Enum):
     INVALID_PHONE_NUMBER_FORMAT = ("Format Nomor Telepon tidak valid. Tidak boleh mengandung huruf", 400)
 
     FACE_DETECTION_FAILED = ("Gagal Mendeteksi wajah", 400)
+    SPOOF_DETECTED = ("Foto terdeteksi palsu. Harap ambil gambar secara langsung.", 400)
     FACE_NOT_FOUND = ("Gagal Mendeteksi wajah, wajah tidak ditemukan.", 400)
     FACE_MORE_THAN_ONE = ("terdeteksi lebih dari 1 wajah, ambil ulang gambar", 400)
 

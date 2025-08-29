@@ -12,9 +12,11 @@ from app.utils.error_code import ErrorCode
 from app.execption.custom_execption import GeneralException, GeneralExceptionWithParam
 from app.repositories.user_repository import UserRepository
 from app.repositories.face_embeddings_repository import FaceEmbeddingsRepository
+import cv2
 
 MODEL_NAME = 'SFace'
 DETECTOR_BACKEND = 'opencv'
+
 
 class FaceRecognitionService:
 
@@ -25,10 +27,11 @@ class FaceRecognitionService:
                 img_path=image_path,
                 model_name=MODEL_NAME,
                 enforce_detection=True,
-                detector_backend=DETECTOR_BACKEND
+                detector_backend=DETECTOR_BACKEND,
+                anti_spoofing=True
             )
 
-            print(f"{len(embedding_objs)} embeddings found.")
+            print(f"{len(embedding_objs)} embeddings ditemukan.")
 
             if len(embedding_objs) > 1:
                 raise GeneralException(ErrorCode.FACE_MORE_THAN_ONE)
@@ -36,15 +39,18 @@ class FaceRecognitionService:
             return embedding_objs[0]['embedding']
 
         except ValueError as e:
-            error_message = str(e)
-
-            if os.path.exists(image_path):
-                os.remove(image_path)
+            error_message = str(e).lower()
 
             if "Face could not be detected" in error_message:
                 raise GeneralException(ErrorCode.FACE_NOT_FOUND)
-
-            raise GeneralException(ErrorCode.FACE_DETECTION_FAILED)
+            elif "liveness" in error_message or "spoof" in error_message:
+                raise GeneralException(ErrorCode.SPOOF_DETECTED)
+            else:
+                print(f"error : {e}")
+                raise GeneralException(ErrorCode.FACE_DETECTION_FAILED)
+        finally:
+            if os.path.exists(image_path):
+                os.remove(image_path)
 
     @staticmethod
     def get_face_registation_status(username):
@@ -82,7 +88,6 @@ class FaceRecognitionService:
 
         filename = f"{uuid.uuid4()}.jpg"
         temp_path = os.path.join(AppConstants.UPLOAD_FOLDER.value, filename)
-
 
         with open(temp_path, 'wb') as f:
             f.write(image_data)
