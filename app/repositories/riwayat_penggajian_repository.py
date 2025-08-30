@@ -72,9 +72,9 @@ class RiwayatPenggajianRepository:
         ).join(GrupGaji, RiwayatPenggajian.grup_gaji_id == GrupGaji.id)
 
         if periode_start:
-            query = query.filter(RiwayatPenggajian.periode_start >= periode_start)
+            query = query.filter(periode_start >= RiwayatPenggajian.periode_start)
         if periode_end:
-            query = query.filter(RiwayatPenggajian.periode_end <= periode_end)
+            query = query.filter(periode_end <= RiwayatPenggajian.periode_end)
 
         if grup_gaji_id:
             query = query.filter(RiwayatPenggajian.grup_gaji_id == grup_gaji_id)

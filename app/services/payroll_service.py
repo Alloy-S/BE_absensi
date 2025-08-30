@@ -183,7 +183,7 @@ class PayrollService:
         return RiwayatPenggajianRepository.get_riwayat_penggajian_pagination(request.get('page'), request.get('size'),
                                                                              request.get('periode_start'),
                                                                              request.get('periode_end'),
-                                                                             request.get('grup_gaji_id'),
+                                                                             request.get('grup_gaji'),
                                                                              request.get('status'))
 
     @staticmethod
