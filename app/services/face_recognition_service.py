@@ -129,7 +129,7 @@ class FaceRecognitionService:
         elif face_recog_mode == 'RENDAH':
             VERIFICATION_THRESHOLD = 0.68
         else:
-            VERIFICATION_THRESHOLD = 1.0
+            return True
 
         encrypted_str = stored_embedding_obj.embedding_data
 
