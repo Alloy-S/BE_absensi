@@ -73,7 +73,7 @@ class UserRepository:
 
         query = query.join(Users.data_karyawan)
 
-        query = query.filter(Users.is_active.is_(True))
+        query = query.filter(Users.is_active.is_(True), DataKaryawan.tipe_karyawan == 'bulanan')
         if search:
             query = query.filter(Users.fullname.ilike(f"%{search}%"))
 
