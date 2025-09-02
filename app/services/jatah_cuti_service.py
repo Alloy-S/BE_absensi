@@ -60,7 +60,7 @@ class JatahCutiService:
     @staticmethod
     def generate_kuota_tahunan(target_year):
         try:
-            active_users = UserRepository.get_all_active_users()
+            active_users = UserRepository.get_all_active_bulanan_users()
             annual_leave_types = JenisIzinRepository.find_by_reset_period('TAHUNAN')
 
             for user in active_users:

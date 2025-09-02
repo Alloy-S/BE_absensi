@@ -19,6 +19,10 @@ class UserRepository:
         return Users.query.join(Users.data_karyawan).filter(Users.is_active == True).all()
 
     @staticmethod
+    def get_all_active_bulanan_users():
+        return Users.query.join(Users.data_karyawan).filter(Users.is_active == True, DataKaryawan.tipe_karyawan == 'bulanan').all()
+
+    @staticmethod
     def get_all_users():
         query = db.session.query(
             Users.id,
