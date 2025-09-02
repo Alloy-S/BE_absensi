@@ -7,7 +7,7 @@ from app.repositories.user_repository import UserRepository
 from app.utils.app_constans import AppConstants
 from app.utils.error_code import ErrorCode
 from app.database import db
-from decimal import Decimal
+from decimal import Decimal, ROUND_HALF_UP
 import pandas as pd
 import io
 import base64
@@ -121,7 +121,7 @@ class PayrollService:
             "periode_start": periode_start,
             "periode_end": periode_end,
             "total_karyawan": len(hasil_penggajian_final),
-            "total_gaji_keseluruhan": total_gaji_keseluruhan,
+            "total_gaji_keseluruhan": total_gaji_keseluruhan.quantize(Decimal('0.01'), ROUND_HALF_UP),
             "created_by": user.id,
             "hasil_karyawan": hasil_penggajian_final
         }

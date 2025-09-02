@@ -11,7 +11,7 @@ class RiwayatPenggajian(db.Model):
     periode_end = db.Column(db.Date, nullable=False)
     status = db.Column(db.String(15), nullable=False)
     total_karyawan = db.Column(db.Integer, nullable=False)
-    total_gaji_keseluruhan = db.Column(db.Numeric(15,2), nullable=False)
+    total_gaji_keseluruhan = db.Column(db.Text, nullable=False)
     created_by = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False)
     date_created =  db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
     date_updated = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
