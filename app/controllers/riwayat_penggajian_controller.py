@@ -32,6 +32,13 @@ class RiwayatPenggajianByIdController(Resource):
 
         return marshal(response, riwayat_penggajian_field), 200
 
+    @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("pengolahan_gaji")
+    def delete(self, riwayat_id):
+        response = PayrollService.delete_riwayat_penggajian(riwayat_id)
+
+        return response, 200
+
 
 class RiwayatPenggajianController(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)

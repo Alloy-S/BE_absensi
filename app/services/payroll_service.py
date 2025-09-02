@@ -326,3 +326,12 @@ class PayrollService:
             'filename': file_name,
             'file': excel_base64
         }
+
+    @staticmethod
+    def delete_riwayat_penggajian(riwayat_id):
+        riwayat = RiwayatPenggajianRepository.get_riwayat_penggajian_by_id(riwayat_id)
+
+        if not riwayat:
+            raise GeneralExceptionWithParam(ErrorCode.RESOURCE_NOT_FOUND, params={'resource': AppConstants.RIWAYAT_PENGGAJIAN_RESOURCE})
+
+        RiwayatPenggajianRepository.delete_riwayat_penggajian(riwayat)

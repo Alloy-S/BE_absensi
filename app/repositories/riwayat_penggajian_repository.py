@@ -88,6 +88,12 @@ class RiwayatPenggajianRepository:
 
         return pagination
 
+    @staticmethod
+    def delete_riwayat_penggajian(riwayat):
+        db.session.delete(riwayat)
+        db.session.commit()
+
+
 
 
 
