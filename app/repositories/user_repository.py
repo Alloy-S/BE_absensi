@@ -11,6 +11,7 @@ from sqlalchemy import text, func
 from werkzeug.security import generate_password_hash
 from sqlalchemy.orm import joinedload
 from sqlalchemy import union_all, literal_column, or_
+from datetime import datetime
 
 
 class UserRepository:
@@ -241,6 +242,9 @@ class UserRepository:
 
     @staticmethod
     def non_active_user(user):
+        if not user.data_karyawan.tgl_resign:
+            user.data_karyawan.tgl_resign = datetime.today()
+
         user.is_active = False
         db.session.commit()
 
