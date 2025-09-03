@@ -40,6 +40,7 @@ class ErrorCode(Enum):
     CONN_FAILED_REDIS = ("Koneksi ke Redis gagal. Tidak bisa memulai tugas.", 500)
 
     FAILED_SYNC_DATA = ("Gagal melakukan sinkronisasi data.", 500)
+    EMPTY_GRUP_GAJI = ("Tidak ada karyawan yang terdaftar pada grup gaji ini. Tambahkan setidaknya 1 karyawan.", 400)
 
     @property
     def message(self):

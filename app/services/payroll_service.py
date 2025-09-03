@@ -35,6 +35,9 @@ class PayrollService:
 
         list_user_id = [karyawan.id for karyawan in data_karyawan]
 
+        if len(list_user_id) == 0:
+            raise GeneralException(ErrorCode.EMPTY_GRUP_GAJI)
+
         data_laporan = LaporanRepository.generate_laporan_periode(list_user_id, periode_start, periode_end)
 
         kode_field_laporan = KodePerhitunganRepository.get_all_kode_perhitungan()
