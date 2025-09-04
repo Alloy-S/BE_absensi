@@ -19,7 +19,6 @@ def check_for_clock_in_reminders():
 
         is_holiday = db.session.query(Libur.id).filter(
             Libur.date == today,
-            Libur.is_holiday == True
         ).first() is not None
 
         if is_holiday:
@@ -81,7 +80,6 @@ def check_for_clock_out_reminders():
 
         is_holiday = db.session.query(Libur.id).filter(
             Libur.date == today,
-            Libur.is_holiday == True
         ).first() is not None
 
         if is_holiday:

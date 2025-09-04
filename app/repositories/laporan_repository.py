@@ -405,7 +405,7 @@ class LaporanRepository:
             DataKaryawan, Users.id == DataKaryawan.user_id
         )
 
-        query = query.filter(Users.is_active.is_(True))
+        query = query.filter(Users.is_active.is_(True), DataKaryawan.tipe_karyawan == 'bulanan')
 
         if year:
             query = query.filter(JatahKuotaCuti.periode == year)
