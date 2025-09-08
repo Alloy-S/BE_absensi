@@ -25,7 +25,7 @@ def check_for_clock_in_reminders():
             print(f"[{now}] Hari ini libur. tidak ada notif.")
             return
 
-        check_from = now - timedelta(minutes=15)
+        check_from = now - timedelta(minutes=30)
         current_day_str = AppConstants.DAY_MAP.value[now.weekday()]
 
         sql_query = text("""
@@ -86,7 +86,7 @@ def check_for_clock_out_reminders():
             print(f"[{now}] Hari ini libur. tidak perlu dinotif.")
             return
 
-        check_until = now + timedelta(minutes=15)
+        check_until = now - timedelta(minutes=30)
         current_day_str = AppConstants.DAY_MAP.value[now.weekday()]
 
         sql_query = text("""

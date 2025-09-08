@@ -15,7 +15,7 @@ for job in scheduler.get_jobs():
     scheduler.cancel(job)
 
 scheduler.cron(
-    cron_string="*/15 * * * *",
+    cron_string="*/30 * * * *",
     func=check_for_clock_in_reminders,
     id="job_cek_absen_masuk",
     repeat=None,
@@ -23,7 +23,7 @@ scheduler.cron(
 )
 
 scheduler.cron(
-    cron_string="*/15 * * * *",
+    cron_string="*/30 * * * *",
     func=check_for_clock_out_reminders,
     id="job_cek_absen_pulang",
     repeat=None,
