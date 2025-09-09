@@ -86,7 +86,7 @@ def check_for_clock_out_reminders():
             print(f"[{now}] Hari ini libur. tidak perlu dinotif.")
             return
 
-        check_until = now - timedelta(minutes=30)
+        check_from = now - timedelta(minutes=30)
         current_day_str = AppConstants.DAY_MAP.value[now.weekday()]
 
         sql_query = text("""
@@ -108,7 +108,7 @@ def check_for_clock_out_reminders():
                                              AND da_out.type = 'OUT')
                            AND djk.hari = :day_of_week
                            AND djk.is_active = TRUE
-                           AND djk.time_out BETWEEN :now_time AND :check_until_time
+                           AND djk.time_out BETWEEN :check_from_time AND :now_time
                            AND a.user_id NOT IN (SELECT rl.user_id
                                                  FROM reminder_log rl
                                                  WHERE rl.date = :today
@@ -119,7 +119,7 @@ def check_for_clock_out_reminders():
             "today": today,
             "day_of_week": current_day_str,
             "now_time": now.time(),
-            "check_until_time": check_until.time()
+            "check_from_time": check_from.time()
         }
 
         result = db.session.execute(sql_query, params).mappings().all()
