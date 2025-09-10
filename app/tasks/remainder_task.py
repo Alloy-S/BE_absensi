@@ -25,7 +25,7 @@ def check_for_clock_in_reminders():
             print(f"[{now}] Hari ini libur. tidak ada notif.")
             return
 
-        check_from = now - timedelta(minutes=30)
+        check_until = now + timedelta(minutes=30)
         current_day_str = AppConstants.DAY_MAP.value[now.weekday()]
 
         sql_query = text("""
@@ -39,7 +39,7 @@ def check_for_clock_in_reminders():
                            AND u.fcm_token IS NOT NULL
                            AND djk.hari = :day_of_week
                            AND djk.is_active = TRUE
-                           AND djk.time_in BETWEEN :check_from_time AND :now_time
+                           AND djk.time_in BETWEEN :now_time AND :check_until
                            AND a.id IS NULL
                            AND u.id NOT IN (SELECT rl.user_id
                                             FROM reminder_log rl
@@ -50,7 +50,7 @@ def check_for_clock_in_reminders():
         params = {
             "today": today,
             "day_of_week": current_day_str,
-            "check_from_time": check_from.time(),
+            "check_until": check_until.time(),
             "now_time": now.time()
         }
 
