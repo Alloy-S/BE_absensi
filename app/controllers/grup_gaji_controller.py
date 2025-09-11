@@ -14,6 +14,7 @@ grup_gaji_api = Api(grup_gaji_bp)
 
 class GrupGajiController(Resource):
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("pengolahan_gaji")
     def post(self):
         json = request.get_json()
 
@@ -26,6 +27,7 @@ class GrupGajiController(Resource):
         return marshal(response, grup_gaji_fields), 200
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("pengolahan_gaji")
     def get(self):
         params = request.args
 
@@ -38,6 +40,7 @@ class GrupGajiController(Resource):
         return marshal(response, grup_gaji_pagination_fields), 200
 
 class GrupGajiByIdController(Resource):
+    @permission_required("pengolahan_gaji")
     @role_required(AppConstants.ADMIN_GROUP.value)
     def get(self, grup_gaji_id):
         response = GrupGajiService.get_grup_gaji_by_id(grup_gaji_id)
@@ -45,6 +48,7 @@ class GrupGajiByIdController(Resource):
         return marshal(response, grup_gaji_fields), 200
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("pengolahan_gaji")
     def put(self, grup_gaji_id):
         json = request.get_json()
 
@@ -57,6 +61,7 @@ class GrupGajiByIdController(Resource):
         return marshal(response, grup_gaji_fields), 200
 
     @role_required(AppConstants.ADMIN_GROUP.value)
+    @permission_required("pengolahan_gaji")
     def delete(self, grup_gaji_id):
 
         response = GrupGajiService.delete_grup_gaji(grup_gaji_id)
