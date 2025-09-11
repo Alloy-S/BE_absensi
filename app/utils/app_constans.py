@@ -3,11 +3,11 @@ from enum import Enum
 
 class AppConstants(Enum):
     ADMIN_ROLE = "Admin"
-    HRD_ROLE = "HRD"
+    PIC_ROLE = "PIC"
     KARYAWAN_ROLE = "Karyawan"
 
-    ADMIN_GROUP = (ADMIN_ROLE, HRD_ROLE)
-    USER_GROUP = (KARYAWAN_ROLE, ADMIN_ROLE, HRD_ROLE)
+    ADMIN_GROUP = (ADMIN_ROLE, PIC_ROLE)
+    USER_GROUP = (KARYAWAN_ROLE, ADMIN_ROLE, PIC_ROLE)
 
     USER_RESOURCE = "User"
     DATA_KONTAK_RESOURCE = "Data Kontak"
