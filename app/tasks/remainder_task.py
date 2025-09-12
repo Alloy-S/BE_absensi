@@ -54,6 +54,8 @@ def check_for_clock_in_reminders():
             "now_time": now.time()
         }
 
+        print(params)
+
         result = db.session.execute(sql_query, params).mappings().all()
 
         if not result:
@@ -121,6 +123,8 @@ def check_for_clock_out_reminders():
             "now_time": now.time(),
             "check_from_time": check_from.time()
         }
+
+        print(params)
 
         result = db.session.execute(sql_query, params).mappings().all()
 
