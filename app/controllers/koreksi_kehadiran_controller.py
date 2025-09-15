@@ -111,7 +111,7 @@ class DetailKoreksiKehadiranByApprovalUserController(Resource):
 
 class SnycKoreksiController(Resource):
 
-    @role_required(AppConstants.ADMIN_GROUP.value)
+    @role_required(AppConstants.USER_GROUP.value)
     def post(self):
         username = get_jwt_identity()
 
