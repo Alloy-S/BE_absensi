@@ -243,7 +243,7 @@ class KoreksiKehadiranService:
                                                                        params={
                                                                            'resource': AppConstants.KOREKSI_KEHADIRAN.value}),
                                                          format_string(AppConstants.APPROVE_BODY.value, params={
-                                                             'resource': AppConstants.IZIN_RESOURCE.value,
+                                                             'resource': AppConstants.KOREKSI_KEHADIRAN.value,
                                                              'nama_pengaju': approval.approval_user.fullname
                                                          }))
 
@@ -276,9 +276,9 @@ class KoreksiKehadiranService:
             NotificationService.send_single_notification(approval.user.fcm_token,
                                                          format_string(AppConstants.REJECT_TITLE.value,
                                                                        params={
-                                                                           'resource': AppConstants.APPROVAL_IZIN_RESOURCE.value}),
+                                                                           'resource': AppConstants.KOREKSI_KEHADIRAN.value}),
                                                          format_string(AppConstants.REJECT_BODY.value, params={
-                                                             'resource': AppConstants.APPROVAL_IZIN_RESOURCE.value
+                                                             'resource': AppConstants.KOREKSI_KEHADIRAN.value
                                                          }))
 
         except Exception as e:

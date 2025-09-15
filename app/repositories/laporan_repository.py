@@ -134,7 +134,7 @@ class LaporanRepository:
                                FROM data_karyawan dk
                                         JOIN users u ON dk.user_id = u.id AND u.is_active = true
                                WHERE (u.fullname ILIKE :search OR
-                                      dk.nip ILIKE :search)
+                                      dk.nip ILIKE :search) AND dk.tipe_karyawan = 'bulanan'
                                """)
 
         offset = (page - 1) * size
