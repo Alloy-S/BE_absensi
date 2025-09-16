@@ -185,7 +185,7 @@ class AttendanceService:
             if current_datetime <= scheduled_check_in:
                 status = AppConstants.ON_TIME.value
             elif scheduled_check_in < current_datetime <= late_deadline:
-                status = AppConstants.LATE.value
+                status = AppConstants.ON_TIME.value
             else:
                 status = AppConstants.LATE.value
 
