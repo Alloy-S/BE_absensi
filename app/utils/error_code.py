@@ -25,6 +25,7 @@ class ErrorCode(Enum):
     SPOOF_DETECTED = ("Foto terdeteksi palsu. Harap ambil gambar secara langsung.", 400)
     FACE_NOT_FOUND = ("Gagal Mendeteksi wajah, wajah tidak ditemukan.", 400)
     FACE_MORE_THAN_ONE = ("terdeteksi lebih dari 1 wajah, ambil ulang gambar", 400)
+    FACE_NOT_REGISTERED = ("Tidak ada wajah terdaftar untuk pengguna ini, Harap Daftarkan wajah terlebih dahulu.")
 
     DUPLICATE_CORRECTION_REQUEST = ("Sudah ada pengajuan koreksi pada tanggal tersebut", 400)
     DUPLICATE_RESOURCE = ("{resource} sudah terdaftar.", 400)

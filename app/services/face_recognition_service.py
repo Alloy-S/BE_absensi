@@ -122,7 +122,7 @@ class FaceRecognitionService:
     def verify_face(user_id: str, image_path: str, face_recog_mode) -> bool:
         stored_embedding_obj = FaceEmbeddings.query.filter_by(user_id=user_id).first()
         if not stored_embedding_obj:
-            raise ValueError("Tidak ada wajah terdaftar untuk pengguna ini.")
+            raise GeneralException(ErrorCode.FACE_NOT_REGISTERED)
 
         if face_recog_mode == 'NORMAL':
             VERIFICATION_THRESHOLD = 0.593
