@@ -311,7 +311,7 @@ class UserRepository:
         ).filter(
             DataKaryawan.user_pic_id == pic_user_id,
             Users.is_active.is_(True),
-            DataKaryawan.tipe_karyawan == 'harian/bulanan'
+            DataKaryawan.tipe_karyawan == 'harian/borongan'
         ).order_by(
             Users.fullname.asc()
         )
