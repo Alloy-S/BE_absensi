@@ -310,7 +310,8 @@ class UserRepository:
             Jabatan, DataKaryawan.jabatan_id == Jabatan.id
         ).filter(
             DataKaryawan.user_pic_id == pic_user_id,
-            Users.is_active.is_(True)
+            Users.is_active.is_(True),
+            DataKaryawan.tipe_karyawan == 'harian/bulanan'
         ).order_by(
             Users.fullname.asc()
         )
