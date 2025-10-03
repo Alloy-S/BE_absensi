@@ -49,7 +49,7 @@ class UserListController(Resource):
         validated = schema.load(data)
         print(validated)
 
-        response = UserService.create_user(fullname=validated['fullname'], data_pribadi=validated['data_pribadi'],
+        response = UserService.create_user(fullname=validated['fullname'], no_ktp=validated['no_ktp'], data_pribadi=validated['data_pribadi'],
                                          data_kontak=validated['data_kontak'],
                                          data_karyawan=validated['data_karyawan'])
 

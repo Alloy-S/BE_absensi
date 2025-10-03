@@ -34,6 +34,7 @@ class UserService:
         decrypted_user_data = {
             'id': user.id,
             'fullname': user.fullname,
+            'no_ktp': user.no_ktp,
             'username': user.username,
             'phone': EncryptionServiceAES256.decrypt(user.phone),
             'user_role': user.user_role,
@@ -87,13 +88,16 @@ class UserService:
         return UserRepository.get_user_by_username(username)
 
     @staticmethod
-    def create_user(fullname, data_pribadi, data_kontak, data_karyawan):
+    def create_user(fullname, no_ktp, data_pribadi, data_kontak, data_karyawan):
 
         if any(char.isalpha() for char in data_kontak['no_telepon']):
             raise GeneralException(ErrorCode.INVALID_PHONE_NUMBER_FORMAT)
 
         username = generate_username()
         password = generate_password()
+
+        if UserRepository.find_user_by_no_ktp(no_ktp):
+            raise GeneralException(ErrorCode.KTP_ALREADY_USED)
 
         nip = DataKaryawanRepository.generate_new_nip()
 
@@ -115,7 +119,7 @@ class UserService:
 
             data_karyawan['user_pic_id'] = None
 
-        result = UserRepository.create_user(fullname, username, password, data_pribadi, data_kontak, data_karyawan, nip)
+        result = UserRepository.create_user(fullname, username, password, data_pribadi, data_kontak, data_karyawan, nip, no_ktp)
 
         if not data_karyawan['tipe_karyawan']:
             return
@@ -144,6 +148,9 @@ class UserService:
     def update_user(user_id, data):
         if any(char.isalpha() for char in data['data_kontak']['no_telepon']):
             raise GeneralException(ErrorCode.INVALID_PHONE_NUMBER_FORMAT)
+
+        if UserRepository.find_user_by_no_ktp(data['no_ktp'], user_id):
+            raise GeneralException(ErrorCode.KTP_ALREADY_USED)
 
         user = UserRepository.get_user_by_id(user_id)
         if not user:

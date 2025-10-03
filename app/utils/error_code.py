@@ -2,6 +2,7 @@ from enum import Enum
 
 class ErrorCode(Enum):
 
+    KTP_ALREADY_USED = ("Nomor KTP sudah digunakan", 400)
     RESOURCE_NOT_FOUND = ("{resource} tidak ditemukan.", 404)
     RESOURCE_IN_USE = ("{resource} sedang digunakan, tidak bisa melakukan delete.", 400)
     ALREADY_INACTIVE = ("{resource} sudah tidak aktif", 400)

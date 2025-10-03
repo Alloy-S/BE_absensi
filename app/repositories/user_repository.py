@@ -119,7 +119,7 @@ class UserRepository:
         return new_user
 
     @staticmethod
-    def create_user(fullname, username, password, data_pribadi, data_kontak, data_karyawan, nip):
+    def create_user(fullname, username, password, data_pribadi, data_kontak, data_karyawan, nip, no_ktp):
         phone_user = EncryptionServiceAES256.encrypt(data_kontak['no_telepon'])
 
         new_data_pribadi = DataPribadi(
@@ -156,6 +156,7 @@ class UserRepository:
             fullname=fullname,
             username=username,
             phone=phone_user,
+            no_ktp=no_ktp,
             data_pribadi=new_data_pribadi,
             data_kontak=new_data_kontak,
             data_karyawan=new_data_karyawan
@@ -180,6 +181,7 @@ class UserRepository:
     @staticmethod
     def update_user(user, data):
         user.fullname = data.get('fullname', user.fullname)
+        user.no_ktp = data.get('no_ktp', user.no_ktp)
 
         if 'data_pribadi' in data and user.data_pribadi:
             data_pribadi_update = data['data_pribadi']
@@ -451,3 +453,14 @@ class UserRepository:
         )
 
         return query.all()
+
+    @staticmethod
+    def find_user_by_no_ktp(no_ktp, exclude_user_id=None):
+        query = db.session.query(Users.id).filter(
+            Users.no_ktp.ilike(no_ktp)
+        )
+
+        if exclude_user_id:
+            query = query.filter(Users.id != exclude_user_id)
+
+        return query.first()

@@ -42,6 +42,7 @@ class UserSchema(Schema):
         unknown = EXCLUDE
 
     fullname = fields.String(required=True)
+    no_ktp = fields.String(required=True)
     data_pribadi = fields.Nested(DataPribadiSchema, required=True)
     data_kontak = fields.Nested(DataKontakSchema, required=True)
     data_karyawan = fields.Nested(DataKaryawanSchema, required=True)

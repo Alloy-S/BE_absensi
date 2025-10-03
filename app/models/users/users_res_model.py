@@ -84,6 +84,7 @@ data_kontak_fields = {
 user_field = {
     'id': fields.String,
     'fullname': fields.String,
+    'no_ktp': fields.String,
     'username': fields.String,
     'phone': fields.String,
     'role_id': fields.String(attribute='user_role.id'),

@@ -16,7 +16,7 @@ class Users(db.Model):
     is_notif_login_send = db.Column(db.Boolean, nullable=True, default=False)
     is_active = db.Column(db.Boolean, nullable=True, default=True)
     fcm_token = db.Column(db.String, nullable=True)
-
+    no_ktp = db.Column(db.String(16), nullable=True)
 
     user_role = db.relationship('UserRole', back_populates='users')
     user_pic = db.relationship('DataKaryawan', foreign_keys='[DataKaryawan.user_pic_id]', back_populates='pic')
