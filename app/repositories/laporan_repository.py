@@ -284,7 +284,7 @@ class LaporanRepository:
                             j.nama                                    AS jabatan,
                             l.name                                    AS lokasi,
                             dk.gaji_pokok,
-                            (dk.gaji_pokok / COALESCE(cfw.total_hari_kerja_penuh, 0)) AS gaji_harian,
+                            ROUND((dk.gaji_pokok::numeric / COALESCE(cfw.total_hari_kerja_penuh, 1)), 2) AS gaji_harian,
                             COALESCE(aa.total_kehadiran, 0)           AS total_kehadiran,
                             COALESCE(ia.total_izin, 0)                AS total_izin,
                             COALESCE(ia.total_izin_berbayar, 0)       AS total_izin_berbayar,

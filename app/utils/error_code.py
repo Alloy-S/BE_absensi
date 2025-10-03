@@ -9,7 +9,7 @@ class ErrorCode(Enum):
     INCORRECT_PASSWORD_OR_USERNAME = ("Username atau Password salah", 400)
     SEND_NOTIFICATION_FAILED = ("GAGAL_MENGIRIM_NOTIFIKASI", 400)
     USER_LOCATION_NOT_MATCH_REQUIREMENT = ("Anda berada di luar jangkauan lokasi kerja yang diizinkan.", 400)
-    USER_FACE_NOT_MATCH_REQUIREMENT = ("Verifikasi wajah gagal. Pastikan wajah terlihat jelas dan sesuai.", 400)
+    USER_FACE_NOT_MATCH_REQUIREMENT = ("Wajah tidak cocok.", 400)
     TODAY_IS_HOLIDAY = ("Hari Ini Merupakan Hari Libur. Tidak Perlu Melakukan Presensi", 400)
     ATTENDANCE_TYPE_NOT_VALID = ("Jenis Presensi Tidak Ada", 400)
     INVALID_DATE_FORMAT = ("Format waktu salah.", 400)
