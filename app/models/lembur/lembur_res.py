@@ -25,7 +25,7 @@ approval_lembur_pagination_fields = {
         'status': fields.String,
         'date_start': fields.String(attribute="lembur.date_start"),
         'date_end': fields.String(attribute="lembur.date_end"),
-        # 'user': fields.Nested(user_field),
+        'user': fields.Nested(user_field),
         'approval_user': fields.String(attribute="approval_user.fullname"),
     }))
 }
