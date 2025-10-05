@@ -18,9 +18,12 @@ approval_izin_pagination_fields = {
         'id': fields.String,
         'created_date': fields.String,
         'status': fields.String,
-        'approval_user_id': fields.String,
+        'approval_user': fields.String(attribute="approval_user.fullname"),
         'izin_id': fields.String,
         'user_id': fields.String,
+        'jenis_izin': fields.String(attribute="izin.jenis_izin.nama"),
+        'tgl_izin_start': fields.String(attribute="izin.tgl_izin_start"),
+        'tgl_izin_end': fields.String(attribute="izin.tgl_izin_end"),
     }))
 }
 
