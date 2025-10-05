@@ -62,8 +62,8 @@ pagination_fields = {
         'created_date': fields.String,
         'absensi_date': fields.String(attribute='absensi_borongan.date'),
         'status': fields.String,
-        'user': fields.Nested(user_simple_field),
         'total': fields.Float(attribute="absensi_borongan.total"),
+        'approval_user': fields.String(attribute="approval_user.fullname"),
     }))
 }
 

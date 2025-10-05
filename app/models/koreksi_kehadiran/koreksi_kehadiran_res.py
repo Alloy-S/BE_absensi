@@ -51,8 +51,8 @@ approval_koreksi_pagination_fields = {
         'id': fields.String,
         'absensi_date': fields.String,
         'status': fields.String,
-        'user': fields.Nested(user_field),
         'absensi_id': fields.String,
         'catatan_pengajuan': fields.String,
+        'approval_user': fields.String(attribute="approval_user.fullname"),
     }))
 }

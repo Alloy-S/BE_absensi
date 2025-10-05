@@ -58,7 +58,7 @@ pagination_fields = {
         'created_date': fields.String,
         'status': fields.String,
         'total': fields.Float(attribute="reimburse.total"),
-        'user': fields.Nested(user_field),
+        'approval_user': fields.String(attribute="approval_user.fullname"),
     }))
 }
 
